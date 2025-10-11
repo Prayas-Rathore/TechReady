@@ -1,5 +1,7 @@
 import { Video, Star, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import johnDoe from '../assets/images/john-doe.svg';
+import Womenwithvideo from '../assets/images/woman-with-headset.jpg';
 
 export default function Hero() {
   return (
@@ -10,7 +12,7 @@ export default function Hero() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Video className="w-8 h-8 text-sky-600" />
-            <span className="text-2xl font-bold text-slate-900">InterviewPro</span>
+            <span className="text-2xl font-bold text-slate-900">TeachReady</span>
           </div>
           <div className="hidden md:flex items-center gap-8">
             <a href="#how-it-works" className="text-slate-600 hover:text-slate-900 transition-colors">How It Works</a>
@@ -46,7 +48,7 @@ export default function Hero() {
 
             <div className="flex flex-col sm:flex-row gap-4">
               <button className="px-8 py-4 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-all hover:shadow-xl hover:scale-105 font-semibold text-lg group">
-                Book Your Free Session
+                Take A Quiz
                 <span className="inline-block ml-2 group-hover:translate-x-1 transition-transform">→</span>
               </button>
               <button className="px-8 py-4 bg-white text-slate-700 rounded-lg border-2 border-slate-200 hover:border-sky-300 hover:shadow-lg transition-all font-semibold text-lg">
@@ -76,13 +78,14 @@ export default function Hero() {
             <div className="absolute inset-0 bg-gradient-to-tr from-sky-400 to-blue-500 rounded-3xl transform rotate-3 opacity-10" />
             <div className="relative bg-white rounded-3xl shadow-2xl p-8 border border-slate-100">
               <div className="aspect-video bg-gradient-to-br from-slate-100 to-slate-200 rounded-xl flex items-center justify-center mb-6">
-                <Video className="w-20 h-20 text-slate-400" />
+                {/* <Video className="w-20 h-20 text-slate-400" /> */}
+                <img src={Womenwithvideo} alt="John Doe" className="w-full h-full object-cover" />
               </div>
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-sky-100 flex items-center justify-center">
-                    <span className="text-sky-600 font-bold">JD</span>
-                  </div>
+                  <div className="w-12 h-12 rounded-full bg-sky-100 flex items-center justify-center overflow-hidden">
+                      <img src={johnDoe} alt="John Doe" className="w-full h-full object-cover" />
+                    </div>
                   <div>
                     <div className="font-semibold text-slate-900">John Doe</div>
                     <div className="text-sm text-slate-600">Senior Software Engineer at Google</div>
