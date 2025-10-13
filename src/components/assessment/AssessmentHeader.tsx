@@ -12,7 +12,7 @@ export default function AssessmentHeader({ onSaveAndExit }: AssessmentHeaderProp
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
             <Video className="w-8 h-8 text-sky-600" />
-            <span className="text-2xl font-bold text-slate-900">InterviewPro</span>
+            <span className="text-2xl font-bold text-slate-900">TeachReady</span>
           </Link>
 
           <button
