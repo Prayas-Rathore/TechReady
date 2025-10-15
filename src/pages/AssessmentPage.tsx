@@ -5,16 +5,19 @@ import ProgressBar from '../components/assessment/ProgressBar';
 import QuestionCard from '../components/assessment/QuestionCard';
 import Navigation from '../components/assessment/Navigation';
 import SuccessScreen from '../components/assessment/SuccessScreen';
-import { AssessmentData, Question } from '../types/assessment';
+import { AssessmentData } from '../types/assessment';
 import { questions } from '../data/questions';
+import { supabase } from '../services/SupabaseClient';
 
 export default function AssessmentPage() {
   const navigate = useNavigate();
+  const [anonUserId, setAnonUserId] = useState<string | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<AssessmentData>({});
   const [isComplete, setIsComplete] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
+  // Load saved answers from localStorage
   useEffect(() => {
     const savedAnswers = localStorage.getItem('assessment_answers');
     if (savedAnswers) {
@@ -22,6 +25,33 @@ export default function AssessmentPage() {
     }
   }, []);
 
+  // Generate or retrieve anonymous user ID
+  useEffect(() => {
+    const initializeAnonUser = async () => {
+      try {
+        const key = 'anon_user_id';
+        let id = localStorage.getItem(key);
+        
+        // Generate new anonymous ID if doesn't exist
+        if (!id) {
+          const rand = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+          id = `anon-${rand()}${rand()}-${Date.now().toString(36)}`;
+          localStorage.setItem(key, id);
+          console.log('🆔 Generated new anonymous ID:', id);
+        } else {
+          console.log('🆔 Retrieved existing anonymous ID:', id);
+        }
+        
+        setAnonUserId(id);
+      } catch (err) {
+        console.error('❌ Could not access localStorage to set anon id:', err);
+      }
+    };
+
+    initializeAnonUser();
+  }, []);
+
+  // Auto-save answers to localStorage (backup)
   useEffect(() => {
     if (Object.keys(answers).length > 0) {
       localStorage.setItem('assessment_answers', JSON.stringify(answers));
@@ -53,12 +83,84 @@ export default function AssessmentPage() {
 
   const handleSubmit = async () => {
     setIsSaving(true);
+
+    try {
+      const id = anonUserId || localStorage.getItem('anon_user_id') || `anon-${Date.now()}`;
+      
+      console.log('💾 Saving assessment for anonymous user:', id);
+
+      const session = await supabase.auth.getSession();
+console.log('Supabase session:', session);
+      console.log('Answers being saved:', answers);
+      // Save to Supabase
+      const { data, error } = await supabase
+        .from('guest_assessments')
+        .insert([
+          console.log('Payload being sent:',{
+            anon_user_id: id,
+            answers: answers,
+            submitted_at: new Date().toISOString()
+          })
+        ])
+        .select();
+
+      if (error) {
+        console.error('❌ Supabase error:', error);
+        throw error;
+      }
+
+      console.log('✅ Assessment saved to Supabase successfully!', data);
+
+      // Also save to localStorage as backup
+      try {
+        const resultsKey = 'assessment_results';
+        const stored = localStorage.getItem(resultsKey);
+        const parsed = stored ? JSON.parse(stored) : {};
+        parsed[id] = parsed[id] || [];
+        parsed[id].push({ 
+          answers, 
+          timestamp: new Date().toISOString(),
+          supabaseId: data?.[0]?.id // Store the Supabase record ID
+        });
+        localStorage.setItem(resultsKey, JSON.stringify(parsed));
+        console.log('✅ Assessment also backed up to localStorage');
+      } catch (localErr) {
+        console.warn('⚠️ LocalStorage backup failed (non-critical):', localErr);
+      }
+
+    } catch (err) {
+      console.error('❌ Failed to save assessment:', err);
+      
+      // Fallback: Save only to localStorage if Supabase fails
+      try {
+        const id = anonUserId || localStorage.getItem('anon_user_id') || `anon-${Date.now()}`;
+        const resultsKey = 'assessment_results';
+        const stored = localStorage.getItem(resultsKey);
+        const parsed = stored ? JSON.parse(stored) : {};
+        parsed[id] = parsed[id] || [];
+        parsed[id].push({ 
+          answers, 
+          timestamp: new Date().toISOString(),
+          supabaseFailed: true 
+        });
+        localStorage.setItem(resultsKey, JSON.stringify(parsed));
+        console.log('⚠️ Saved to localStorage as fallback');
+      } catch (fallbackErr) {
+        console.error('❌ Even fallback failed:', fallbackErr);
+      }
+    }
+
+    // Simulate processing time
     await new Promise(resolve => setTimeout(resolve, 1500));
+    
     setIsComplete(true);
+    
+    // Clear the in-progress answers (assessment is submitted)
     localStorage.removeItem('assessment_answers');
 
+    // Redirect to results page
     setTimeout(() => {
-      navigate('/');
+      navigate('/results');
     }, 3000);
   };
 

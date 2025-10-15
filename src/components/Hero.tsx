@@ -2,6 +2,7 @@ import { Video, Star, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Womenwithvideo from '../assets/images/woman-with-headset.jpg';
 
+
 export default function Hero() {
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-slate-50 via-white to-sky-50">
@@ -11,7 +12,7 @@ export default function Hero() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Video className="w-8 h-8 text-sky-600" />
-            <span className="text-2xl font-bold text-slate-900">TeachReady</span>
+            <span className="text-2xl font-bold text-slate-900">MockIthub</span>
           </div>
           <div className="hidden md:flex items-center gap-8">
             <a href="#how-it-works" className="text-slate-600 hover:text-slate-900 transition-colors">How It Works</a>
