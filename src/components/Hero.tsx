@@ -21,9 +21,9 @@ export default function Hero() {
             <a href="#faq" className="text-slate-600 hover:text-slate-900 transition-colors">FAQ</a>
             <Link to="/talentvue" className="text-slate-600 hover:text-slate-900 transition-colors">TalentVue</Link>
           </div>
-          <button className="px-6 py-2.5 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-all hover:shadow-lg hover:scale-105 font-medium">
+          <Link to= "/login" className="px-6 py-2.5 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-all hover:shadow-lg hover:scale-105 font-medium">
             Sign In
-          </button>
+          </Link>
         </div>
       </nav>
 

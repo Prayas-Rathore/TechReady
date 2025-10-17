@@ -160,7 +160,7 @@ console.log('Supabase session:', session);
 
     // Redirect to results page
     setTimeout(() => {
-      navigate('/results');
+      navigate('/signup');
     }, 3000);
   };
 
