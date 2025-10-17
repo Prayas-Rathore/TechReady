@@ -5,6 +5,8 @@ import AssessmentPage from './pages/AssessmentPage';
 import TestConnectionPage from './pages/TestConnectionPage';
 import Login from './pages/LoginPage';
 import Signup from './pages/SignupPage';
+import UserDashboard from './pages/UserDashboard';
+import AdminDashboard from './pages/AdminDashboard';
 
 function App() {
   return (
@@ -16,6 +18,14 @@ function App() {
         <Route path="/test" element={<TestConnectionPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route
+          path="/user-dashboard"
+          element={<UserDashboard />}
+        />
+        <Route
+          path="/admin-dasbboard"
+          element={<AdminDashboard />}
+        />
       </Routes>
     </Router>
   );
