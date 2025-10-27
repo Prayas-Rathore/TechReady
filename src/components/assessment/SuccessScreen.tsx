@@ -42,7 +42,7 @@ export default function SuccessScreen() {
             </div>
 
             <p className="text-sm text-slate-500 mt-8">
-              Redirecting you to your dashboard...
+              Thinking......
             </p>
           </div>
         </div>

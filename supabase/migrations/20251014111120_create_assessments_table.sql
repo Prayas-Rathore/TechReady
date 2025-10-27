@@ -1,4 +1,4 @@
--- Create table for guest assessment answers (detailed Q&A)
+-- Migration 2: Guest Assessments table (for non-authenticated users taking tests)
 CREATE TABLE IF NOT EXISTS public.guest_assessments (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   anon_user_id TEXT NOT NULL,
@@ -19,11 +19,14 @@ CREATE INDEX IF NOT EXISTS idx_guest_assessments_linked_user
 -- Enable RLS
 ALTER TABLE public.guest_assessments ENABLE ROW LEVEL SECURITY;
 
+-- ⚠️ CRITICAL FIX: Use "TO public" instead of "TO anon, authenticated"
+-- This allows ANYONE (including non-authenticated visitors) to insert data
+
 -- RLS Policies
 CREATE POLICY "Anyone can insert guest assessments"
   ON public.guest_assessments
   FOR INSERT
-  TO anon, authenticated
+  TO public  -- ✅ CHANGED FROM "TO anon, authenticated"
   WITH CHECK (true);
 
 CREATE POLICY "Users can read their linked assessments"
@@ -33,4 +36,4 @@ CREATE POLICY "Users can read their linked assessments"
   USING (linked_to_user_id = auth.uid());
 
 -- Add comment
-COMMENT ON TABLE public.guest_assessments IS 'Stores detailed Q&A assessment data for anonymous users';
+COMMENT ON TABLE public.guest_assessments IS 'Stores detailed Q&A assessment data for guest users (before signup)';

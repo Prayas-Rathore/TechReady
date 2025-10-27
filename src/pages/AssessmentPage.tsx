@@ -11,7 +11,7 @@ import { supabase } from '../services/SupabaseClient';
 
 export default function AssessmentPage() {
   const navigate = useNavigate();
-  const [anonUserId, setAnonUserId] = useState<string | null>(null);
+  const [guestUserId, setGuestUserId] = useState<string | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<AssessmentData>({});
   const [isComplete, setIsComplete] = useState(false);
@@ -21,48 +21,43 @@ export default function AssessmentPage() {
   useEffect(() => {
     const savedAnswers = localStorage.getItem('assessment_answers');
     if (savedAnswers) {
-      setAnswers(JSON.parse(savedAnswers));
+      try {
+        const parsed = JSON.parse(savedAnswers);
+        if (parsed && typeof parsed === 'object') {
+          setAnswers(parsed);
+        }
+      } catch (err) {
+        console.warn('Could not parse saved answers', err);
+      }
     }
   }, []);
 
-  // Generate or retrieve anonymous user ID
+  // Generate guest user ID
   useEffect(() => {
-    const initializeAnonUser = async () => {
-      try {
-        const key = 'anon_user_id';
-        let id = localStorage.getItem(key);
-        
-        // Generate new anonymous ID if doesn't exist
-        if (!id) {
-          const rand = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-          id = `anon-${rand()}${rand()}-${Date.now().toString(36)}`;
-          localStorage.setItem(key, id);
-          console.log('🆔 Generated new anonymous ID:', id);
-        } else {
-          console.log('🆔 Retrieved existing anonymous ID:', id);
-        }
-        
-        setAnonUserId(id);
-      } catch (err) {
-        console.error('❌ Could not access localStorage to set anon id:', err);
-      }
-    };
-
-    initializeAnonUser();
+    const key = 'guest_user_id';
+    let id = localStorage.getItem(key);
+    
+    if (!id) {
+      const rand = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+      id = `guest-${rand()}${rand()}-${Date.now().toString(36)}`;
+      localStorage.setItem(key, id);
+      console.log('🆔 Generated guest ID:', id);
+    } else {
+      console.log('🆔 Retrieved guest ID:', id);
+    }
+    
+    setGuestUserId(id);
   }, []);
 
-  // Auto-save answers to localStorage (backup)
+  // Auto-save answers
   useEffect(() => {
-    if (Object.keys(answers).length > 0) {
+    if (answers && Object.keys(answers).length > 0) {
       localStorage.setItem('assessment_answers', JSON.stringify(answers));
     }
   }, [answers]);
 
   const handleAnswer = (questionId: string, answer: any) => {
-    setAnswers(prev => ({
-      ...prev,
-      [questionId]: answer
-    }));
+    setAnswers(prev => ({ ...prev, [questionId]: answer }));
   };
 
   const handleNext = () => {
@@ -85,80 +80,74 @@ export default function AssessmentPage() {
     setIsSaving(true);
 
     try {
-      const id = anonUserId || localStorage.getItem('anon_user_id') || `anon-${Date.now()}`;
+      const id = guestUserId || `guest-${Date.now()}`;
       
-      console.log('💾 Saving assessment for anonymous user:', id);
+      console.log('💾 Submitting assessment...');
+      console.log('Guest ID:', id);
+      console.log('Answers:', answers);
 
-      const session = await supabase.auth.getSession();
-console.log('Supabase session:', session);
-      console.log('Answers being saved:', answers);
-      // Save to Supabase
+      const payload = {
+        anon_user_id: id,
+        answers: answers,
+        submitted_at: new Date().toISOString()
+      };
+
       const { data, error } = await supabase
         .from('guest_assessments')
-        .insert([
-          console.log('Payload being sent:',{
-            anon_user_id: id,
-            answers: answers,
-            submitted_at: new Date().toISOString()
-          })
-        ])
+        .insert([payload])
         .select();
 
       if (error) {
-        console.error('❌ Supabase error:', error);
+        console.error('❌ Supabase Error:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        });
         throw error;
       }
 
-      console.log('✅ Assessment saved to Supabase successfully!', data);
+      console.log('✅ Saved to Supabase:', data);
 
-      // Also save to localStorage as backup
-      try {
-        const resultsKey = 'assessment_results';
-        const stored = localStorage.getItem(resultsKey);
-        const parsed = stored ? JSON.parse(stored) : {};
-        parsed[id] = parsed[id] || [];
-        parsed[id].push({ 
-          answers, 
-          timestamp: new Date().toISOString(),
-          supabaseId: data?.[0]?.id // Store the Supabase record ID
-        });
-        localStorage.setItem(resultsKey, JSON.stringify(parsed));
-        console.log('✅ Assessment also backed up to localStorage');
-      } catch (localErr) {
-        console.warn('⚠️ LocalStorage backup failed (non-critical):', localErr);
-      }
+      // Backup to localStorage
+      const resultsKey = 'assessment_results';
+      const stored = localStorage.getItem(resultsKey);
+      let parsed: any = stored ? JSON.parse(stored) : {};
+      if (!parsed || typeof parsed !== 'object') parsed = {};
+      
+      parsed[id] = parsed[id] || [];
+      parsed[id].push({
+        answers,
+        timestamp: new Date().toISOString(),
+        supabaseId: data?.[0]?.id
+      });
+      localStorage.setItem(resultsKey, JSON.stringify(parsed));
 
     } catch (err) {
-      console.error('❌ Failed to save assessment:', err);
+      console.error('❌ Failed to save:', err);
       
-      // Fallback: Save only to localStorage if Supabase fails
-      try {
-        const id = anonUserId || localStorage.getItem('anon_user_id') || `anon-${Date.now()}`;
-        const resultsKey = 'assessment_results';
-        const stored = localStorage.getItem(resultsKey);
-        const parsed = stored ? JSON.parse(stored) : {};
-        parsed[id] = parsed[id] || [];
-        parsed[id].push({ 
-          answers, 
-          timestamp: new Date().toISOString(),
-          supabaseFailed: true 
-        });
-        localStorage.setItem(resultsKey, JSON.stringify(parsed));
-        console.log('⚠️ Saved to localStorage as fallback');
-      } catch (fallbackErr) {
-        console.error('❌ Even fallback failed:', fallbackErr);
-      }
+      // Fallback to localStorage only
+      const id = guestUserId || `guest-${Date.now()}`;
+      const resultsKey = 'assessment_results';
+      const stored = localStorage.getItem(resultsKey);
+      let parsed: any = stored ? JSON.parse(stored) : {};
+      if (!parsed || typeof parsed !== 'object') parsed = {};
+      
+      parsed[id] = parsed[id] || [];
+      parsed[id].push({
+        answers,
+        timestamp: new Date().toISOString(),
+        supabaseFailed: true
+      });
+      localStorage.setItem(resultsKey, JSON.stringify(parsed));
+    } finally {
+      setIsSaving(false);
     }
 
-    // Simulate processing time
     await new Promise(resolve => setTimeout(resolve, 1500));
-    
     setIsComplete(true);
-    
-    // Clear the in-progress answers (assessment is submitted)
     localStorage.removeItem('assessment_answers');
 
-    // Redirect to results page
     setTimeout(() => {
       navigate('/signup');
     }, 3000);
@@ -166,7 +155,7 @@ console.log('Supabase session:', session);
 
   const handleSaveAndExit = () => {
     localStorage.setItem('assessment_answers', JSON.stringify(answers));
-    navigate('/');
+    navigate('/signup');
   };
 
   const isCurrentQuestionAnswered = () => {
@@ -174,19 +163,11 @@ console.log('Supabase session:', session);
     const answer = answers[question.id];
 
     if (!answer) return false;
-
-    if (Array.isArray(answer)) {
-      return answer.length > 0;
-    }
-
-    if (typeof answer === 'string') {
-      return answer.trim().length > 0;
-    }
-
+    if (Array.isArray(answer)) return answer.length > 0;
+    if (typeof answer === 'string') return answer.trim().length > 0;
     if (typeof answer === 'object') {
       return Object.values(answer).some(v => v !== null && v !== undefined);
     }
-
     return true;
   };
 
