@@ -7,6 +7,9 @@ import Login from './pages/LoginPage';
 import Signup from './pages/SignupPage';
 import UserDashboard from './pages/UserDashboard';
 import AdminDashboard from './pages/AdminDashboard';
+import RoadmapGeneratorPage from './pages/RoadmapGeneratorPage';
+import SuccessScreen from './components/assessment/SuccessScreen';
+import PricingPage from './pages/PricingPage';
 
 function App() {
   return (
@@ -18,14 +21,11 @@ function App() {
         <Route path="/test" element={<TestConnectionPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route
-          path="/user-dashboard"
-          element={<UserDashboard />}
-        />
-        <Route
-          path="/admin-dasbboard"
-          element={<AdminDashboard />}
-        />
+        <Route path="/user-dashboard"element={<UserDashboard />}/>
+        <Route path="/admin-dasbboard"element={<AdminDashboard />}/>
+        <Route path="/roadmap" element={<RoadmapGeneratorPage />} />
+        <Route path="/SuccessScreen" element={<SuccessScreen />} />
+        <Route path="/pricing" element={<PricingPage />} />
       </Routes>
     </Router>
   );

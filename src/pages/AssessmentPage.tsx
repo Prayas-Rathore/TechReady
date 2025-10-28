@@ -149,7 +149,7 @@ export default function AssessmentPage() {
     localStorage.removeItem('assessment_answers');
 
     setTimeout(() => {
-      navigate('/signup');
+      navigate('/roadmap');
     }, 3000);
   };
 
