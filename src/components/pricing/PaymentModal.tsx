@@ -1,6 +1,7 @@
 import { X, Lock, CreditCard, Loader2, CheckCircle2 } from 'lucide-react';
 import { useState } from 'react';
 import { PricingTier, OneTimePurchase } from '../../data/pricingData';
+import { useNavigate } from 'react-router-dom';
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -11,6 +12,7 @@ interface PaymentModalProps {
 }
 
 export default function PaymentModal({ isOpen, onClose, selectedItem, billingPeriod = 'annual', itemType }: PaymentModalProps) {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
@@ -60,6 +62,10 @@ export default function PaymentModal({ isOpen, onClose, selectedItem, billingPer
       setLoading(false);
     }
   };
+
+  const paymentnavigate = () => {
+    navigate('/signup');
+  }
 
   if (success) {
     return (
@@ -161,7 +167,7 @@ export default function PaymentModal({ isOpen, onClose, selectedItem, billingPer
               </div>
             )}
 
-            <button
+            {/* <button
               type="submit"
               disabled={loading}
               className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
@@ -177,6 +183,15 @@ export default function PaymentModal({ isOpen, onClose, selectedItem, billingPer
                   <span>Complete Purchase</span>
                 </>
               )}
+            </button>
+             */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              onClick={paymentnavigate}
+            >
+              Complete Payment
             </button>
 
             <p className="text-xs text-center text-slate-500">
