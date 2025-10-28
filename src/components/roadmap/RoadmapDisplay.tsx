@@ -60,8 +60,8 @@ export default function RoadmapDisplay({ roadmap, onRegenerate }: RoadmapDisplay
             onClick={handleShare}
             className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-200"
           >
-            <Share2 className="w-5 h-5" />
-            <span>Share Roadmap</span>
+            {/* <Share2 className="w-5 h-5" /> */}
+            <span>Get Detailed RoadMap</span>
           </button>
         </div>
 
