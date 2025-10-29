@@ -9,22 +9,32 @@ export default function SignupPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const guestId = typeof window !== 'undefined' ? localStorage.getItem('guest_user_id') : null;
 
   const passwordRequirements = [
     { label: 'At least 8 characters', met: password.length >= 8 },
     { label: 'Contains a number', met: /\d/.test(password) },
     { label: 'Contains uppercase letter', met: /[A-Z]/.test(password) },
-    { label: 'Contains lowercase letter', met: /[a-z]/.test(password) },
+    { label: 'Contains lowercase letter', met: /[a-z]/.test(password) }
   ];
+
+  // Single confirm-password requirement: only present when user typed confirm field
+  const confirmRequirement = confirmPassword
+    ? { label: password === confirmPassword ? 'Passwords match' : 'Passwords do not match', met: password === confirmPassword }
+    : null;
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
-    const allRequirementsMet = passwordRequirements.every(req => req.met);
+  const passwordsOk = passwordRequirements.every(req => req.met);
+  const confirmOk = confirmRequirement ? confirmRequirement.met : false;
+  const allRequirementsMet = passwordsOk && confirmOk;
     if (!allRequirementsMet) {
       setError('Please meet all password requirements');
       setLoading(false);
@@ -38,10 +48,10 @@ export default function SignupPage() {
         options: {
           data: {
             full_name: fullName,
+            guest_id: guestId
           },
         },
       });
-
       if (error) throw error;
 
       navigate('/');
@@ -153,6 +163,44 @@ export default function SignupPage() {
                           </span>
                         </div>
                       ))}
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-200 mb-2">
+                    Confirm Password
+                  </label>
+                  <div className="relative">
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                    <input
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      required
+                      className="w-full pl-12 pr-12 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all"
+                      placeholder="••••••••"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
+                    >
+                      {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    </button>
+                  </div>
+
+                  {confirmRequirement && (
+                    <div className="mt-3">
+                      <div className="flex items-center gap-2 text-sm">
+                        {confirmRequirement.met ? (
+                          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                        ) : (
+                          <X className="w-4 h-4 text-red-500" />
+                        )}
+                        <span className={confirmRequirement.met ? 'text-emerald-400' : 'text-red-400'}>
+                          {confirmRequirement.label}
+                        </span>
+                      </div>
                     </div>
                   )}
                 </div>
