@@ -10,6 +10,8 @@ import AdminDashboard from './pages/AdminDashboard';
 import RoadmapGeneratorPage from './pages/RoadmapGeneratorPage';
 import SuccessScreen from './components/assessment/SuccessScreen';
 import PricingPage from './pages/PricingPage';
+import VoiceRecorderPage from './pages/VoiceRecorderPage';
+import CameraWithVoice from './pages/CameraWithVoice';
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
         <Route path="/roadmap" element={<RoadmapGeneratorPage />} />
         <Route path="/SuccessScreen" element={<SuccessScreen />} />
         <Route path="/pricing" element={<PricingPage />} />
+        <Route path="/voice" element={<VoiceRecorderPage />} />
+        <Route path="/CameraWithVoice" element={<CameraWithVoice />} />
       </Routes>
     </Router>
   );

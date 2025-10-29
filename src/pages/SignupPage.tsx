@@ -22,7 +22,6 @@ export default function SignupPage() {
     { label: 'Contains lowercase letter', met: /[a-z]/.test(password) }
   ];
 
-  // Single confirm-password requirement: only present when user typed confirm field
   const confirmRequirement = confirmPassword
     ? { label: password === confirmPassword ? 'Passwords match' : 'Passwords do not match', met: password === confirmPassword }
     : null;
