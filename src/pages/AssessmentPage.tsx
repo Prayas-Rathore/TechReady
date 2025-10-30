@@ -75,13 +75,14 @@ export default function AssessmentPage() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
-
   const handleSubmit = async () => {
     setIsSaving(true);
 
+    let savedRecord: any = null;
+
     try {
-      const id = guestUserId || `guest-${Date.now()}`;
-      
+      const id = guestUserId || localStorage.getItem('guest_user_id') || `guest-${Date.now()}`;
+
       console.log('💾 Submitting assessment...');
       console.log('Guest ID:', id);
       console.log('Answers:', answers);
@@ -89,7 +90,7 @@ export default function AssessmentPage() {
       const payload = {
         anon_user_id: id,
         answers: answers,
-        submitted_at: new Date().toISOString()
+        submitted_at: new Date().toISOString(),
       };
 
       const { data, error } = await supabase
@@ -102,54 +103,72 @@ export default function AssessmentPage() {
           message: error.message,
           details: error.details,
           hint: error.hint,
-          code: error.code
+          code: error.code,
         });
         throw error;
       }
 
       console.log('✅ Saved to Supabase:', data);
 
-      // Backup to localStorage
-      const resultsKey = 'assessment_results';
-      const stored = localStorage.getItem(resultsKey);
-      let parsed: any = stored ? JSON.parse(stored) : {};
-      if (!parsed || typeof parsed !== 'object') parsed = {};
-      
-      parsed[id] = parsed[id] || [];
-      parsed[id].push({
-        answers,
-        timestamp: new Date().toISOString(),
-        supabaseId: data?.[0]?.id
-      });
-      localStorage.setItem(resultsKey, JSON.stringify(parsed));
+      savedRecord = data?.[0] ?? { ...payload };
 
+      // Backup to localStorage
+      try {
+        const resultsKey = 'assessment_results';
+        const stored = localStorage.getItem(resultsKey);
+        let parsed: any = stored ? JSON.parse(stored) : {};
+        if (!parsed || typeof parsed !== 'object') parsed = {};
+
+        parsed[id] = parsed[id] || [];
+        parsed[id].push({
+          answers,
+          timestamp: new Date().toISOString(),
+          supabaseId: savedRecord?.id,
+        });
+        localStorage.setItem(resultsKey, JSON.stringify(parsed));
+        console.log('✅ Assessment also backed up to localStorage');
+      } catch (localErr) {
+        console.warn('⚠️ LocalStorage backup failed (non-critical):', localErr);
+      }
     } catch (err) {
-      console.error('❌ Failed to save:', err);
-      
-      // Fallback to localStorage only
-      const id = guestUserId || `guest-${Date.now()}`;
-      const resultsKey = 'assessment_results';
-      const stored = localStorage.getItem(resultsKey);
-      let parsed: any = stored ? JSON.parse(stored) : {};
-      if (!parsed || typeof parsed !== 'object') parsed = {};
-      
-      parsed[id] = parsed[id] || [];
-      parsed[id].push({
-        answers,
-        timestamp: new Date().toISOString(),
-        supabaseFailed: true
-      });
-      localStorage.setItem(resultsKey, JSON.stringify(parsed));
+      console.error('❌ Failed to save assessment:', err);
+
+      // Fallback: Save only to localStorage if Supabase fails
+      try {
+        const id = guestUserId || localStorage.getItem('guest_user_id') || `guest-${Date.now()}`;
+        const resultsKey = 'assessment_results';
+        const stored = localStorage.getItem(resultsKey);
+        let parsed: any = stored ? JSON.parse(stored) : {};
+        if (!parsed || typeof parsed !== 'object') parsed = {};
+        parsed[id] = parsed[id] || [];
+        parsed[id].push({
+          answers,
+          timestamp: new Date().toISOString(),
+          supabaseFailed: true,
+        });
+        localStorage.setItem(resultsKey, JSON.stringify(parsed));
+        console.log('⚠️ Saved to localStorage as fallback');
+
+        // create a local savedRecord so we can forward something to the roadmap page
+        savedRecord = { anon_user_id: id, answers, submitted_at: new Date().toISOString(), supabaseFailed: true };
+      } catch (fallbackErr) {
+        console.error('❌ Even fallback failed:', fallbackErr);
+      }
     } finally {
       setIsSaving(false);
     }
 
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    // Simulate processing time
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
     setIsComplete(true);
+
+    // Clear the in-progress answers (assessment is submitted)
     localStorage.removeItem('assessment_answers');
 
+    // Redirect to roadmap page, passing the savedRecord in navigation state
     setTimeout(() => {
-      navigate('/roadmap');
+      navigate('/roadmap', { state: { assessmentData: savedRecord } });
     }, 3000);
   };
 
@@ -163,11 +182,19 @@ export default function AssessmentPage() {
     const answer = answers[question.id];
 
     if (!answer) return false;
-    if (Array.isArray(answer)) return answer.length > 0;
-    if (typeof answer === 'string') return answer.trim().length > 0;
-    if (typeof answer === 'object') {
-      return Object.values(answer).some(v => v !== null && v !== undefined);
+
+    if (Array.isArray(answer)) {
+      return answer.length > 0;
     }
+
+    if (typeof answer === 'string') {
+      return answer.trim().length > 0;
+    }
+
+    if (typeof answer === 'object') {
+      return Object.values(answer).some((v) => v !== null && v !== undefined);
+    }
+
     return true;
   };
 

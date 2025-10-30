@@ -1,33 +1,133 @@
-import { useState } from 'react';
-import { Sparkles, Loader2, Map } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Sparkles, Loader2, Map, AlertCircle } from 'lucide-react';
 import RoadmapDisplay from '../components/roadmap/RoadmapDisplay';
-import { mockRoadmapData } from '../data/roadmapData';
+import { useRoadmapGenerator } from '../components/hooks/useRoadmapGenerator';
 
-type PageState = 'initial' | 'loading' | 'success';
+type PageState = 'initial' | 'loading' | 'success' | 'error';
 
 export default function RoadmapGeneratorPage() {
   const [pageState, setPageState] = useState<PageState>('initial');
+  const [roadmapData, setRoadmapData] = useState<any>(null);
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { generateRoadmap, isGenerating, error } = useRoadmapGenerator();
+  
+  // Get assessment data from navigation state
+  const assessmentData = location.state?.answers || location.state?.assessmentData;
 
-  const handleGenerate = () => {
+  // Check if assessment data exists on mount
+  useEffect(() => {
+    if (!assessmentData) {
+      console.error('❌ No assessment data found');
+      setPageState('error');
+      setErrorMessage('No assessment data found. Please complete the assessment first.');
+    }
+  }, [assessmentData]);
+
+  const handleGenerate = async () => {
+    if (!assessmentData) {
+      setPageState('error');
+      setErrorMessage('No assessment data available. Please complete the assessment first.');
+      return;
+    }
+
     setPageState('loading');
 
-    setTimeout(() => {
+    try {
+      console.log('🤖 Sending to GPT...');
+      console.log('Assessment Data:', assessmentData);
+      
+      // Send to Edge Function (index.ts) → GPT
+      const roadmap = await generateRoadmap(assessmentData);
+      
+      console.log('✅ Received from GPT:', roadmap);
+      
+      // Update with real GPT data
+      setRoadmapData(roadmap);
       setPageState('success');
-    }, 3000);
+      
+    } catch (err: any) {
+      console.error('❌ Failed to generate roadmap:', err);
+      setPageState('error');
+      setErrorMessage(err.message || 'Failed to generate roadmap. Please try again.');
+    }
   };
 
-  const handleRegenerate = () => {
+  const handleRegenerate = async () => {
+    if (!assessmentData) {
+      setPageState('error');
+      setErrorMessage('No assessment data available. Please complete the assessment first.');
+      return;
+    }
+
     setPageState('loading');
 
-    setTimeout(() => {
+    try {
+      console.log('🤖 Regenerating...');
+      console.log('Assessment Data:', assessmentData);
+
+      const roadmap = await generateRoadmap(assessmentData);
+      
+      console.log('✅ Received from GPT:', roadmap);
+      
+      setRoadmapData(roadmap);
       setPageState('success');
-    }, 3000);
+      
+    } catch (err: any) {
+      console.error('❌ Failed to generate roadmap:', err);
+      setPageState('error');
+      setErrorMessage(err.message || 'Failed to generate roadmap. Please try again.');
+    }
   };
 
-  if (pageState === 'success') {
-    return <RoadmapDisplay roadmap={mockRoadmapData} onRegenerate={handleRegenerate} />;
+  // ✅ SUCCESS STATE
+  if (pageState === 'success' && roadmapData) {
+    return <RoadmapDisplay roadmap={roadmapData} onRegenerate={handleRegenerate} />;
   }
 
+  // ✅ ERROR STATE - No Mock Data!
+  if (pageState === 'error') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-sky-50 flex items-center justify-center px-4">
+        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <AlertCircle className="w-8 h-8 text-red-600" />
+          </div>
+          
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">
+            Oops! Something went wrong
+          </h2>
+          
+          <p className="text-slate-600 mb-8">
+            {errorMessage}
+          </p>
+          
+          <div className="flex flex-col gap-3">
+            <button
+              onClick={() => navigate('/assessment')}
+              className="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all duration-200"
+            >
+              Go to Assessment
+            </button>
+            
+            {assessmentData && (
+              <button
+                onClick={handleGenerate}
+                className="w-full px-6 py-3 bg-white text-slate-700 rounded-lg font-semibold border-2 border-slate-200 hover:border-blue-300 transition-all duration-200"
+              >
+                Try Again
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ✅ LOADING STATE
   if (pageState === 'loading') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-sky-50 flex items-center justify-center px-4">
@@ -87,6 +187,7 @@ export default function RoadmapGeneratorPage() {
     );
   }
 
+  // ✅ INITIAL STATE
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-sky-50 flex items-center justify-center px-4">
       <div className="max-w-4xl mx-auto text-center">
@@ -110,12 +211,21 @@ export default function RoadmapGeneratorPage() {
 
         <button
           onClick={handleGenerate}
-          className="group relative inline-flex items-center gap-3 px-12 py-5 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-lg font-bold rounded-xl shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-200 overflow-hidden"
+          disabled={!assessmentData}
+          className="group relative inline-flex items-center gap-3 px-12 py-5 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-lg font-bold rounded-xl shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-200 overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
           <Sparkles className="w-6 h-6 relative z-10 group-hover:rotate-12 transition-transform duration-200" />
-          <span className="relative z-10">Generate My Roadmap</span>
+          <span className="relative z-10">
+            {assessmentData ? 'Generate My Roadmap' : 'Complete Assessment First'}
+          </span>
         </button>
+
+        {!assessmentData && (
+          <p className="mt-4 text-red-600 font-semibold">
+            Please complete the assessment before generating a roadmap.
+          </p>
+        )}
 
         <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
           <div className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-200">

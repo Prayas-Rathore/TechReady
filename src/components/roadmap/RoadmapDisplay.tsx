@@ -1,12 +1,12 @@
 import { Download, RefreshCw, Share2, Sparkles } from 'lucide-react';
 import { RoadmapData } from '../../data/roadmapData';
-import ReadinessScoreCard from './ReadinessScoreCard';
-import StrengthsCard from './StrengthsCard';
-import AreasToImproveCard from './AreasToImproveCard';
-import LearningPathTimeline from './LearningPathTimeline';
-import DailyScheduleCard from './DailyScheduleCard';
-import ResourcesList from './ResourcesList';
-import MilestonesChecklist from './MilestonesChecklist';
+// import ReadinessScoreCard from './ReadinessScoreCard';
+// import StrengthsCard from './StrengthsCard';
+// import AreasToImproveCard from './AreasToImproveCard';
+// import LearningPathTimeline from './LearningPathTimeline';
+// import DailyScheduleCard from './DailyScheduleCard';
+// import ResourcesList from './ResourcesList';
+// import MilestonesChecklist from './MilestonesChecklist';
 import { useNavigate } from 'react-router-dom';
 
 interface RoadmapDisplayProps {
@@ -65,7 +65,13 @@ export default function RoadmapDisplay({ roadmap, onRegenerate }: RoadmapDisplay
           </button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+         <div>
+          <h1>Actual Data- Review This</h1>
+          {/* Display roadmap.overview, roadmap.phases, etc */}
+          <pre>{JSON.stringify(roadmap, null, 2)}</pre>
+        </div>
+
+        {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           <ReadinessScoreCard
             score={roadmap.readinessScore}
             estimatedWeeks={roadmap.estimatedWeeks}
@@ -97,7 +103,7 @@ export default function RoadmapDisplay({ roadmap, onRegenerate }: RoadmapDisplay
               Schedule a mentor session
             </button>
           </p>
-        </div>
+        </div> */}
       </div>
     </div>
   );
