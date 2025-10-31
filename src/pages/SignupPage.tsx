@@ -53,7 +53,7 @@ export default function SignupPage() {
       });
       if (error) throw error;
 
-      navigate('/');
+      navigate('/login');
     } catch (err: any) {
       setError(err.message || 'Failed to create account');
     } finally {

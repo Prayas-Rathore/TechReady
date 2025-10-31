@@ -51,7 +51,7 @@ export default function UserDashboard() {
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center gap-2">
               <Video className="w-8 h-8 text-sky-600" />
-              <span className="text-2xl font-bold text-slate-900">InterviewPro</span>
+              <span className="text-2xl font-bold text-slate-900">MockIthub</span>
             </Link>
 
             <div className="flex items-center gap-6">

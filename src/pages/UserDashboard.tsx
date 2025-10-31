@@ -8,7 +8,7 @@ export default function UserDashboard() {
   const user = {
     email: 'demo@example.com',
     user_metadata: {
-      full_name: 'Demo User'
+      full_name: 'test'
     }
   };
 
