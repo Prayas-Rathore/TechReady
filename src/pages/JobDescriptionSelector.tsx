@@ -29,52 +29,51 @@ export default function JobDescriptionSelector() {
   };
 
   const generateQuestions = async () => {
-    if (!customDescription.trim()) {
-      setError('Please enter or select a job description');
+  if (!customDescription.trim()) {
+    setError('Please enter or select a job description');
+    return;
+  }
+
+  setLoading(true);
+  setError('');
+
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      setError('You must be logged in');
+      setLoading(false);
       return;
     }
 
-    setLoading(true);
-    setError('');
+    // Call Edge Function
+    const { data: questionsData, error: questionsError } = await supabase.functions.invoke(
+      'generate-interview-questions',
+      { body: { jobDescription: customDescription } }
+    );
 
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
+    if (questionsError) throw questionsError;
 
-      if (!user) {
-        setError('You must be logged in to generate questions');
-        setLoading(false);
-        return;
-      }
+    // Save to database
+    const { data: session, error: sessionError } = await supabase
+      .from('interview_sessions')
+      .insert({
+        user_id: user.id,
+        job_description_text: customDescription,
+        questions: questionsData.questions,
+        status: 'pending'
+      })
+      .select()
+      .single();
 
-      const mockQuestions = [
-        'Can you describe a project where you had to design a feature from scratch? What steps did you take to ensure it met user needs and was technically sound?',
-        'Tell me about a time when you had to work with a difficult team member. How did you handle the situation?',
-        'How do you stay updated with the latest technologies and industry trends?',
-        'Describe a challenging bug or technical problem you encountered. How did you approach solving it?',
-        'What motivates you in your career, and where do you see yourself in 5 years?'
-      ];
+    if (sessionError) throw sessionError;
 
-      const { data: session, error: sessionError } = await supabase
-        .from('interview_sessions')
-        .insert({
-          user_id: user.id,
-          job_description_text: customDescription,
-          questions: mockQuestions,
-          status: 'pending'
-        })
-        .select()
-        .single();
-
-      if (sessionError) throw sessionError;
-
-      navigate(`/interview/${session.id}`);
-    } catch (err) {
-      console.error('Error generating questions:', err);
-      setError('Failed to generate questions. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
+    navigate(`/interview/${session.id}`);
+  } catch (err: any) {
+    setError(err.message || 'Failed to generate questions');
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-sky-50 py-12 px-4">
