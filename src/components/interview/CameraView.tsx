@@ -17,10 +17,8 @@ export default function CameraView({ isEnabled, onToggle }: CameraViewProps) {
     } else {
       stopCamera();
     }
-
-    return () => {
-      stopCamera();
-    };
+    return () => stopCamera();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEnabled]);
 
   const startCamera = async () => {
@@ -29,9 +27,9 @@ export default function CameraView({ isEnabled, onToggle }: CameraViewProps) {
         video: {
           width: { ideal: 1280 },
           height: { ideal: 720 },
-          facingMode: 'user'
+          facingMode: 'user',
         },
-        audio: false
+        audio: false,
       });
 
       setStream(mediaStream);
@@ -47,7 +45,7 @@ export default function CameraView({ isEnabled, onToggle }: CameraViewProps) {
 
   const stopCamera = () => {
     if (stream) {
-      stream.getTracks().forEach(track => track.stop());
+      stream.getTracks().forEach((t) => t.stop());
       setStream(null);
     }
     if (videoRef.current) {
@@ -56,7 +54,8 @@ export default function CameraView({ isEnabled, onToggle }: CameraViewProps) {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+    <div className="bg-white rounded-xl shadow-lg overflow-hidden h-full">
+      {/* Header */}
       <div className="bg-slate-900 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Camera className="w-5 h-5 text-white" />
@@ -84,38 +83,41 @@ export default function CameraView({ isEnabled, onToggle }: CameraViewProps) {
         </button>
       </div>
 
-      <div className="relative bg-slate-900 aspect-video">
-        {isEnabled ? (
-          <>
-            <video
-              ref={videoRef}
-              autoPlay
-              playsInline
-              muted
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute top-4 left-4 flex items-center gap-2 px-3 py-1 bg-red-600 rounded-full">
-              <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
-              <span className="text-white text-sm font-semibold">LIVE</span>
+      {/* Video Container - Medium Size */}
+      <div className="bg-slate-50 p-4">
+        <div className="relative w-full rounded-lg overflow-hidden bg-slate-900" style={{ aspectRatio: '16/9' }}>
+          {isEnabled ? (
+            <>
+              <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                muted
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute top-3 left-3 flex items-center gap-2 px-3 py-1.5 bg-red-600 rounded-full">
+                <div className="w-2.5 h-2.5 bg-white rounded-full animate-pulse" />
+                <span className="text-white text-sm font-semibold">LIVE</span>
+              </div>
+            </>
+          ) : (
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-slate-400">
+              <VideoOff className="w-16 h-16 mb-3" />
+              <p className="text-lg font-semibold">Camera is off</p>
+              <p className="text-sm mt-1">Click "Turn On" to enable camera</p>
             </div>
-          </>
-        ) : (
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-slate-400">
-            <VideoOff className="w-16 h-16 mb-4" />
-            <p className="text-lg font-semibold">Camera is off</p>
-            <p className="text-sm">Click "Turn On" to enable camera</p>
-          </div>
-        )}
+          )}
 
-        {error && (
-          <div className="absolute inset-0 flex items-center justify-center bg-slate-900/90">
-            <div className="text-center px-6">
-              <VideoOff className="w-12 h-12 text-red-500 mx-auto mb-3" />
-              <p className="text-white font-semibold mb-2">Camera Error</p>
-              <p className="text-sm text-slate-300">{error}</p>
+          {error && (
+            <div className="absolute inset-0 flex items-center justify-center bg-slate-900/95">
+              <div className="text-center px-6">
+                <VideoOff className="w-12 h-12 text-red-500 mx-auto mb-3" />
+                <p className="text-white font-semibold mb-2">Camera Error</p>
+                <p className="text-sm text-slate-300">{error}</p>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
