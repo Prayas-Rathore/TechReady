@@ -1,0 +1,6 @@
+# Ignore environment files
+.env
+
+# Ignore the commands.tsx file
+src/pages/commands.tsx
+node_modules
