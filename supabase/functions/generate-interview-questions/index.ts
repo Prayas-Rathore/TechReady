@@ -1,8 +1,6 @@
-// This file is a Deno/Supabase Edge Function — suppress local TS resolver errors for the std import
 // @ts-ignore
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 
-// Running in Deno (Supabase Edge Functions) — quiet the TypeScript checker about the Deno global
 declare const Deno: any;
 
 const corsHeaders = {
@@ -30,15 +28,15 @@ serve(async (req: Request) => {
           {
             role: 'system',
             content: `Generate exactly 5 interview questions based on this job description. 
-Return ONLY valid JSON — no markdown, no code fences, no explanations.
+                      Return ONLY valid JSON — no markdown, no code fences, no explanations.
 
-Job Description: ${jobDescription}
+                      Job Description: ${jobDescription}
 
-Format: ["question 1", "question 2", "question 3", "question 4", "question 5"]`
+                      Format: ["question 1", "question 2", "question 3", "question 4", "question 5"]`
           },
           {
             role: 'user',
-            content: `Create personalized interview roadmap for: ${JSON.stringify(jobDescription)}`
+            content: `Create personalized interview questions for: ${JSON.stringify(jobDescription)}`
           }
         ],
         temperature: 0.7,
@@ -48,7 +46,6 @@ Format: ["question 1", "question 2", "question 3", "question 4", "question 5"]`
 
     const data = await openaiResponse.json()
 
-    // If the OpenAI API returned an error, handle gracefully
     if (!openaiResponse.ok) {
       console.error("OpenAI API Error:", data)
       return new Response(
@@ -57,7 +54,6 @@ Format: ["question 1", "question 2", "question 3", "question 4", "question 5"]`
       )
     }
 
-    let roadmap
     try {
       let content = data.choices[0].message.content.trim()
 
@@ -66,10 +62,10 @@ Format: ["question 1", "question 2", "question 3", "question 4", "question 5"]`
         content = content.replace(/^```(json)?\n?/, "").replace(/```$/, "").trim()
       }
 
-      roadmap = JSON.parse(content)
+      const questions = JSON.parse(content)
       
       return new Response(
-        JSON.stringify({ success: true, roadmap }),
+        JSON.stringify({ success: true, questions }), // Changed from 'roadmap' to 'questions'
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       )
 
@@ -85,7 +81,7 @@ Format: ["question 1", "question 2", "question 3", "question 4", "question 5"]`
       )
     }
 
-  } catch (err:any) {
+  } catch (err: any) {
     return new Response(
       JSON.stringify({ success: false, error: err.message }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }

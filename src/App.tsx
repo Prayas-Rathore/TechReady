@@ -15,6 +15,7 @@ import CameraWithVoice from './pages/CameraWithVoice';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import JobDescriptionSelector from './pages/JobDescriptionSelector';
+import InterviewSession from './pages/InterviewSession'
 
 function App() {
 
@@ -42,6 +43,7 @@ function App() {
           <Route path="/user-dashboard" element={<UserDashboard />} />
           <Route path="/admin-dasbboard" element={<AdminDashboard />} />
           <Route path="/jobdescription" element={<JobDescriptionSelector />} />
+          <Route path="/interview/:sessionId" element={<InterviewSession />} />
         </Route>
       {/* Protected routes wrapped in AuthProvider */}
       </Routes>

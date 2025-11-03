@@ -5,6 +5,7 @@ import {
   Calendar, CheckCircle2, PlayCircle, Award, Zap, BarChart3
 } from 'lucide-react';
 import { supabase } from '../services/SupabaseClient';
+import Sidebar from '../components/Sidebar';
 
 export default function UserDashboard() {
   const navigate = useNavigate();
@@ -46,7 +47,10 @@ export default function UserDashboard() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <nav className="bg-white border-b border-slate-200 sticky top-0 z-50">
+      <div className="flex">
+        <Sidebar role="user" />
+        <div className="flex-1">
+          <nav className="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center gap-2">
@@ -340,6 +344,8 @@ export default function UserDashboard() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
           </div>
         </div>
       </div>

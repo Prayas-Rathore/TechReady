@@ -113,7 +113,7 @@ export default function InterviewSession() {
       .update({ status: 'completed', completed_at: new Date().toISOString() })
       .eq('id', sessionId);
 
-    navigate('/dashboard');
+    navigate('/user-dashboard');
   };
 
   if (loading) {
