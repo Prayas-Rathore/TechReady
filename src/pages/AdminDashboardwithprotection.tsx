@@ -6,43 +6,18 @@ import {
   Settings, Filter, Search, ChevronDown, Eye, Edit, Trash2
 } from 'lucide-react';
 import { supabase } from '../services/SupabaseClient';
+import { useAuth } from '../context/AuthContext';
+import Sidebar from '../components/Sidebar';
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
   const [admin, setAdmin] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('overview');
+   const { user,role } = useAuth();
 
-  useEffect(() => {
-    // Allow a quick dev bypass by setting localStorage.dev_bypass_admin = '1'
-    const bypass = typeof window !== 'undefined' && localStorage.getItem('dev_bypass_admin') === '1';
-    if (bypass) {
-      // set a mock admin to view the page during development
-      setAdmin({ email: 'dev@local', user_metadata: { full_name: 'Dev Admin' } });
-      setLoading(false);
-      return;
-    }
 
-    checkAdmin();
-  }, []);
-
-  const checkAdmin = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        navigate('/login');
-        return;
-      }
-      setAdmin(user);
-    } catch (error) {
-      console.error('Error:', error);
-      navigate('/login');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleLogout = async () => {
+   const handleLogout = async () => {
     await supabase.auth.signOut();
     navigate('/login');
   };
@@ -103,10 +78,10 @@ export default function AdminDashboard() {
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">Admin Dashboard</h1>
+          <h1 className="text-3xl font-bold text-slate-900 mb-2">Admin Dashboard = {Number(role) === 1 ? 'admin' : 'user'}</h1>
           <p className="text-slate-600">Manage your platform and monitor performance</p>
         </div>
-
+      <Sidebar role={Number(role) === 1 ? 'admin' : 'user'} />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl shadow-lg p-6 text-white">
             <div className="flex items-center justify-between mb-4">

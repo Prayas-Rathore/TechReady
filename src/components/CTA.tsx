@@ -26,7 +26,7 @@ export default function CTA() {
               Get Started Now
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
-            <Link to="/admin-dasbboard" className="px-10 py-5 bg-white/10 text-white rounded-lg border-2 border-white/20 hover:bg-white/20 transition-all font-semibold text-lg backdrop-blur-sm">
+            <Link to="/admin-dashboard" className="px-10 py-5 bg-white/10 text-white rounded-lg border-2 border-white/20 hover:bg-white/20 transition-all font-semibold text-lg backdrop-blur-sm">
               Schedule Free Session
             </Link>
           </div>

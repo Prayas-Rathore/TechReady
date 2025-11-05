@@ -47,7 +47,7 @@ export default function Sidebar({ role }: SidebarProps) {
         <Link to="/" className="flex items-center gap-2 mb-8">
           <Video className={`w-8 h-8 ${role === 'admin' ? 'text-purple-600' : 'text-sky-600'}`} />
           <div>
-            <span className="text-xl font-bold text-slate-900">InterviewPro</span>
+            {/* <span className="text-xl font-bold text-slate-900">MockIthub</span> */}
             {role === 'admin' && (
               <span className="ml-2 text-xs font-semibold text-purple-600 bg-purple-100 px-2 py-0.5 rounded">
                 ADMIN

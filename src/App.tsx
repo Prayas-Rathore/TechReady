@@ -41,7 +41,7 @@ function App() {
       {/* Protected routes wrapped in AuthProvider */}
         <Route element={<ProtectedRoute />}>
           <Route path="/user-dashboard" element={<UserDashboard />} />
-          <Route path="/admin-dasbboard" element={<AdminDashboard />} />
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/jobdescription" element={<JobDescriptionSelector />} />
           <Route path="/interview/:sessionId" element={<InterviewSession />} />
         </Route>

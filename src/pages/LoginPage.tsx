@@ -1,32 +1,67 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Video, Mail, Lock, ArrowRight, Loader2, Eye, EyeOff, Sparkles, Zap, Shield } from 'lucide-react';
+import {
+  Video, Mail, Lock, ArrowRight, Loader2, Eye, EyeOff, Sparkles, Zap, Shield
+} from 'lucide-react';
 import { supabase } from '../services/SupabaseClient';
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
 
-  const handleLogin = async (e: React.FormEvent) => {
+  // 🧩 Check if user already logged in (JWT exists)
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (data.session) {
+        // ✅ JWT session exists - redirect by role if available
+        const sessUser = data.session.user;
+        const sessRole = sessUser?.user_metadata?.user_role;
+        if (Number(sessRole) === 1) {
+          navigate('/admin-dashboard', { replace: true });
+        } else {
+          navigate('/user-dashboard', { replace: true });
+        }
+      }
+    };
+    checkSession();
+  }, [navigate]);
+
+  // 🧩 Handle Login and Store JWT
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) throw error;
 
-      navigate('/user-dashboard');
-    } catch (err: any) {
-      setError(err.message || 'Failed to login');
+      const accessToken = data.session?.access_token;
+      if (accessToken) {
+        // Optionally store JWT if you want custom access later
+        localStorage.setItem('jwt', accessToken);
+      }
+
+      // Redirect after successful login based on role in user metadata
+      const signedInUser = data.user || data.session?.user;
+      const userRole = signedInUser?.user_metadata?.user_role;
+      if (Number(userRole) === 1) {
+        navigate('/admin-dashboard', { replace: true });
+      } else {
+        navigate('/user-dashboard', { replace: true });
+      }
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to login';
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -34,13 +69,14 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-slate-950">
+      {/* Background effects */}
       <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-slate-950 to-cyan-900/20" />
-
       <div className="absolute top-0 left-0 w-96 h-96 bg-purple-500 rounded-full blur-3xl opacity-20 animate-pulse" />
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-cyan-500 rounded-full blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '1s' }} />
       <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-pink-500 rounded-full blur-3xl opacity-10 animate-pulse" style={{ animationDelay: '2s' }} />
 
       <div className="relative min-h-screen flex">
+        {/* Left side content */}
         <div className="hidden lg:flex lg:w-1/2 relative items-center justify-center p-12">
           <div className="max-w-lg">
             <div className="mb-8 animate-fadeIn">
@@ -62,39 +98,14 @@ export default function LoginPage() {
             </div>
 
             <div className="space-y-6 animate-fadeIn" style={{ animationDelay: '0.2s' }}>
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center flex-shrink-0">
-                  <Sparkles className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-white font-semibold mb-1">Personalized Learning</h3>
-                  <p className="text-slate-400">AI-powered paths tailored to your goals</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center flex-shrink-0">
-                  <Zap className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-white font-semibold mb-1">Real-Time Practice</h3>
-                  <p className="text-slate-400">Live coding and mock interviews</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-500 to-orange-500 flex items-center justify-center flex-shrink-0">
-                  <Shield className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-white font-semibold mb-1">Expert Support</h3>
-                  <p className="text-slate-400">Guidance from industry professionals</p>
-                </div>
-              </div>
+              <Feature icon={<Sparkles />} title="Personalized Learning" text="AI-powered paths tailored to your goals" />
+              <Feature icon={<Zap />} title="Real-Time Practice" text="Live coding and mock interviews" />
+              <Feature icon={<Shield />} title="Expert Support" text="Guidance from industry professionals" />
             </div>
           </div>
         </div>
 
+        {/* Right side login form */}
         <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12">
           <div className="w-full max-w-md">
             <div className="bg-white/10 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 p-8 sm:p-10 animate-slideUp">
@@ -116,10 +127,9 @@ export default function LoginPage() {
               )}
 
               <form onSubmit={handleLogin} className="space-y-6">
+                {/* Email */}
                 <div>
-                  <label className="block text-sm font-medium text-slate-200 mb-2">
-                    Email Address
-                  </label>
+                  <label className="block text-sm font-medium text-slate-200 mb-2">Email Address</label>
                   <div className="relative">
                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                     <input
@@ -133,10 +143,9 @@ export default function LoginPage() {
                   </div>
                 </div>
 
+                {/* Password */}
                 <div>
-                  <label className="block text-sm font-medium text-slate-200 mb-2">
-                    Password
-                  </label>
+                  <label className="block text-sm font-medium text-slate-200 mb-2">Password</label>
                   <div className="relative">
                     <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                     <input
@@ -157,6 +166,7 @@ export default function LoginPage() {
                   </div>
                 </div>
 
+                {/* Remember + Forgot */}
                 <div className="flex items-center justify-between">
                   <label className="flex items-center">
                     <input
@@ -170,6 +180,7 @@ export default function LoginPage() {
                   </Link>
                 </div>
 
+                {/* Submit */}
                 <button
                   type="submit"
                   disabled={loading}
@@ -204,6 +215,26 @@ export default function LoginPage() {
             </p>
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+interface FeatureProps {
+  icon: JSX.Element;
+  title: string;
+  text: string;
+}
+
+function Feature({ icon, title, text }: FeatureProps) {
+  return (
+    <div className="flex items-start gap-4">
+      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center flex-shrink-0">
+        {icon}
+      </div>
+      <div>
+        <h3 className="text-white font-semibold mb-1">{title}</h3>
+        <p className="text-slate-400">{text}</p>
       </div>
     </div>
   );

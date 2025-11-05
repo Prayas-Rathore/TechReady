@@ -14,6 +14,7 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const guestId = typeof window !== 'undefined' ? localStorage.getItem('guest_user_id') : null;
+  const [userrole, setUserRole] = useState(0);
 
   const passwordRequirements = [
     { label: 'At least 8 characters', met: password.length >= 8 },
@@ -47,7 +48,8 @@ export default function SignupPage() {
         options: {
           data: {
             full_name: fullName,
-            guest_id: guestId
+            guest_id: guestId,
+            user_role: userrole,
           },
         },
       });

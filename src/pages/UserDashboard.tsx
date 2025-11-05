@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { supabase } from '../services/SupabaseClient';
 import {
   Video, LogOut, BookOpen, Trophy, Target, Clock, TrendingUp,
   Calendar, CheckCircle2, PlayCircle, Award, Zap, BarChart3
@@ -12,8 +13,20 @@ export default function UserDashboard() {
     }
   };
 
-  const handleLogout = () => {
-    window.location.href = '/';
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+    } catch (e) {
+      console.error('Error signing out:', e);
+    }
+    try {
+      if (typeof window !== 'undefined') localStorage.removeItem('dev_bypass_admin');
+    } catch (e) {
+      // ignore
+    }
+    navigate('/', { replace: true });
   };
 
   return (

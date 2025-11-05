@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { supabase } from '../services/SupabaseClient';
 import {
   Video, LogOut, Users, BookOpen, DollarSign, TrendingUp,
   Activity, UserCheck, AlertCircle, Calendar, BarChart3,
@@ -16,8 +17,21 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleLogout = () => {
-    window.location.href = '/';
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    // sign out from supabase and send user to the public home page
+    try {
+      await supabase.auth.signOut();
+    } catch (e) {
+      console.error('Error signing out:', e);
+    }
+    try {
+      if (typeof window !== 'undefined') localStorage.removeItem('dev_bypass_admin');
+    } catch (e) {
+      // ignore
+    }
+    navigate('/', { replace: true });
   };
 
   const recentUsers = [

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
   Video, LogOut, BookOpen, Trophy, Target, Clock, TrendingUp,
@@ -6,35 +6,26 @@ import {
 } from 'lucide-react';
 import { supabase } from '../services/SupabaseClient';
 import Sidebar from '../components/Sidebar';
+import { useAuth } from '../context/AuthContext';
 
 export default function UserDashboard() {
   const navigate = useNavigate();
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const { user, role, loading } = useAuth();
 
   useEffect(() => {
-    checkUser();
-  }, []);
-
-  const checkUser = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        navigate('/login');
-        return;
-      }
-      setUser(user);
-    } catch (error) {
-      console.error('Error:', error);
-      navigate('/login');
-    } finally {
-      setLoading(false);
-    }
-  };
+    // log role for debugging
+    // console.log('UserDashboard: user_role =', role);
+  }, [role]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    navigate('/login');
+    // clear any local dev bypass and send to public home page
+    try {
+      if (typeof window !== 'undefined') localStorage.removeItem('dev_bypass_admin');
+    } catch (e) {
+      // ignore
+    }
+    navigate('/', { replace: true });
   };
 
   if (loading) {
@@ -48,7 +39,7 @@ export default function UserDashboard() {
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="flex">
-        <Sidebar role="user" />
+  <Sidebar role={Number(role) === 1 ? 'admin' : 'user'} />
         <div className="flex-1">
           <nav className="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -68,6 +59,7 @@ export default function UserDashboard() {
                 <div>
                   <div className="text-sm font-semibold text-slate-900">
                     {user?.user_metadata?.full_name || 'User'}
+                    {/* <span className="ml-2 text-xs font-medium text-red/70 bg-slate-500/10 px-2 py-0.5 rounded">{Number(role) === 1 ? 'Admin' : 'User'}</span> */}
                   </div>
                   <div className="text-xs text-slate-500">{user?.email}</div>
                 </div>
