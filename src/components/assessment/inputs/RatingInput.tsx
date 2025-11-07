@@ -1,4 +1,4 @@
-import { Frown, Meh, Smile, Laugh, Star } from 'lucide-react';
+import { Frown, Meh, Smile, Laugh } from 'lucide-react';
 
 interface RatingInputProps {
   labels: string[];

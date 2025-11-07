@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AssessmentHeader from '../components/assessment/AssessmentHeader';
 import ProgressBar from '../components/assessment/ProgressBar';
@@ -16,6 +16,54 @@ export default function AssessmentPage() {
   const [answers, setAnswers] = useState<AssessmentData>({});
   const [isComplete, setIsComplete] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+
+  // Build the visible question list based on professional status selection.
+  // Build the visible question list based on professional status selection.
+const visibleQuestions = useMemo(() => {
+  // Always start with the professional_status question (index 0)
+  const first = questions[0];
+
+  const selected = answers['professional_status'];
+
+  // Define index ranges for the two flows (based on current questions.ts layout)
+  // junior flow: indices 1..18
+  const juniorIndices = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18];
+  // mid-level flow: index 19 (mid_level_extra_1)
+  const midLevelIndices = [19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36];
+
+  let flowQuestions: typeof questions = [] as any;
+
+  if (selected && typeof selected === 'string') {
+    if (selected.includes('Junior Developer')) {
+      flowQuestions = juniorIndices.map(i => questions[i]).filter(Boolean);
+    } else if (selected.includes('Mid-Level Developer')) {
+      flowQuestions = midLevelIndices.map(i => questions[i]).filter(Boolean);
+    }
+  }
+
+  // IMPORTANT: Do NOT append the "rest" — otherwise mid-level sees junior questions next.
+  // If you later add truly post-flow common questions, append them explicitly via indices.
+  return [first, ...flowQuestions];
+}, [answers]);
+
+
+  // Keep currentQuestion within bounds if visibleQuestions changes
+  useEffect(() => {
+    if (currentQuestion >= visibleQuestions.length) {
+      setCurrentQuestion(Math.max(0, visibleQuestions.length - 1));
+    }
+  }, [visibleQuestions.length]);
+
+  // If professional_status was just selected and we're still on the intro (index 0),
+  // advance to the next visible question so the flow proceeds immediately.
+  useEffect(() => {
+    const prof = answers['professional_status'];
+    if (prof && currentQuestion === 0) {
+      // move to the second item in visibleQuestions (index 1) which will be
+      // the mid-level extra question for Mid-Level users or the first junior question.
+      setCurrentQuestion(1);
+    }
+  }, [answers['professional_status']]);
 
   // Load saved answers from localStorage
   useEffect(() => {
@@ -61,7 +109,7 @@ export default function AssessmentPage() {
   };
 
   const handleNext = () => {
-    if (currentQuestion < questions.length - 1) {
+    if (currentQuestion < visibleQuestions.length - 1) {
       setCurrentQuestion(prev => prev + 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
@@ -178,7 +226,7 @@ export default function AssessmentPage() {
   };
 
   const isCurrentQuestionAnswered = () => {
-    const question = questions[currentQuestion];
+    const question = visibleQuestions[currentQuestion];
     const answer = answers[question.id];
 
     if (!answer) return false;
@@ -217,20 +265,17 @@ export default function AssessmentPage() {
             </p>
           </div>
 
-          <ProgressBar
-            current={currentQuestion + 1}
-            total={questions.length}
-          />
+          <ProgressBar current={currentQuestion + 1} total={visibleQuestions.length} />
 
           <QuestionCard
-            question={questions[currentQuestion]}
-            answer={answers[questions[currentQuestion].id]}
+            question={visibleQuestions[currentQuestion]}
+            answer={answers[visibleQuestions[currentQuestion].id]}
             onAnswer={handleAnswer}
           />
 
           <Navigation
             currentQuestion={currentQuestion}
-            totalQuestions={questions.length}
+            totalQuestions={visibleQuestions.length}
             onPrevious={handlePrevious}
             onNext={handleNext}
             canGoNext={isCurrentQuestionAnswered()}

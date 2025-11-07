@@ -1,26 +1,55 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useState,useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
-  Video, LogOut, Users, BookOpen, DollarSign, TrendingUp,
+  LogOut, Users, BookOpen, DollarSign, TrendingUp,
   Activity, UserCheck, AlertCircle, Calendar, BarChart3,
   Settings, Filter, Search, ChevronDown, Eye, Edit, Trash2
 } from 'lucide-react';
 import { supabase } from '../services/SupabaseClient';
 import { useAuth } from '../context/AuthContext';
-import Sidebar from '../components/Sidebar';
+import AdminSidebar from '../components/AdminSidebar';
 
 export default function AdminDashboard() {
-  const navigate = useNavigate();
-  const [admin, setAdmin] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('overview');
-   const { user,role } = useAuth();
+    const navigate = useNavigate();
+    const [admin, setAdmin] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+    const [activeTab, setActiveTab] = useState('overview');
+    // const { user,role } = useAuth();
+  const [recentUsers] = useState<any[]>([]);
 
 
-   const handleLogout = async () => {
+ const handleLogout = async () => {
     await supabase.auth.signOut();
-    navigate('/login');
+    navigate('/');
   };
+
+useEffect(() => {
+    let mounted = true;
+
+    const fetchAuthUsers = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('user_metadata')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(10);
+
+        // Console result for inspection (admin-only view)
+        console.log('auth.users data:', data);
+        if (error) console.warn('auth.users error:', error);
+      } catch (err) {
+        console.error('Failed to fetch auth.users', err);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+
+    fetchAuthUsers();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   if (loading) {
     return (
@@ -30,58 +59,48 @@ export default function AdminDashboard() {
     );
   }
 
-  const recentUsers = [
-    { id: 1, name: 'John Doe', email: 'john@example.com', status: 'active', joined: '2 hours ago' },
-    { id: 2, name: 'Sarah Smith', email: 'sarah@example.com', status: 'active', joined: '5 hours ago' },
-    { id: 3, name: 'Mike Johnson', email: 'mike@example.com', status: 'pending', joined: '1 day ago' },
-    { id: 4, name: 'Emily Davis', email: 'emily@example.com', status: 'active', joined: '2 days ago' },
-  ];
-
   return (
-    <div className="min-h-screen bg-slate-50">
-      <nav className="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center gap-2">
-              <Video className="w-8 h-8 text-purple-600" />
-              <div>
-                <span className="text-2xl font-bold text-slate-900">InterviewPro</span>
-                <span className="ml-2 text-xs font-semibold text-purple-600 bg-purple-100 px-2 py-1 rounded">ADMIN</span>
-              </div>
-            </Link>
+    <div className="flex min-h-screen bg-slate-50">
+      <AdminSidebar />
 
-            <div className="flex items-center gap-6">
-              <div className="hidden md:flex items-center gap-2">
-                <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center">
-                  <span className="text-white font-semibold">
-                    {admin?.user_metadata?.full_name?.charAt(0) || admin?.email?.charAt(0).toUpperCase()}
-                  </span>
-                </div>
-                <div>
-                  <div className="text-sm font-semibold text-slate-900">
-                    {admin?.user_metadata?.full_name || 'Admin'}
+      <div className="flex-1 w-full lg:w-auto">
+        <nav className="bg-white border-b border-slate-200 sticky top-0 z-30">
+          <div className="px-4 sm:px-6 lg:px-8 py-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-bold text-slate-900 ml-16 lg:ml-0">Admin Dashboard</h2>
+
+              <div className="flex items-center gap-6">
+                <div className="hidden md:flex items-center gap-2">
+                  <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center">
+                    <span className="text-white font-semibold">
+                      {admin?.user_metadata?.full_name?.charAt(0) || admin?.email?.charAt(0).toUpperCase()}
+                    </span>
                   </div>
-                  <div className="text-xs text-slate-500">{admin?.email}</div>
+                  <div>
+                    <div className="text-sm font-semibold text-slate-900">
+                      {admin?.user_metadata?.full_name || 'Admin'}
+                    </div>
+                    <div className="text-xs text-slate-500">{admin?.email}</div>
+                  </div>
                 </div>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-2 px-4 py-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-all"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span className="hidden sm:inline">Logout</span>
+                </button>
               </div>
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-2 px-4 py-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-all"
-              >
-                <LogOut className="w-4 h-4" />
-                <span className="hidden sm:inline">Logout</span>
-              </button>
             </div>
           </div>
-        </div>
-      </nav>
+        </nav>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">Admin Dashboard = {Number(role) === 1 ? 'admin' : 'user'}</h1>
+          <h1 className="text-3xl font-bold text-slate-900 mb-2">Hello , Bert</h1>
           <p className="text-slate-600">Manage your platform and monitor performance</p>
         </div>
-      <Sidebar role={Number(role) === 1 ? 'admin' : 'user'} />
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl shadow-lg p-6 text-white">
             <div className="flex items-center justify-between mb-4">
@@ -465,6 +484,7 @@ export default function AdminDashboard() {
                 </div>
               </div>
             </div>
+          </div>
           </div>
         </div>
       </div>

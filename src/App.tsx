@@ -6,12 +6,12 @@ import TestConnectionPage from './pages/TestConnectionPage';
 import Login from './pages/LoginPage';
 import Signup from './pages/SignupPage';
 import UserDashboard from './pages/UserDashboardwithprotection';
-import AdminDashboard from './pages/AdminDashboard';
+import AdminDashboard from './pages/AdminDashboardwithprotection';
 import RoadmapGeneratorPage from './pages/RoadmapGeneratorPage';
 import SuccessScreen from './components/assessment/SuccessScreen';
 import PricingPage from './pages/PricingPage';
-import VoiceRecorderPage from './pages/VoiceRecorderPage';
-import CameraWithVoice from './pages/CameraWithVoice';
+// import VoiceRecorderPage from './pages/VoiceRecorderPage';
+// import CameraWithVoice from './pages/CameraWithVoice';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import JobDescriptionSelector from './pages/JobDescriptionSelector';
@@ -34,8 +34,8 @@ function App() {
           <Route path="/pricing" element={<PricingPage />} />
           <Route path="/roadmap" element={<RoadmapGeneratorPage />} />
           <Route path="/SuccessScreen" element={<SuccessScreen />} />
-          <Route path="/voice" element={<VoiceRecorderPage />} />
-          <Route path="/CameraWithVoice" element={<CameraWithVoice />} />
+          {/* <Route path="/voice" element={<VoiceRecorderPage />} />
+          <Route path="/CameraWithVoice" element={<CameraWithVoice />} /> */}
         {/* Public routes */}
 
       {/* Protected routes wrapped in AuthProvider */}

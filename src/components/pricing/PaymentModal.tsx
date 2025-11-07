@@ -1,4 +1,4 @@
-import { X, Lock, CreditCard, Loader2, CheckCircle2 } from 'lucide-react';
+import { X, Lock, CreditCard, CheckCircle2 } from 'lucide-react';
 import { useState } from 'react';
 import { PricingTier, OneTimePurchase } from '../../data/pricingData';
 import { useNavigate } from 'react-router-dom';

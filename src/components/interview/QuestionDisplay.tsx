@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Mic, Square, ChevronRight, ChevronLeft, Clock, MessageSquare } from 'lucide-react';
+import { Mic, Square, ChevronRight, ChevronLeft } from 'lucide-react';
 
 interface QuestionDisplayProps {
   question: string;

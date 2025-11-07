@@ -1,4 +1,4 @@
-import { Download, RefreshCw, Share2, Sparkles } from 'lucide-react';
+import { Download, RefreshCw, Sparkles } from 'lucide-react';
 import { RoadmapData } from '../../data/roadmapData';
 // import ReadinessScoreCard from './ReadinessScoreCard';
 // import StrengthsCard from './StrengthsCard';
