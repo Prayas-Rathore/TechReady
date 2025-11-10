@@ -16,6 +16,7 @@ import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import JobDescriptionSelector from './pages/JobDescriptionSelector';
 import InterviewSession from './pages/InterviewSession'
+import CVAnalyzerPage from './pages/CVAnalyzerPage';
 
 function App() {
 
@@ -44,6 +45,7 @@ function App() {
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/jobdescription" element={<JobDescriptionSelector />} />
           <Route path="/interview/:sessionId" element={<InterviewSession />} />
+          <Route path="/cv-analyzer" element={<CVAnalyzerPage />} />
         </Route>
       {/* Protected routes wrapped in AuthProvider */}
       </Routes>
