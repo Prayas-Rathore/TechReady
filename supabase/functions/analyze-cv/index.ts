@@ -74,18 +74,18 @@ serve(async (req: Request) => {
           {
             role: 'system',
             content: `You are a professional resume analyst. 
-${hasCvText && hasJobDescription ? 'Compare the CV with the job description.' : 'Analyze the provided content.'}
-Return ONLY valid JSON — no markdown, no code fences, no explanations:
-{
-  "score": number,
-  "strengths": ["strength 1", "strength 2", "strength 3"],
-  "weaknesses": ["weakness 1", "weakness 2", "weakness 3"],
-  "suggestions": ["suggestion 1", "suggestion 2", "suggestion 3"],
-  "keywords": { "matched": ["keyword1", "keyword2"], "missing": ["keyword3", "keyword4"] },
-  "sections": [{ "name": "section name", "score": number, "feedback": "feedback text" }]
-}
-Provide at least 3 items for strengths, weaknesses, suggestions.`
-          },
+            ${hasCvText && hasJobDescription ? 'Compare the CV with the job description.' : 'Analyze the provided content.'}
+            Return ONLY valid JSON — no markdown, no code fences, no explanations:
+            {
+              "score": number,
+              "strengths": ["strength 1", "strength 2", "strength 3"],
+              "weaknesses": ["weakness 1", "weakness 2", "weakness 3"],
+              "suggestions": ["suggestion 1", "suggestion 2", "suggestion 3"],
+              "keywords": { "matched": ["keyword1", "keyword2"], "missing": ["keyword3", "keyword4"] },
+              "sections": [{ "name": "section name", "score": number, "feedback": "feedback text" }]
+            }
+            Provide at least 3 items for strengths, weaknesses, suggestions.`
+                      },
           {
             role: 'user',
             content: userPrompt,

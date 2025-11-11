@@ -17,6 +17,10 @@ import ProtectedRoute from './components/ProtectedRoute';
 import JobDescriptionSelector from './pages/JobDescriptionSelector';
 import InterviewSession from './pages/InterviewSession'
 import CVAnalyzerPage from './pages/CVAnalyzerPage';
+import CVDashboardHome from './pages/CVDashboardHome';
+import CVAnalysisPage from './pages/CVAnalysisPage';
+import JDGeneratorPage from './pages/JDGeneratorPage';
+import CVDashboardLayout from './components/CVDashboardLayout'; 
 
 function App() {
 
@@ -46,8 +50,12 @@ function App() {
           <Route path="/jobdescription" element={<JobDescriptionSelector />} />
           <Route path="/interview/:sessionId" element={<InterviewSession />} />
           <Route path="/cv-analyzer" element={<CVAnalyzerPage />} />
+          <Route path="/cv-dashboard" element={<CVDashboardLayout />}>
+          <Route index element={<CVDashboardHome />} />
+          <Route path="analysis" element={<CVAnalysisPage />} />
+          <Route path="jd-generator" element={<JDGeneratorPage />} />
         </Route>
-      {/* Protected routes wrapped in AuthProvider */}
+        </Route>
       </Routes>
       </AuthProvider>
     </Router>
