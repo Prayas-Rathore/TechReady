@@ -1,5 +1,4 @@
-import { useEffect, useRef } from 'react';
-import { Mic, FileText } from 'lucide-react';
+import { FileText, Mic } from 'lucide-react';
 
 interface TranscriptionBoxProps {
   transcription: string;
@@ -7,56 +6,41 @@ interface TranscriptionBoxProps {
 }
 
 export default function TranscriptionBox({ transcription, isRecording }: TranscriptionBoxProps) {
-  const textRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (textRef.current) {
-      textRef.current.scrollTop = textRef.current.scrollHeight;
-    }
-  }, [transcription]);
-
   return (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden h-full flex flex-col">
-      <div className="bg-slate-900 px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <FileText className="w-5 h-5 text-white" />
-          <span className="text-white font-semibold">Live Transcription</span>
-        </div>
+    <div className="bg-white rounded-xl shadow-md border border-gray-200 h-full flex flex-col">
+      {/* Header - Compact */}
+      <div className="bg-slate-800 px-3 py-2 flex items-center gap-2 flex-shrink-0">
+        <FileText className="w-4 h-4 text-white" />
+        <span className="text-white font-medium text-sm">Live Transcription</span>
         {isRecording && (
-          <div className="flex items-center gap-2 px-3 py-1 bg-red-600 rounded-full">
-            <Mic className="w-4 h-4 text-white" />
-            <span className="text-white text-sm font-semibold">Recording</span>
-          </div>
+          <span className="ml-auto flex items-center gap-1.5 text-red-400 text-xs">
+            <Mic className="w-3 h-3 animate-pulse" />
+            Recording
+          </span>
         )}
       </div>
 
-      <div
-        ref={textRef}
-        className="flex-1 p-6 overflow-y-auto bg-slate-50"
-        style={{ minHeight: '400px', maxHeight: '600px' }}
-      >
+      {/* Transcription Content - Scrollable */}
+      <div className="flex-1 overflow-y-auto min-h-0">
         {transcription ? (
-          <div className="prose prose-slate max-w-none">
-            <p className="text-slate-700 leading-relaxed whitespace-pre-wrap">
-              {transcription}
-            </p>
+          <div className="p-4 text-gray-700 text-sm leading-relaxed">
+            {transcription}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center h-full text-slate-400">
-            <Mic className="w-16 h-16 mb-4" />
-            <p className="text-lg font-semibold mb-2">No transcription yet</p>
-            <p className="text-sm text-center max-w-xs">
+          <div className="h-full flex flex-col items-center justify-center text-gray-400 p-4">
+            <Mic className="w-10 h-10 mb-2 opacity-50" />
+            <p className="text-sm font-medium">No transcription yet</p>
+            <p className="text-xs mt-1 text-center text-gray-400">
               Start recording to see your speech transcribed in real-time
             </p>
           </div>
         )}
       </div>
 
-      <div className="border-t border-slate-200 px-6 py-4 bg-white">
-        <div className="flex items-center justify-between text-sm text-slate-600">
-          <span>Words: {transcription.split(/\s+/).filter(w => w.length > 0).length}</span>
-          <span>Characters: {transcription.length}</span>
-        </div>
+      {/* Footer - Word/Character count */}
+      <div className="border-t border-gray-200 px-3 py-2 text-xs text-gray-500 flex justify-between bg-gray-50 flex-shrink-0">
+        <span>Words: {transcription.trim().split(/\s+/).filter(Boolean).length}</span>
+        <span>Characters: {transcription.length}</span>
       </div>
     </div>
   );
