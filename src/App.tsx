@@ -20,7 +20,8 @@ import CVAnalyzerPage from './pages/CVAnalyzerPage';
 import CVDashboardHome from './pages/CVDashboardHome';
 import CVAnalysisPage from './pages/CVAnalysisPage';
 import JDGeneratorPage from './pages/JDGeneratorPage';
-import CVDashboardLayout from './components/CVDashboardLayout'; 
+import CVDashboardLayout from './components/CVDashboardLayout';
+import PostRoadMap from './pages/PostRoadMap';
 
 function App() {
 
@@ -49,6 +50,7 @@ function App() {
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/jobdescription" element={<JobDescriptionSelector />} />
           <Route path="/interview/:sessionId" element={<InterviewSession />} />
+          <Route path="/postroadmap" element={<PostRoadMap />} />
           <Route path="/cv-analyzer" element={<CVAnalyzerPage />} />
           <Route path="/cv-dashboard" element={<CVDashboardLayout />}>
           <Route index element={<CVDashboardHome />} />
