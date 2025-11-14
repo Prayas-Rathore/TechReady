@@ -89,7 +89,7 @@ export default function CVAnalyzerPage() {
       console.log('Extracted text length:', extractedText.length);
       // Automatically analyze after successful extraction
       // pass the extracted text directly to avoid waiting for setState
-      await handleAnalyze(extractedText);
+      // await handleAnalyze(extractedText);
     } catch (err: any) {
       console.error('Extraction error:', err);
       setError('Failed to extract text from file. Please try paste text option.');
@@ -100,11 +100,7 @@ export default function CVAnalyzerPage() {
   };
 
   const handleAnalyze = async (overrideCvText?: string) => {
-    // Require at least a CV or Job Description
-    if (!cvFile && !cvText && !jdText && !overrideCvText) {
-      setError('Please provide at least a CV or Job Description.');
-      return;
-    }
+  
 
     setIsAnalyzing(true);
     setError(null);
@@ -453,29 +449,29 @@ export default function CVAnalyzerPage() {
           )}
 
           {!analysisResult && (
-              <div className="mt-6 flex justify-center">
-              <button
-                onClick={() => handleAnalyze()}
-                disabled={isAnalyzing || isExtracting}
-                className="px-8 py-4 bg-gradient-to-r from-sky-600 to-blue-600 text-white rounded-xl font-semibold hover:from-sky-700 hover:to-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3 shadow-lg shadow-sky-500/30"
-              >
-                {isAnalyzing ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    Analyzing...
-                  </>
-                ) : isExtracting ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    Extracting text...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-5 h-5" />
-                    Analyze CV
-                  </>
-                )}
-              </button>
+  <div className="mt-6 flex justify-center">
+    <button
+      onClick={() => handleAnalyze()}
+      disabled={isAnalyzing || isExtracting || (!cvFile && !cvText.trim())}
+      className="px-8 py-4 bg-gradient-to-r from-sky-600 to-blue-600 text-white rounded-xl font-semibold hover:from-sky-700 hover:to-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3 shadow-lg shadow-sky-500/30"
+    >
+      {isAnalyzing ? (
+        <>
+          <Loader2 className="w-5 h-5 animate-spin" />
+          Analyzing...
+        </>
+      ) : isExtracting ? (
+        <>
+          <Loader2 className="w-5 h-5 animate-spin" />
+          Extracting text...
+        </>
+      ) : (
+        <>
+          <Sparkles className="w-5 h-5" />
+          Analyze CV
+        </>
+      )}
+    </button>
             </div>
           )}
         </div>

@@ -1,10 +1,11 @@
 import { Link, useLocation, Outlet } from 'react-router-dom';
-import { Home, FileText, Briefcase, Sparkles } from 'lucide-react';
+import { Home, FileText, Briefcase, Sparkles, ArrowBigLeftIcon } from 'lucide-react';
 
 export default function CVDashboardLayout() {
   const location = useLocation();
 
   const menuItems = [
+    { icon: ArrowBigLeftIcon, label: 'Back', path: '/user-dashboard' },
     { icon: Home, label: 'Home', path: '/cv-dashboard' },
     { icon: FileText, label: 'CV Analysis', path: '/cv-dashboard/analysis' },
     { icon: Briefcase, label: 'JD Generator', path: '/cv-dashboard/jd-generator' },
