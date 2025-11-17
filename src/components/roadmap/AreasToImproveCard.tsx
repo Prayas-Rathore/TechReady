@@ -49,8 +49,8 @@ export default function AreasToImproveCard({ areas }: AreasToImproveCardProps) {
                 <div className="flex items-start gap-3 flex-1">
                   <AlertCircle className={`w-5 h-5 ${style.icon} mt-0.5 flex-shrink-0`} />
                   <div>
-                    <h3 className="font-semibold text-slate-900">{area.title}</h3>
-                    <p className="text-sm text-slate-600 mt-1">{area.desc}</p>
+                    {/* <h3 className="font-semibold text-slate-900">{area.reason}</h3> */}
+                    <p className="text-sm text-slate-600 mt-1">{area.reason}</p>
                   </div>
                 </div>
                 <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${style.badge} whitespace-nowrap`}>

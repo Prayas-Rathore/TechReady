@@ -222,7 +222,7 @@ const visibleQuestions = useMemo(() => {
 
   const handleSaveAndExit = () => {
     localStorage.setItem('assessment_answers', JSON.stringify(answers));
-    navigate('/signup');
+    navigate('/login');
   };
 
   const isCurrentQuestionAnswered = () => {

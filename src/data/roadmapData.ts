@@ -11,9 +11,9 @@ export interface RoadmapData {
 }
 
 export interface AreaToImprove {
-  title: string;
+  area: string;
   priority: 'high' | 'medium' | 'low';
-  desc: string;
+  reason: string;
 }
 
 export interface LearningPhase {
@@ -43,11 +43,14 @@ export interface Resource {
   priority: 'high' | 'medium' | 'low';
 }
 
+
 export interface Milestone {
   week: number;
-  task: string;
+  title: string;
+  description: string;
   completed: boolean;
 }
+
 
 export const mockRoadmapData: RoadmapData = {
   readinessScore: 45,
@@ -62,10 +65,10 @@ export const mockRoadmapData: RoadmapData = {
   ],
 
   areasToImprove: [
-    { title: "Data Structures", priority: "high", desc: "Arrays, trees, graphs" },
-    { title: "Algorithms", priority: "high", desc: "Sorting, searching, recursion" },
-    { title: "System Design", priority: "medium", desc: "Scalability basics" },
-    { title: "Behavioral Questions", priority: "medium", desc: "STAR method practice" }
+    { area: "Data Structures", priority: "high", reason: "Arrays, trees, graphs" },
+    { area: "Algorithms", priority: "high", reason: "Sorting, searching, recursion" },
+    { area: "System Design", priority: "medium", reason: "Scalability basics" },
+    { area: "Behavioral Questions", priority: "medium", reason: "STAR method practice" }
   ],
 
   learningPath: [
@@ -119,72 +122,73 @@ export const mockRoadmapData: RoadmapData = {
     }
   ],
 
-  dailySchedule: {
-    morning: {
-      duration: "1 hour",
-      activities: [
-        "30 min: Review yesterday's problems",
-        "30 min: Learn new concept"
-      ]
-    },
-    evening: {
-      duration: "1.5-2 hours",
-      activities: [
-        "45 min: Solve 2-3 problems",
-        "30 min: Code review",
-        "15 min: Document learnings"
-      ]
-    }
+ dailySchedule: {
+  morning: {
+    duration: "2 hours",
+    activities: [
+      "Technical Study (1.5 hrs)",
+      "Communication Skills (1 hr)"
+    ]
   },
+  evening: {
+    duration: "2 hours",
+    activities: [
+      "Coding Practice (1 hr)",
+      "Mock Interviews (0.5 hr)"
+    ]
+  }
+},
+
 
   resources: [
-    {
-      type: "course",
-      name: "JavaScript Algorithms Masterclass",
-      platform: "Udemy",
-      price: "$19.99",
-      priority: "high"
-    },
-    {
-      type: "book",
-      name: "Cracking the Coding Interview",
-      author: "Gayle McDowell",
-      priority: "high"
-    },
-    {
-      type: "platform",
-      name: "LeetCode Premium",
-      price: "$35/month",
-      priority: "medium"
-    },
-    {
-      type: "course",
-      name: "System Design Interview",
-      platform: "Educative",
-      price: "$49",
-      priority: "medium"
-    },
-    {
-      type: "book",
-      name: "Elements of Programming Interviews",
-      author: "Aziz, Lee, Prakash",
-      priority: "medium"
-    },
-    {
-      type: "platform",
-      name: "AlgoExpert",
-      price: "$99/year",
-      priority: "low"
-    }
-  ],
+  {
+    type: "course",
+    name: "JavaScript Algorithms Masterclass",
+    platform: "Udemy",
+    price: "$19.99",
+    priority: "high"
+  },
+  {
+    type: "book",
+    name: "Cracking the Coding Interview",
+    author: "Gayle McDowell",
+    priority: "high"
+  },
+  {
+    type: "platform",
+    name: "LeetCode Premium",
+    price: "$35/month",
+    priority: "medium"
+  },
+  {
+    type: "course",
+    name: "System Design Interview",
+    platform: "Educative",
+    price: "$49",
+    priority: "medium"
+  },
+  {
+    type: "book",
+    name: "Elements of Programming Interviews",
+    author: "Aziz, Lee, Prakash",
+    priority: "medium"
+  },
+  {
+    type: "platform",
+    name: "AlgoExpert",
+    price: "$99/year",
+    priority: "low"
+  }
+],
+
 
   milestones: [
-    { week: 1, task: "Master 15 array problems", completed: false },
-    { week: 2, task: "Build word search project", completed: false },
-    { week: 4, task: "Solve first medium problem", completed: false },
-    { week: 6, task: "Recognize 5 patterns", completed: false },
-    { week: 8, task: "Complete portfolio project", completed: false },
-    { week: 10, task: "Complete 100 total problems", completed: false },
-    { week: 12, task: "Pass first mock interview", completed: false }
+    { week: 1, title: "Master 15 array problems", description:"test",completed: false },
+    { week: 2, title: "Build word search project", description:"test",completed: false },
+    { week: 4, title: "Solve first medium problem", description:"test",completed: false },
+    { week: 6, title: "Recognize 5 patterns", description:"test",completed: false },
+    { week: 8, title: "Complete portfolio project", description:"test",completed: false },
+    { week: 10, title: "Complete 100 total problems", description:"test",completed: false },
+    { week: 12, title: "Pass first mock interview", description:"test",completed: false }
   ]
 };

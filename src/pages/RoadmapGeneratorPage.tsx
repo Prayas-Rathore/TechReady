@@ -84,9 +84,14 @@ export default function RoadmapGeneratorPage() {
   };
 
   // ✅ SUCCESS STATE
-  if (pageState === 'success' && roadmapData) {
-    return <RoadmapDisplay roadmap={roadmapData} onRegenerate={handleRegenerate} />;
-  }
+if (pageState === 'success' && roadmapData) {
+  // ADD THIS DEBUG CODE:
+  console.log('🔍 roadmapData being passed to RoadmapDisplay:', roadmapData);
+  console.log('🔍 roadmapData keys:', Object.keys(roadmapData));
+  console.log('🔍 roadmapData.summary:', roadmapData.summary);
+  
+  return <RoadmapDisplay roadmap={roadmapData} onRegenerate={handleRegenerate} />;
+}
 
   // ✅ ERROR STATE - No Mock Data!
   if (pageState === 'error') {

@@ -26,31 +26,30 @@ serve(async (req: Request) => {
           content:
             `You are an expert interview coach. Respond with a SINGLE JSON object only, no markdown, no code fences. It must match this schema exactly:
 
-{
-  "summary": "string",
-  "readinessScore": number,
-  "estimatedWeeks": number,
-  "strengths": ["string"],
-  "areasToImprove": [
-    { "area": "string", "reason": "string", "priority": "high" | "medium" | "low" }
-  ],
-  "learningPath": [
-    { "phase": "string", "duration": "string", "focus": "string", "topics": ["string"], "status": "not-started" }
-  ],
-  "dailySchedule": {
-    "totalHours": number,
-    "breakdown": [{ "activity": "string", "hours": number, "color": "string" }]
-  },
-  "milestones": [
-    { "week": number, "title": "string", "description": "string", "completed": false }
-  ],
-  "resources": [
-    { "title": "string", "type": "string", "url": "string", "description": "string" }
-  ]
-}
-
-Rules:
-- Return ONLY valid JSON. No extra keys. Do not wrap in backticks.`
+                {
+                  "summary": "string",
+                  "readinessScore": number,
+                  "estimatedWeeks": number,
+                  "strengths": ["string"],
+                  "areasToImprove": [
+                    { "area": "string", "reason": "string", "priority": "high" | "medium" | "low" }
+                  ],
+                  "learningPath": [
+                    { "phase": "string", "duration": "string", "focus": "string", "topics": ["string"], "status": "not-started" }
+                  ],
+                  "dailySchedule": {
+                    "totalHours": number,
+                    "breakdown": [{ "activity": "string", "hours": number, "color": "string" }]
+                  },
+                  "milestones": [
+                    { "week": number, "title": "string", "description": "string", "completed": false }
+                  ],
+                  "resources": [
+                    { "title": "string", "type": "string", "url": "string", "description": "string" }
+                  ]
+                }
+                Rules:
+                - Return ONLY valid JSON. No extra keys. Do not wrap in backticks.`
         },
         {
           role: 'user',

@@ -23,6 +23,7 @@ import JDGeneratorPage from './pages/JDGeneratorPage';
 import CVDashboardLayout from './components/CVDashboardLayout';
 import PostRoadMap from './pages/PostRoadMap';
 import JobDetailsFormPage from './pages/JobDetailsFormPage';
+import RoadmapDisplay from './components/roadmap/RoadmapDisplay';
 
 function App() {
 
@@ -41,8 +42,7 @@ function App() {
           <Route path="/pricing" element={<PricingPage />} />
           <Route path="/roadmap" element={<RoadmapGeneratorPage />} />
           <Route path="/SuccessScreen" element={<SuccessScreen />} />
-          {/* <Route path="/voice" element={<VoiceRecorderPage />} />
-          <Route path="/CameraWithVoice" element={<CameraWithVoice />} /> */}
+          <Route path="/roadmaptest" element={<RoadmapDisplay />} />
         {/* Public routes */}
 
       {/* Protected routes wrapped in AuthProvider */}
