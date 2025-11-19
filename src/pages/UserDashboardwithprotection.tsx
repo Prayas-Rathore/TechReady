@@ -2,15 +2,21 @@ import { useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
   Video, LogOut, BookOpen, Trophy, Target, Clock, TrendingUp,
-  Calendar, CheckCircle2, PlayCircle, Award, Zap, BarChart3
+  Calendar, CheckCircle2, PlayCircle, Award, Zap, BarChart3,Trash2, Edit, Eye
 } from 'lucide-react';
 import { supabase } from '../services/SupabaseClient';
 import Sidebar from '../components/Sidebar';
 import { useAuth } from '../context/AuthContext';
+import { useInterviewCount } from '../components/hooks/useInterviewCount';
+import { useInterviewTime } from "../components/hooks/useInterviewCount";
+import { useLastFiveScores } from "../components/hooks/useLastFiveScores";
 
 export default function UserDashboard() {
   const navigate = useNavigate();
   const { user, role, loading } = useAuth();
+  const { data: count } = useInterviewCount();
+  const { data: totalMs } = useInterviewTime();
+  const { data,isLoading } = useLastFiveScores();
 
   useEffect(() => {
     // log role for debugging
@@ -36,6 +42,33 @@ export default function UserDashboard() {
     );
   }
 
+  function formatTime(ms: number) {
+    const hours = Math.floor(ms / (1000 * 60 * 60));
+    const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+    return `${hours}h ${minutes}m`;
+  }
+
+  const formattedScores = data?.map((item, index) => {
+  const prev = data[index + 1]?.score;
+
+  let status = "same";
+
+  if (prev !== undefined) {
+    if (item.score > prev) status = "active";       // improved
+    else if (item.score < prev) status = "inactive"; // declined
+    else status = "same";
+  }
+
+  return {
+    id: index,
+    name: `CV Score ${item.score}%`,
+    email: `Score: ${item.score}%`,
+    status,
+    joined: new Date(item.date).toLocaleDateString(),
+  };
+});
+
+
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="flex">
@@ -44,7 +77,7 @@ export default function UserDashboard() {
           <nav className="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center gap-2">
+            <Link to="/user-dashboard" className="flex items-center gap-2">
               <Video className="w-8 h-8 text-sky-600" />
               <span className="text-2xl font-bold text-slate-900">MockIthub</span>
             </Link>
@@ -90,12 +123,12 @@ export default function UserDashboard() {
               <div className="w-12 h-12 bg-gradient-to-br from-sky-500 to-blue-600 rounded-xl flex items-center justify-center">
                 <BookOpen className="w-6 h-6 text-white" />
               </div>
-              <span className="text-sm font-medium text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">
+              {/* <span className="text-sm font-medium text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">
                 +12%
-              </span>
+              </span> */}
             </div>
-            <div className="text-3xl font-bold text-slate-900 mb-1">24</div>
-            <div className="text-sm text-slate-600">Lessons Completed</div>
+            <div className="text-3xl font-bold text-slate-900 mb-1">10/{isLoading ? "..." : count}</div>
+            <div className="text-sm text-slate-600">Interview Practice Attempted</div>
           </div>
 
           <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 hover:shadow-md transition-all">
@@ -130,10 +163,10 @@ export default function UserDashboard() {
                 <Clock className="w-6 h-6 text-white" />
               </div>
               <span className="text-sm font-medium text-slate-600 bg-slate-100 px-3 py-1 rounded-full">
-                Today
+                Total
               </span>
             </div>
-            <div className="text-3xl font-bold text-slate-900 mb-1">2.5h</div>
+            <div className="text-3xl font-bold text-slate-900 mb-1">{formatTime(totalMs || 0)}</div>
             <div className="text-sm text-slate-600">Study Time</div>
           </div>
         </div>
@@ -142,53 +175,60 @@ export default function UserDashboard() {
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-slate-900">Learning Progress</h2>
-                <button className="text-sm text-sky-600 hover:text-sky-700 font-medium">
+                <h2 className="text-xl font-bold text-slate-900">CV Reports and Analysis</h2>
+                {/* <button className="text-sm text-sky-600 hover:text-sky-700 font-medium">
                   View All
-                </button>
+                </button> */}
               </div>
 
-              <div className="space-y-4">
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-slate-900">Data Structures & Algorithms</span>
-                    <span className="text-sm font-semibold text-sky-600">85%</span>
-                  </div>
-                  <div className="h-3 bg-slate-100 rounded-full overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-sky-500 to-blue-600 rounded-full" style={{ width: '85%' }}></div>
-                  </div>
-                </div>
+              {formattedScores?.map((user) => (
+                  <tr key={user.id} className="border-b border-slate-100 hover:bg-slate-50 transition-all">
+                    <td className="py-4 px-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center">
+                          <span className="text-white font-semibold text-sm">
+                            {user.name.charAt(0)}
+                          </span>
+                        </div>
+                        <span className="font-medium text-slate-900">{user.name}</span>
+                      </div>
+                    </td>
 
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-slate-900">System Design</span>
-                    <span className="text-sm font-semibold text-purple-600">60%</span>
-                  </div>
-                  <div className="h-3 bg-slate-100 rounded-full overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-purple-500 to-pink-600 rounded-full" style={{ width: '60%' }}></div>
-                  </div>
-                </div>
+                    <td className="py-4 px-4 text-slate-600">{user.email}</td>
 
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-slate-900">Behavioral Questions</span>
-                    <span className="text-sm font-semibold text-emerald-600">92%</span>
-                  </div>
-                  <div className="h-3 bg-slate-100 rounded-full overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-emerald-500 to-cyan-600 rounded-full" style={{ width: '92%' }}></div>
-                  </div>
-                </div>
+                    <td className="py-4 px-4">
+                      <span
+                        className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
+                          user.status === "active"
+                            ? "bg-emerald-100 text-emerald-700"
+                            : user.status === "inactive"
+                            ? "bg-amber-100 text-amber-700"
+                            : "bg-slate-200 text-slate-700"
+                        }`}
+                      >
+                        <span
+                          className={`w-1.5 h-1.5 rounded-full ${
+                            user.status === "active"
+                              ? "bg-emerald-500"
+                              : user.status === "inactive"
+                              ? "bg-amber-500"
+                              : "bg-slate-500"
+                          }`}
+                        ></span>
+                        {user.status === "active"
+                          ? "Improved"
+                          : user.status === "inactive"
+                          ? "Declined"
+                          : "Same"}
+                      </span>
+                    </td>
 
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-slate-900">Full Stack Development</span>
-                    <span className="text-sm font-semibold text-orange-600">45%</span>
-                  </div>
-                  <div className="h-3 bg-slate-100 rounded-full overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-orange-500 to-rose-600 rounded-full" style={{ width: '45%' }}></div>
-                  </div>
-                </div>
-              </div>
+                    <td className="py-4 px-4 text-slate-600 text-sm">{user.joined}</td>
+
+                    
+                  </tr>
+                ))}
+
             </div>
 
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">

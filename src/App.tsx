@@ -23,7 +23,7 @@ import JDGeneratorPage from './pages/JDGeneratorPage';
 import CVDashboardLayout from './components/CVDashboardLayout';
 import PostRoadMap from './pages/PostRoadMap';
 import JobDetailsFormPage from './pages/JobDetailsFormPage';
-import RoadmapDisplay from './components/roadmap/RoadmapDisplay';
+// import RoadmapDisplay from './components/roadmap/RoadmapDisplay';
 
 function App() {
 
@@ -35,18 +35,18 @@ function App() {
         {/* Public routes */}
           <Route path="/" element={<InterviewProPage />} />
           <Route path="/talentvue" element={<HireVuePage />} />
-          <Route path="/assessment" element={<AssessmentPage />} />
           <Route path="/test" element={<TestConnectionPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/pricing" element={<PricingPage />} />
-          <Route path="/roadmap" element={<RoadmapGeneratorPage />} />
           <Route path="/SuccessScreen" element={<SuccessScreen />} />
-          <Route path="/roadmaptest" element={<RoadmapDisplay />} />
+          {/* <Route path="/roadmaptest" element={<RoadmapDisplay />} /> */}
         {/* Public routes */}
 
       {/* Protected routes wrapped in AuthProvider */}
         <Route element={<ProtectedRoute />}>
+          <Route path="/assessment" element={<AssessmentPage />} />
+          <Route path="/roadmap" element={<RoadmapGeneratorPage />} />
           <Route path="/user-dashboard" element={<UserDashboard />} />
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/jobdescription" element={<JobDescriptionSelector />} />

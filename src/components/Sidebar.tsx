@@ -16,10 +16,10 @@ export default function Sidebar({ role }: SidebarProps) {
     { icon: Video, label: 'Interview Practice', path: '/jobdescription' },
     { icon: Video, label: 'Cv Analyze', path: '/cv-dashboard' },
     { icon: BookOpen, label: 'Post Job RoadMap', path: '/postroadmap' },
-    { icon: Trophy, label: 'Achievements', path: '/achievements' },
-    { icon: Target, label: 'Goals', path: '/goals' },
-    { icon: Calendar, label: 'Schedule', path: '/schedule' },
-    { icon: Settings, label: 'Settings', path: '/settings' },
+    // { icon: Trophy, label: 'Achievements', path: '/achievements' },
+    // { icon: Target, label: 'Goals', path: '/goals' },
+    // { icon: Calendar, label: 'Schedule', path: '/schedule' },
+    // { icon: Settings, label: 'Settings', path: '/settings' },
   ];
 
   const adminMenuItems = [
@@ -45,7 +45,7 @@ export default function Sidebar({ role }: SidebarProps) {
   return (
     <aside className="w-64 bg-white border-r border-slate-200 min-h-screen sticky top-0 overflow-y-auto">
       <div className="p-6">
-        <Link to="/" className="flex items-center gap-2 mb-8">
+        <Link to="/user-dashboard" className="flex items-center gap-2 mb-8">
           <Video className={`w-8 h-8 ${role === 'admin' ? 'text-purple-600' : 'text-sky-600'}`} />
           <div>
             {/* <span className="text-xl font-bold text-slate-900">MockIthub</span> */}
@@ -82,7 +82,7 @@ export default function Sidebar({ role }: SidebarProps) {
         </nav>
       </div>
 
-      <div className={`mx-6 mb-6 p-4 rounded-xl ${
+      {/* <div className={`mx-6 mb-6 p-4 rounded-xl ${
         role === 'admin'
           ? 'bg-gradient-to-br from-purple-500 to-pink-600'
           : 'bg-gradient-to-br from-sky-500 to-blue-600'
@@ -101,7 +101,7 @@ export default function Sidebar({ role }: SidebarProps) {
             {role === 'admin' ? 'View Docs' : 'Upgrade Now'}
           </button>
         </div>
-      </div>
+      </div> */}
     </aside>
   );
 }
