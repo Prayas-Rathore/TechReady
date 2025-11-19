@@ -19,7 +19,7 @@ export default function Hero() {
             <a href="#features" className="text-slate-600 hover:text-slate-900 transition-colors">Features</a>
             <a href="#pricing" className="text-slate-600 hover:text-slate-900 transition-colors">Pricing</a>
             <a href="#faq" className="text-slate-600 hover:text-slate-900 transition-colors">FAQ</a>
-            <Link to="/talentvue" className="text-slate-600 hover:text-slate-900 transition-colors">TalentVue</Link>
+            {/* <Link to="/talentvue" className="text-slate-600 hover:text-slate-900 transition-colors">TalentVue</Link> */}
 
           </div>
           <Link to= "/login" className="px-6 py-2.5 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-all hover:shadow-lg hover:scale-105 font-medium">
