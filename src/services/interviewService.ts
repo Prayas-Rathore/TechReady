@@ -81,3 +81,25 @@ export async function getLastFiveScores() {
 
   return result;
 }
+
+export async function getLastFiveInterviewSessions() {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return [];
+
+  const { data, error } = await supabase
+    .from("interview_sessions")
+    .select("id, job_description_text, status, started_at, completed_at, created_at")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false })
+    .limit(5);
+
+  if (error) {
+    console.error("Error fetching interview sessions:", error);
+    return [];
+  }
+
+  return data;
+}

@@ -10,6 +10,7 @@ import { useAuth } from '../context/AuthContext';
 import { useInterviewCount } from '../components/hooks/useInterviewCount';
 import { useInterviewTime } from "../components/hooks/useInterviewCount";
 import { useLastFiveScores } from "../components/hooks/useLastFiveScores";
+import { useLastInterviewSessions } from '../components/hooks/useLastInterviewSessions';
 
 export default function UserDashboard() {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ export default function UserDashboard() {
   const { data: count } = useInterviewCount();
   const { data: totalMs } = useInterviewTime();
   const { data,isLoading } = useLastFiveScores();
+  const { data: lastFiveSessions, isLoading: isSessionsLoading } = useLastInterviewSessions();
 
   useEffect(() => {
     // log role for debugging
@@ -68,7 +70,7 @@ export default function UserDashboard() {
   };
 });
 
-
+if (isLoading || isSessionsLoading) return <div>Loading...</div>;
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="flex">
@@ -171,7 +173,7 @@ export default function UserDashboard() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
               <div className="flex items-center justify-between mb-6">
@@ -230,8 +232,61 @@ export default function UserDashboard() {
                 ))}
 
             </div>
+            <div className="bg-white p-4 rounded-xl shadow">
+      <h3 className="text-lg font-semibold mb-3">Recent Interview Sessions</h3>
 
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+      <ul className="space-y-3">
+        {lastFiveSessions?.map((item) => {
+          const duration =
+            item.started_at && item.completed_at
+              ? Math.round(
+                  (new Date(item.completed_at).getTime() -
+                    new Date(item.started_at).getTime()) /
+                    60000
+                )
+              : null;
+
+          return (
+            <li
+              key={item.id}
+              className="p-3 bg-gray-50 rounded-lg flex justify-between items-center"
+            >
+              <div className="flex flex-col">
+                <p className="font-medium">
+                  {item.job_description_text.slice(0, 40)}...
+                </p>
+
+                <span className="text-gray-500 text-sm">
+                  {new Date(item.created_at).toLocaleDateString()}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <span
+                  className={`px-2 py-1 rounded-full text-xs ${
+                    item.status === "completed"
+                      ? "bg-green-100 text-green-700"
+                      : item.status === "in_progress"
+                      ? "bg-yellow-100 text-yellow-700"
+                      : "bg-gray-100 text-gray-600"
+                  }`}
+                >
+                  {item.status}
+                </span>
+
+                {duration !== null && (
+                  <span className="text-sm text-gray-600">
+                    {duration} min
+                  </span>
+                )}
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+
+            {/* <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold text-slate-900">Recent Activity</h2>
                 <TrendingUp className="w-5 h-5 text-slate-400" />
@@ -284,11 +339,11 @@ export default function UserDashboard() {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
 
           <div className="space-y-6">
-            <div className="bg-gradient-to-br from-sky-500 to-blue-600 rounded-2xl shadow-lg p-6 text-white">
+            {/* <div className="bg-gradient-to-br from-sky-500 to-blue-600 rounded-2xl shadow-lg p-6 text-white">
               <div className="flex items-center gap-3 mb-4">
                 <Zap className="w-8 h-8" />
                 <h3 className="text-lg font-bold">Daily Challenge</h3>
@@ -308,9 +363,9 @@ export default function UserDashboard() {
               <button className="w-full py-3 bg-white text-sky-600 rounded-xl font-semibold hover:bg-sky-50 transition-all">
                 Start Challenge
               </button>
-            </div>
+            </div> */}
 
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+            {/* <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
               <div className="flex items-center gap-3 mb-6">
                 <Calendar className="w-6 h-6 text-slate-600" />
                 <h3 className="text-lg font-bold text-slate-900">Upcoming Sessions</h3>
@@ -349,9 +404,9 @@ export default function UserDashboard() {
               <button className="w-full mt-4 py-2 text-sky-600 hover:bg-sky-50 rounded-lg font-medium transition-all">
                 View All Sessions
               </button>
-            </div>
+            </div> */}
 
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+            {/* <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
               <div className="flex items-center gap-3 mb-4">
                 <BarChart3 className="w-6 h-6 text-slate-600" />
                 <h3 className="text-lg font-bold text-slate-900">Quick Stats</h3>
@@ -375,7 +430,7 @@ export default function UserDashboard() {
                   <span className="text-sm font-semibold text-slate-900">8</span>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
           </div>

@@ -52,7 +52,7 @@ export default function Hero() {
                 Take A Quiz
                 <span className="inline-block ml-2 group-hover:translate-x-1 transition-transform">→</span>
               </Link>
-              <button className="px-8 py-4 bg-white text-slate-700 rounded-lg border-2 border-slate-200 hover:border-sky-300 hover:shadow-lg transition-all font-semibold text-lg">
+              <button  className="px-8 py-4 bg-white text-slate-700 rounded-lg border-2 border-slate-200 hover:border-sky-300 hover:shadow-lg transition-all font-semibold text-lg">
                 Watch Demo
               </button>
             </div>
