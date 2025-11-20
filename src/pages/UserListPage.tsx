@@ -9,7 +9,7 @@ interface UserProfile {
   email: string;
   full_name: string;
   phone: string;
-  company: string;
+  plan_type: string;
   role: string;
   status: string;
   created_at: string;
@@ -24,48 +24,46 @@ export default function UserListPage() {
   const [filterRole, setFilterRole] = useState<'all' | 'user' | 'admin'>('all');
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive' | 'suspended'>('all');
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [limit] = useState(10); // users per page
+  const [totalUsers, setTotalUsers] = useState(0);
+
 
   useEffect(() => {
     fetchUsers();
-  }, [filterRole, filterStatus]);
+  }, [filterRole, filterStatus,page]);
 
   const fetchUsers = async () => {
-    try {
-      setLoading(true);
+  try {
+    setLoading(true);
 
-      let query = supabase
-        .from('user_profiles')
-        .select('*')
-        .order('created_at', { ascending: false });
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
 
-      if (filterRole !== 'all') {
-        query = query.eq('role', filterRole);
-      }
+    // count(*) gives total rows for pagination
+    let query = supabase
+      .from('profiles')
+      .select('*', { count: 'exact' })
+      .order('created_at', { ascending: false })
+      .range(from, to);
 
-      if (filterStatus !== 'all') {
-        query = query.eq('status', filterStatus);
-      }
+    if (filterRole !== 'all') query = query.eq('role', filterRole);
+    if (filterStatus !== 'all') query = query.eq('status', filterStatus);
 
-      const { data: profiles, error: profileError } = await query;
-      if (profileError) throw profileError;
+    const { data, error, count } = await query;
 
-      const usersWithEmail = await Promise.all(
-        (profiles || []).map(async (profile) => {
-          const { data: authUser } = await supabase.auth.admin.getUserById(profile.id);
-          return {
-            ...profile,
-            email: authUser?.user?.email || 'N/A'
-          };
-        })
-      );
+    if (error) throw error;
 
-      setUsers(usersWithEmail);
-    } catch (err) {
-      console.error('Error fetching users:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+    setUsers(data || []);
+    setTotalUsers(count || 0);
+
+  } catch (err) {
+    console.error("Error fetching users:", err);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const handleDeleteUser = async (id: string) => {
     if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
@@ -75,8 +73,8 @@ export default function UserListPage() {
     try {
       setDeletingId(id);
 
-      const { error: deleteError } = await supabase.auth.admin.deleteUser(id);
-      if (deleteError) throw deleteError;
+      const { error } = await supabase.auth.admin.deleteUser(id);
+      if (error) throw error;
 
       await fetchUsers();
     } catch (err: any) {
@@ -131,7 +129,7 @@ export default function UserListPage() {
   const filteredUsers = users.filter(user =>
     user.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     user.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    user.company?.toLowerCase().includes(searchQuery.toLowerCase())
+    user.plan_type?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -218,7 +216,7 @@ export default function UserListPage() {
                         User
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
-                        Company
+                        Plan Type
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
                         Role
@@ -251,7 +249,7 @@ export default function UserListPage() {
                           </div>
                         </td>
                         <td className="px-6 py-4 text-sm text-slate-700">
-                          {user.company || '-'}
+                          {user.plan_type}
                         </td>
                         <td className="px-6 py-4">
                           {getRoleBadge(user.role)}
@@ -287,8 +285,34 @@ export default function UserListPage() {
                         </td>
                       </tr>
                     ))}
+                  
                   </tbody>
+                  
                 </table>
+                {/* Start Pagination Button */}
+                <div className="flex justify-between items-center mt-4">
+                  <button
+                    disabled={page === 1}
+                    onClick={() => setPage(page - 1)}
+                    className="px-4 py-2 bg-slate-200 rounded disabled:opacity-50"
+                    >
+                    Previous
+                  </button>
+
+                  <span className="text-sm text-slate-600">
+                    Page {page} of {Math.ceil(totalUsers / limit)}
+                  </span>
+
+                  <button
+                    disabled={page >= Math.ceil(totalUsers / limit)}
+                    onClick={() => setPage(page + 1)}
+                    className="px-4 py-2 bg-slate-200 rounded disabled:opacity-50"
+                    >
+                    Next
+                  </button>
+                </div>
+                    {/* End Pagination Button */}
+
               </div>
             </div>
           )}
