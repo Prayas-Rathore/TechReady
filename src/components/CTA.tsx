@@ -22,13 +22,13 @@ export default function CTA() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link to="/user-dashboard" className="group px-10 py-5 bg-sky-600 text-white rounded-lg hover:bg-sky-500 transition-all hover:shadow-2xl hover:shadow-sky-500/50 hover:scale-105 font-semibold text-lg flex items-center gap-2">
+            <Link to="/signup" className="group px-10 py-5 bg-sky-600 text-white rounded-lg hover:bg-sky-500 transition-all hover:shadow-2xl hover:shadow-sky-500/50 hover:scale-105 font-semibold text-lg flex items-center gap-2">
               Get Started Now
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
-            <Link to="/admin-dashboard" className="px-10 py-5 bg-white/10 text-white rounded-lg border-2 border-white/20 hover:bg-white/20 transition-all font-semibold text-lg backdrop-blur-sm">
+            {/* <Link to="/admin-dashboard" className="px-10 py-5 bg-white/10 text-white rounded-lg border-2 border-white/20 hover:bg-white/20 transition-all font-semibold text-lg backdrop-blur-sm">
               Schedule Free Session
-            </Link>
+            </Link> */}
           </div>
 
           <div className="mt-12 flex flex-wrap justify-center gap-8 text-slate-400">

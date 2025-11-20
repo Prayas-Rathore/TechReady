@@ -1,4 +1,5 @@
 import { Zap, Users, FileText, Sparkles, Clock, Award } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const features = [
   {
@@ -77,9 +78,9 @@ export default function Features() {
           <p className="text-sky-100 text-lg mb-8 max-w-2xl mx-auto">
             Join thousands of successful candidates who transformed their interview skills with our platform
           </p>
-          <button className="px-8 py-4 bg-white text-sky-600 rounded-lg hover:bg-slate-50 transition-all hover:shadow-xl hover:scale-105 font-semibold text-lg">
+          <Link to="/signup" className="px-8 py-4 bg-white text-sky-600 rounded-lg hover:bg-slate-50 transition-all hover:shadow-xl hover:scale-105 font-semibold text-lg">
             Start Your Free Trial
-          </button>
+          </Link>
         </div>
       </div>
     </section>

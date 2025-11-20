@@ -24,6 +24,8 @@ import CVDashboardLayout from './components/CVDashboardLayout';
 import PostRoadMap from './pages/PostRoadMap';
 import JobDetailsFormPage from './pages/JobDetailsFormPage';
 // import RoadmapDisplay from './components/roadmap/RoadmapDisplay';
+import UserFormPage from './pages/UserFormPage';
+import UserListPage from './pages/UserListPage';
 
 function App() {
 
@@ -45,10 +47,16 @@ function App() {
 
       {/* Protected routes wrapped in AuthProvider */}
         <Route element={<ProtectedRoute />}>
+          {/* Start Admin Part */}
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/users" element={<UserListPage />} />
+          <Route path="/admin/users/edit/:id" element={<UserFormPage />} /> 
+          {/* End Admin Part */}
+
+          
           <Route path="/assessment" element={<AssessmentPage />} />
           <Route path="/roadmap" element={<RoadmapGeneratorPage />} />
           <Route path="/user-dashboard" element={<UserDashboard />} />
-          <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/jobdescription" element={<JobDescriptionSelector />} />
           <Route path="/interview/:sessionId" element={<InterviewSession />} />
           <Route path="/postroadmap" element={<PostRoadMap />} />

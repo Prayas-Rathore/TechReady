@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
-  Video, LogOut, BookOpen, Trophy, Target, Clock, TrendingUp,
-  Calendar, CheckCircle2, PlayCircle, Award, Zap, BarChart3,Trash2, Edit, Eye
+  Video, LogOut, BookOpen, Trophy, Target, Clock
 } from 'lucide-react';
 import { supabase } from '../services/SupabaseClient';
 import Sidebar from '../components/Sidebar';
@@ -70,7 +69,7 @@ export default function UserDashboard() {
   };
 });
 
-if (isLoading || isSessionsLoading) return <div>Loading...</div>;
+
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="flex">

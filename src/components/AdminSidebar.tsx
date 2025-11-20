@@ -70,14 +70,14 @@ export default function AdminSidebar() {
   const SidebarContent = () => (
     <>
       <div className="p-6 border-b border-slate-200">
-        <Link to="/" className="flex items-center gap-3 mb-2">
+        <div className="flex items-center gap-3 mb-2">
           <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl flex items-center justify-center">
             <Video className="w-6 h-6 text-white" />
           </div>
           <div>
-            <span className="text-xl font-bold text-slate-900">InterviewPro</span>
+            <span className="text-xl font-bold text-slate-900">Mockithub</span>
           </div>
-        </Link>
+        </div>
         <div className="flex items-center gap-2 mt-2">
           <Shield className="w-4 h-4 text-purple-600" />
           <span className="text-sm font-semibold text-purple-600 bg-purple-50 px-3 py-1 rounded-full">

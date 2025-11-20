@@ -92,9 +92,14 @@ export default function FAQ() {
           <p className="text-slate-600 mb-4">
             Still have questions?
           </p>
-          <a href="#" className="text-sky-600 hover:text-sky-700 font-semibold text-lg">
+          <a
+            href="mailto:bertvanspall@gmail.com"
+            className="text-sky-600 hover:text-sky-700 font-semibold text-lg"
+          >
             Contact our support team →
           </a>
+
+          
         </div>
       </div>
     </section>

@@ -33,39 +33,38 @@ export default function LoginPage() {
 
   // 🧩 Handle Login and Store JWT
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
+  e.preventDefault();
+  setLoading(true);
+  setError("");
 
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
-      if (error) throw error;
+    if (error) throw error;
 
-      const accessToken = data.session?.access_token;
-      if (accessToken) {
-        // Optionally store JWT if you want custom access later
-        localStorage.setItem('jwt', accessToken);
-      }
+    const signedInUser = data.user || data.session?.user;
+    const userRole = signedInUser?.user_metadata?.user_role;
 
-      // Redirect after successful login based on role in user metadata
-      const signedInUser = data.user || data.session?.user;
-      const userRole = signedInUser?.user_metadata?.user_role;
-      if (Number(userRole) === 1) {
-        navigate('/admin-dashboard', { replace: true });
-      } else {
-        navigate('/user-dashboard', { replace: true });
-      }
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Failed to login';
-      setError(message);
-    } finally {
-      setLoading(false);
+    console.log("✅ Logged in user:", signedInUser);
+    console.log("✅ Logged in role (raw):", userRole);
+    console.log("✅ Logged in role (Number):", Number(userRole));
+
+    if (Number(userRole) === 1) {
+      navigate("/admin-dashboard", { replace: true });
+    } else {
+      navigate("/user-dashboard", { replace: true });
     }
-  };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to login";
+    setError(message);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-slate-950">

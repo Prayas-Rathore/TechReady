@@ -1,4 +1,6 @@
 import { Check, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
+
 
 const plans = [
   {
@@ -112,15 +114,17 @@ export default function Pricing() {
                 ))}
               </ul>
 
-              <button
-                className={`w-full py-4 rounded-lg font-semibold transition-all hover:scale-105 ${
+              <Link to="/signup">
+                <button
+                  className={`w-full py-4 rounded-lg font-semibold transition-all hover:scale-105 ${
                   plan.highlighted
                     ? 'bg-white text-sky-600 hover:bg-slate-50 shadow-xl'
                     : 'bg-slate-900 text-white hover:bg-slate-800'
-                }`}
-              >
-                {plan.cta}
-              </button>
+                  }`}
+                  >
+                  {plan.cta}
+                </button>
+              </Link>
             </div>
           ))}
         </div>
@@ -129,9 +133,9 @@ export default function Pricing() {
           <p className="text-slate-600 mb-4">
             All plans include a 14-day money-back guarantee
           </p>
-          <a href="#" className="text-sky-600 hover:text-sky-700 font-medium">
+          {/* <a href="#" className="text-sky-600 hover:text-sky-700 font-medium">
             Need a custom plan? Contact sales →
-          </a>
+          </a> */}
         </div>
       </div>
     </section>

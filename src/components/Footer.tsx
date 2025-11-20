@@ -42,7 +42,7 @@ export default function Footer() {
           <div className="lg:col-span-2">
             <div className="flex items-center gap-2 mb-4">
               <Video className="w-8 h-8 text-sky-500" />
-              <span className="text-2xl font-bold text-white">InterviewPro</span>
+              <span className="text-2xl font-bold text-white">Mockithub</span>
             </div>
             <p className="text-slate-400 leading-relaxed mb-6">
               Empowering job seekers worldwide with expert-led mock interviews and personalized feedback to land their dream jobs.
@@ -117,12 +117,12 @@ export default function Footer() {
         <div className="border-t border-slate-800 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-slate-400 text-sm">
-              © 2025 InterviewPro. All rights reserved.
+              © 2025 Mockithub. All rights reserved.
             </p>
             <div className="flex items-center gap-6 text-sm">
               <a href="#" className="hover:text-sky-400 transition-colors flex items-center gap-2">
                 <Mail className="w-4 h-4" />
-                support@interviewpro.com
+                bertvanspall@gmail.com
               </a>
             </div>
           </div>
