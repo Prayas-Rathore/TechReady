@@ -105,16 +105,33 @@ export default function InterviewSession() {
     }
   };
 
+  // const handleEndInterview = async () => {
+  //   if (isListening) await handleStopRecording();
+
+  //   await supabase
+  //     .from('interview_sessions')
+  //     .update({ status: 'completed', completed_at: new Date().toISOString() })
+  //     .eq('id', sessionId);
+
+  //   navigate('/user-dashboard');
+  // };
+
   const handleEndInterview = async () => {
-    if (isListening) await handleStopRecording();
+  if (isListening) await handleStopRecording();
+  
+  // Stop camera before navigating
+  setCameraEnabled(false);
+  
+  // Give a brief moment for the camera to stop
+  await new Promise(resolve => setTimeout(resolve, 100));
 
-    await supabase
-      .from('interview_sessions')
-      .update({ status: 'completed', completed_at: new Date().toISOString() })
-      .eq('id', sessionId);
+  await supabase
+    .from('interview_sessions')
+    .update({ status: 'completed', completed_at: new Date().toISOString() })
+    .eq('id', sessionId);
 
-    navigate('/user-dashboard');
-  };
+  navigate('/user-dashboard');
+};
 
   if (loading) {
     return (
