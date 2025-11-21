@@ -28,36 +28,37 @@ export default function AdminSidebar() {
     {
       title: 'Main',
       items: [
-        { icon: LayoutDashboard, label: 'Overview', path: '/admin' },
-        { icon: BarChart3, label: 'Analytics', path: '/admin/analytics' },
+        // { icon: LayoutDashboard, label: 'Overview', path: '/admin' },
+        // { icon: BarChart3, label: 'Analytics', path: '/admin/analytics' },
+        { icon: Users, label: 'Users', path: '/admin/users' }
       ]
     },
-    {
-      title: 'Management',
-      items: [
-        { icon: Users, label: 'Users', path: '/admin/users' },
-        { icon: BookOpen, label: 'Content', path: '/admin/content' },
-        { icon: Package, label: 'Subscriptions', path: '/admin/subscriptions' },
-        { icon: FileText, label: 'Reports', path: '/admin/reports' },
-      ]
-    },
-    {
-      title: 'Finance',
-      items: [
-        { icon: DollarSign, label: 'Revenue', path: '/admin/revenue' },
-        { icon: FileText, label: 'Invoices', path: '/admin/invoices' },
-      ]
-    },
-    {
-      title: 'System',
-      items: [
-        { icon: Bell, label: 'Notifications', path: '/admin/notifications' },
-        { icon: Mail, label: 'Email Templates', path: '/admin/emails' },
-        { icon: Database, label: 'Database', path: '/admin/database' },
-        { icon: Shield, label: 'Security', path: '/admin/security' },
-        { icon: Settings, label: 'Settings', path: '/admin/settings' },
-      ]
-    }
+    // {
+    //   title: 'Management',
+    //   items: [
+    //     { icon: Users, label: 'Users', path: '/admin/users' },
+    //     { icon: BookOpen, label: 'Content', path: '/admin/content' },
+    //     { icon: Package, label: 'Subscriptions', path: '/admin/subscriptions' },
+    //     { icon: FileText, label: 'Reports', path: '/admin/reports' },
+    //   ]
+    // },
+    // {
+    //   title: 'Finance',
+    //   items: [
+    //     { icon: DollarSign, label: 'Revenue', path: '/admin/revenue' },
+    //     { icon: FileText, label: 'Invoices', path: '/admin/invoices' },
+    //   ]
+    // },
+    // {
+    //   title: 'System',
+    //   items: [
+    //     { icon: Bell, label: 'Notifications', path: '/admin/notifications' },
+    //     { icon: Mail, label: 'Email Templates', path: '/admin/emails' },
+    //     { icon: Database, label: 'Database', path: '/admin/database' },
+    //     { icon: Shield, label: 'Security', path: '/admin/security' },
+    //     { icon: Settings, label: 'Settings', path: '/admin/settings' },
+    //   ]
+    // }
   ];
 
   const isActive = (path: string) => {
@@ -144,10 +145,10 @@ export default function AdminSidebar() {
           </div>
         </div>
 
-        <button className="w-full mt-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2">
+        {/* <button className="w-full mt-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2">
           <FileText className="w-4 h-4" />
           View Documentation
-        </button>
+        </button> */}
       </div>
     </>
   );

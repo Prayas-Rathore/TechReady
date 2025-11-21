@@ -120,7 +120,10 @@ export default function Footer() {
               © 2025 Mockithub. All rights reserved.
             </p>
             <div className="flex items-center gap-6 text-sm">
-              <a href="#" className="hover:text-sky-400 transition-colors flex items-center gap-2">
+              <a 
+                href="mailto:bertvanspall@gmail.com" 
+                className="hover:text-sky-400 transition-colors flex items-center gap-2"
+              >
                 <Mail className="w-4 h-4" />
                 bertvanspall@gmail.com
               </a>

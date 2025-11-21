@@ -6,17 +6,23 @@ import {
   Settings, Filter, Search, ChevronDown, Eye, Edit, Trash2
 } from 'lucide-react';
 import { supabase } from '../services/SupabaseClient';
-import { useAuth } from '../context/AuthContext';
+// import { useAuth } from '../context/AuthContext';
 import AdminSidebar from '../components/AdminSidebar';
+import { useTotalUsers, useNewUsersThisMonth,useGetTotalSession } from "..//components/hooks/admin/useAnalytics";
 
 export default function AdminDashboard() {
     const navigate = useNavigate();
     const [admin, setAdmin] = useState<any>(null);
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState('overview');
+    const [activeTab, setActiveTab] = useState('analytics');
     // const { user,role } = useAuth();
-  const [recentUsers] = useState<any[]>([]);
+  // const [recentUsers] = useState<any[]>([]);
+   const { data: totalUsers, isLoading: totalLoading } = useTotalUsers();
+  const { data: newUsersThisMonth, isLoading: newUsersLoading } = useNewUsersThisMonth();
+  const { data: totalSessions, isLoading:totalSessionsLoading } = useGetTotalSession();
+  const [recentUsers, setRecentUsers] = useState<any[]>([]);
 
+  
 
  const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -24,32 +30,38 @@ export default function AdminDashboard() {
   };
 
 useEffect(() => {
-    let mounted = true;
+  let mounted = true;
 
-    const fetchAuthUsers = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('user_metadata')
-          .select('*')
-          .order('created_at', { ascending: false })
-          .limit(10);
+  const fetchAuthUsers = async () => {
+    try {
+      // Fetch admin user
+      const { data: userData } = await supabase.auth.getUser();
+      if (mounted) setAdmin(userData?.user);
 
-        // Console result for inspection (admin-only view)
-        console.log('auth.users data:', data);
-        if (error) console.warn('auth.users error:', error);
-      } catch (err) {
-        console.error('Failed to fetch auth.users', err);
-      } finally {
-        if (mounted) setLoading(false);
-      }
-    };
+      // Fetch recent users from profiles
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(5);
 
-    fetchAuthUsers();
+      if (error) console.warn("profiles error:", error);
 
-    return () => {
-      mounted = false;
-    };
-  }, []);
+      if (mounted) setRecentUsers(data || []);
+    } catch (err) {
+      console.error("Failed to fetch:", err);
+    } finally {
+      if (mounted) setLoading(false);
+    }
+  };
+
+  fetchAuthUsers();
+
+  return () => {
+    mounted = false;
+  };
+}, []);
+
 
   if (loading) {
     return (
@@ -107,11 +119,11 @@ useEffect(() => {
               <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
                 <Users className="w-6 h-6" />
               </div>
-              <span className="text-sm font-medium bg-white/20 px-3 py-1 rounded-full">
+              {/* <span className="text-sm font-medium bg-white/20 px-3 py-1 rounded-full">
                 +12.5%
-              </span>
+              </span> */}
             </div>
-            <div className="text-3xl font-bold mb-1">2,547</div>
+            <div className="text-3xl font-bold mb-1">{totalLoading ? "..." : totalUsers}</div>
             <div className="text-purple-100">Total Users</div>
           </div>
 
@@ -120,11 +132,11 @@ useEffect(() => {
               <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
                 <UserCheck className="w-6 h-6" />
               </div>
-              <span className="text-sm font-medium bg-white/20 px-3 py-1 rounded-full">
+              {/* <span className="text-sm font-medium bg-white/20 px-3 py-1 rounded-full">
                 +8.2%
-              </span>
+              </span> */}
             </div>
-            <div className="text-3xl font-bold mb-1">1,842</div>
+            <div className="text-3xl font-bold mb-1">{newUsersLoading ? "..." : newUsersThisMonth}</div>
             <div className="text-sky-100">Active Users</div>
           </div>
 
@@ -150,7 +162,7 @@ useEffect(() => {
                 +5.3%
               </span>
             </div>
-            <div className="text-3xl font-bold mb-1">8,456</div>
+            <div className="text-3xl font-bold mb-1">{totalSessions ? "...":totalSessionsLoading}</div>
             <div className="text-orange-100">Sessions Completed</div>
           </div>
         </div>
@@ -159,7 +171,7 @@ useEffect(() => {
           <div className="border-b border-slate-200 px-6 py-4">
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div className="flex items-center gap-4">
-                <button
+                {/* <button
                   onClick={() => setActiveTab('overview')}
                   className={`px-4 py-2 rounded-lg font-medium transition-all ${
                     activeTab === 'overview'
@@ -168,7 +180,7 @@ useEffect(() => {
                   }`}
                 >
                   Overview
-                </button>
+                </button> */}
                 <button
                   onClick={() => setActiveTab('users')}
                   className={`px-4 py-2 rounded-lg font-medium transition-all ${
@@ -179,7 +191,7 @@ useEffect(() => {
                 >
                   Users
                 </button>
-                <button
+                {/* <button
                   onClick={() => setActiveTab('content')}
                   className={`px-4 py-2 rounded-lg font-medium transition-all ${
                     activeTab === 'content'
@@ -188,7 +200,7 @@ useEffect(() => {
                   }`}
                 >
                   Content
-                </button>
+                </button> */}
                 <button
                   onClick={() => setActiveTab('analytics')}
                   className={`px-4 py-2 rounded-lg font-medium transition-all ${
@@ -201,10 +213,10 @@ useEffect(() => {
                 </button>
               </div>
 
-              <button className="flex items-center gap-2 px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-all">
+              {/* <button className="flex items-center gap-2 px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-all">
                 <Settings className="w-4 h-4" />
                 <span>Settings</span>
-              </button>
+              </button> */}
             </div>
           </div>
 
@@ -312,23 +324,7 @@ useEffect(() => {
 
             {activeTab === 'users' && (
               <div>
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-bold text-slate-900">User Management</h3>
-                  <div className="flex items-center gap-3">
-                    <div className="relative">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                      <input
-                        type="text"
-                        placeholder="Search users..."
-                        className="pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
-                      />
-                    </div>
-                    <button className="flex items-center gap-2 px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 transition-all">
-                      <Filter className="w-4 h-4" />
-                      Filter
-                    </button>
-                  </div>
-                </div>
+                <h3 className="text-lg font-bold text-slate-900 mb-6">Recent Users</h3>
 
                 <div className="overflow-x-auto">
                   <table className="w-full">
@@ -336,11 +332,10 @@ useEffect(() => {
                       <tr className="border-b border-slate-200">
                         <th className="text-left py-3 px-4 text-sm font-semibold text-slate-900">User</th>
                         <th className="text-left py-3 px-4 text-sm font-semibold text-slate-900">Email</th>
-                        <th className="text-left py-3 px-4 text-sm font-semibold text-slate-900">Status</th>
                         <th className="text-left py-3 px-4 text-sm font-semibold text-slate-900">Joined</th>
-                        <th className="text-right py-3 px-4 text-sm font-semibold text-slate-900">Actions</th>
                       </tr>
                     </thead>
+
                     <tbody>
                       {recentUsers.map((user) => (
                         <tr key={user.id} className="border-b border-slate-100 hover:bg-slate-50 transition-all">
@@ -348,38 +343,19 @@ useEffect(() => {
                             <div className="flex items-center gap-3">
                               <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center">
                                 <span className="text-white font-semibold text-sm">
-                                  {user.name.charAt(0)}
+                                  {user.full_name?.charAt(0)?.toUpperCase() || user.email?.charAt(0)?.toUpperCase()}
                                 </span>
                               </div>
-                              <span className="font-medium text-slate-900">{user.name}</span>
+                              <span className="font-medium text-slate-900">{user.full_name || 'N/A'}</span>
                             </div>
                           </td>
-                          <td className="py-4 px-4 text-slate-600">{user.email}</td>
-                          <td className="py-4 px-4">
-                            <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
-                              user.status === 'active'
-                                ? 'bg-emerald-100 text-emerald-700'
-                                : 'bg-amber-100 text-amber-700'
-                            }`}>
-                              <span className={`w-1.5 h-1.5 rounded-full ${
-                                user.status === 'active' ? 'bg-emerald-500' : 'bg-amber-500'
-                              }`}></span>
-                              {user.status}
-                            </span>
+
+                          <td className="py-4 px-4 text-slate-600">
+                            {user.email}
                           </td>
-                          <td className="py-4 px-4 text-slate-600 text-sm">{user.joined}</td>
-                          <td className="py-4 px-4">
-                            <div className="flex items-center justify-end gap-2">
-                              <button className="p-2 hover:bg-slate-100 rounded-lg transition-all" title="View">
-                                <Eye className="w-4 h-4 text-slate-600" />
-                              </button>
-                              <button className="p-2 hover:bg-slate-100 rounded-lg transition-all" title="Edit">
-                                <Edit className="w-4 h-4 text-slate-600" />
-                              </button>
-                              <button className="p-2 hover:bg-red-50 rounded-lg transition-all" title="Delete">
-                                <Trash2 className="w-4 h-4 text-red-600" />
-                              </button>
-                            </div>
+
+                          <td className="py-4 px-4 text-slate-600 text-sm">
+                            {new Date(user.created_at).toLocaleDateString()}
                           </td>
                         </tr>
                       ))}
@@ -388,6 +364,7 @@ useEffect(() => {
                 </div>
               </div>
             )}
+
 
             {activeTab === 'content' && (
               <div className="text-center py-12">
@@ -408,7 +385,7 @@ useEffect(() => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+          {/* <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-bold text-slate-900">Recent Alerts</h3>
               <AlertCircle className="w-5 h-5 text-slate-400" />
@@ -442,9 +419,9 @@ useEffect(() => {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
 
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+          {/* <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-bold text-slate-900">Top Performing Content</h3>
               <TrendingUp className="w-5 h-5 text-slate-400" />
@@ -484,7 +461,7 @@ useEffect(() => {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
           </div>
         </div>
       </div>

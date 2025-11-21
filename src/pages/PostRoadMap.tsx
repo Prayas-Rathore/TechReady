@@ -65,28 +65,28 @@ export default function AssessmentQuizPage() {
       const optionsBlock = buildOptionsBlock(questionId);
 
       const prompt = `
-You are an objective career coach. Do not praise or flatter. Do not say "right" or "wrong".
-Given the question and options, decide which option is the strongest approach, first carefully understand all the options.
+            You are an objective career coach. Do not praise or flatter. Do not say "right" or "wrong".
+            Given the question and options, decide which option is the strongest approach, first carefully understand all the options.
 
-Question: "${questionText}"
-Options:
-${optionsBlock}
-User selected: ${userPick} — "${userPickText}"
+            Question: "${questionText}"
+            Options:
+            ${optionsBlock}
+            User selected: ${userPick} — "${userPickText}"
 
-Write a short, neutral response:
-1) First line:
-  - If the user's choice is strongest, write:
-    "You chose the stronger approach: <LETTER> — <4–8 words rationale>."
-  - Otherwise, write:
-    "Stronger approach: <LETTER> — <4–8 words rationale>."
-2) Then 2–3 bullets (each ≤ 10 words) explaining why that approach works better.
-3) End with one line:
-  "Try: <one specific action, ≤ 8 words>"
+            Write a short, neutral response:
+            1) First line:
+              - If the user's choice is strongest, write:
+                "You chose the stronger approach: <LETTER> — <4–8 words rationale>."
+              - Otherwise, write:
+                "Stronger approach: <LETTER> — <4–8 words rationale>."
+            2) Then 2–3 bullets (each ≤ 10 words) explaining why that approach works better.
+            3) End with one line:
+              "Try: <one specific action, ≤ 8 words>"
 
-Rules:
-- No compliments, no encouragement words (e.g., great, nice, good).
-- Be specific and practical. Keep it brief.
-- No extra sections or paragraphs.
+            Rules:
+            - No compliments, no encouragement words (e.g., great, nice, good).
+            - Be specific and practical. Keep it brief.
+            - No extra sections or paragraphs.
       `.trim();
 
       const res = await fetch('https://api.openai.com/v1/chat/completions', {

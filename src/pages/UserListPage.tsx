@@ -227,9 +227,9 @@ export default function UserListPage() {
                       <th className="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
                         Joined
                       </th>
-                      <th className="px-6 py-3 text-right text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                      {/* <th className="px-6 py-3 text-right text-xs font-semibold text-slate-600 uppercase tracking-wider">
                         Actions
-                      </th>
+                      </th> */}
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-200">
@@ -260,7 +260,7 @@ export default function UserListPage() {
                         <td className="px-6 py-4 text-sm text-slate-600">
                           {new Date(user.created_at).toLocaleDateString()}
                         </td>
-                        <td className="px-6 py-4">
+                        {/* <td className="px-6 py-4">
                           <div className="flex items-center justify-end gap-2">
                             <button
                               onClick={() => navigate(`/admin/users/edit/${user.id}`)}
@@ -282,7 +282,7 @@ export default function UserListPage() {
                               )}
                             </button>
                           </div>
-                        </td>
+                        </td> */}
                       </tr>
                     ))}
                   
