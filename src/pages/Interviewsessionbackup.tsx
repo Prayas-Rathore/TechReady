@@ -39,14 +39,6 @@ export default function InterviewSession() {
     return () => clearInterval(interval);
   }, [isListening]);
 
-  // ✅ Cleanup camera on unmount
-  useEffect(() => {
-    return () => {
-      console.log('🧹 Component unmounting - ensuring camera is off');
-      setCameraEnabled(false);
-    };
-  }, []);
-
   const loadSession = async () => {
     try {
       const { data, error } = await supabase
@@ -113,42 +105,44 @@ export default function InterviewSession() {
     }
   };
 
-  const handleEndInterview = async () => {
-    try {
-      console.log('🏁 Ending interview...');
-      
-      // Stop recording if active
-      if (isListening) {
-        console.log('🎤 Stopping recording...');
-        await handleStopRecording();
-      }
+  // const handleEndInterview = async () => {
+  //   if (isListening) await handleStopRecording();
 
-      // ✅ CRITICAL: Stop camera BEFORE navigation
-      console.log('🎥 Disabling camera...');
-      setCameraEnabled(false);
-      
-      // Wait for camera to fully stop
-      await new Promise(resolve => setTimeout(resolve, 300));
+  //   await supabase
+  //     .from('interview_sessions')
+  //     .update({ status: 'completed', completed_at: new Date().toISOString() })
+  //     .eq('id', sessionId);
 
-      // Update database
-      console.log('💾 Updating database...');
-      await supabase
-        .from('interview_sessions')
-        .update({ status: 'completed', completed_at: new Date().toISOString() })
-        .eq('id', sessionId);
+  //   navigate('/user-dashboard');
+  // };
 
-      console.log('✅ Interview ended successfully');
-      
-      // Navigate to dashboard
-      navigate('/user-dashboard');
-    } catch (err) {
-      console.error('❌ Error ending interview:', err);
-      // Even if error, ensure camera is off
-      setCameraEnabled(false);
-      // Still navigate
-      navigate('/user-dashboard');
+const handleEndInterview = async () => {
+  try {
+    // Stop recording if active
+    if (isListening) {
+      await handleStopRecording();
     }
-  };
+
+    // ✅ CRITICAL: Stop camera BEFORE navigation
+    setCameraEnabled(false);
+    
+    // Wait a moment for camera to stop
+    await new Promise(resolve => setTimeout(resolve, 300));
+
+    // Update database
+    await supabase
+      .from('interview_sessions')
+      .update({ status: 'completed', completed_at: new Date().toISOString() })
+      .eq('id', sessionId);
+
+    // Now navigate
+    navigate('/user-dashboard');
+  } catch (err) {
+    console.error('Error ending interview:', err);
+    // Even if there's an error, try to stop camera
+    setCameraEnabled(false);
+  }
+};
 
   if (loading) {
     return (
@@ -161,8 +155,8 @@ export default function InterviewSession() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-sky-50 py-8 px-4">
       <div className="max-w-5xl mx-auto">
-        {/* Camera and Transcription - Centered Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+         {/* Camera and Transcription - Centered Grid */}
+        <div className="grid grid-cols- md:grid-cols-2 gap-6 mb-4">
           {/* Camera View - Medium Size, Centered */}
           <div className="flex justify-center">
             <div className="w-full max-w-lg">
@@ -183,7 +177,6 @@ export default function InterviewSession() {
             </div>
           </div>
         </div>
-
         {/* Question Display - Full Width */}
         <div className="mb-6">
           <QuestionDisplay
@@ -201,6 +194,8 @@ export default function InterviewSession() {
             canGoPrevious={currentQuestionIndex > 0}
           />
         </div>
+
+       
 
         {/* Submit Button - Centered */}
         <div className="flex justify-center">

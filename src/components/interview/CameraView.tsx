@@ -17,7 +17,10 @@ export default function CameraView({ isEnabled, onToggle }: CameraViewProps) {
       stopCamera();
     }
 
-    return () => stopCamera();
+    // ✅ Cleanup on unmount - ALWAYS stop camera
+    return () => {
+      stopCamera();
+    };
   }, [isEnabled]);
 
   const startCamera = async () => {
@@ -36,9 +39,20 @@ export default function CameraView({ isEnabled, onToggle }: CameraViewProps) {
   };
 
   const stopCamera = () => {
+    console.log('🎥 Stopping camera...');
+    
+    // Stop all tracks from the stream
     if (stream) {
-      stream.getTracks().forEach(track => track.stop());
+      stream.getTracks().forEach(track => {
+        console.log('🛑 Stopping track:', track.label);
+        track.stop();
+      });
       setStream(null);
+    }
+
+    // Clear video element
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
     }
   };
 
