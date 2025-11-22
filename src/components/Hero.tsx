@@ -48,13 +48,13 @@ export default function Hero() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link  to="/assessment" className="px-8 py-4 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-all hover:shadow-xl hover:scale-105 font-semibold text-lg group">
+              <Link  to="/signup" className="px-8 py-4 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-all hover:shadow-xl hover:scale-105 font-semibold text-lg group">
                 Take A Quiz
                 <span className="inline-block ml-2 group-hover:translate-x-1 transition-transform">→</span>
               </Link>
-              <button  className="px-8 py-4 bg-white text-slate-700 rounded-lg border-2 border-slate-200 hover:border-sky-300 hover:shadow-lg transition-all font-semibold text-lg">
+              {/* <button  className="px-8 py-4 bg-white text-slate-700 rounded-lg border-2 border-slate-200 hover:border-sky-300 hover:shadow-lg transition-all font-semibold text-lg">
                 Watch Demo
-              </button>
+              </button> */}
             </div>
 
             <div className="flex items-center gap-8 pt-4">
