@@ -14,7 +14,7 @@ export default function Sidebar({ role }: SidebarProps) {
   const userMenuItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/user-dashboard' },
     { icon: Video, label: 'Interview Practice', path: '/jobdescription' },
-    { icon: Video, label: 'Cv Analyze', path: '/cv-dashboard' },
+    { icon: Video, label: 'Cv Optimizer', path: '/cv-dashboard' },
     { icon: BookOpen, label: 'Post Job RoadMap', path: '/postroadmap' },
     // { icon: Trophy, label: 'Achievements', path: '/achievements' },
     // { icon: Target, label: 'Goals', path: '/goals' },

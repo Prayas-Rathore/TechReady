@@ -146,23 +146,6 @@ export default function JobDescriptionSelector() {
             </div>
           </div>
 
-          <div className="border-2 border-dashed border-slate-200 rounded-xl p-6 mb-6">
-            <div className="flex items-start gap-4">
-              <Upload className="w-6 h-6 text-slate-400 flex-shrink-0 mt-1" />
-              <div className="flex-1">
-                <p className="font-semibold text-slate-900 mb-1">
-                  Upload your resume for improved, tailored feedback!
-                </p>
-                <p className="text-sm text-blue-600">
-                  You must be a Pro member to access this feature
-                </p>
-              </div>
-              <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full">
-                Pro
-              </span>
-            </div>
-          </div>
-
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
               {error}
