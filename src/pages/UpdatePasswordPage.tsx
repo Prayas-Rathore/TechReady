@@ -14,15 +14,23 @@ export default function UpdatePasswordPage() {
   const [error, setError] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
-  useEffect(() => {
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        navigate('/login');
-      }
-    };
-    checkSession();
-  }, [navigate]);
+//   useEffect(() => {
+//     const checkSession = async () => {
+//       const { data: { session } } = await supabase.auth.getSession();
+//       if (!session) {
+//         navigate('/login');
+//       }
+//     };
+//     checkSession();
+//   }, [navigate]);
+
+useEffect(() => {
+  const hash = window.location.hash;
+  if (!hash.includes("access_token")) {
+    navigate('/login'); // prevent direct visit
+  }
+}, [navigate]);
+
 
   const validatePassword = (password: string): string[] => {
     const errors: string[] = [];
@@ -66,13 +74,20 @@ export default function UpdatePasswordPage() {
         password: newPassword,
       });
 
-      if (updateError) throw updateError;
+      if (updateError) {
+        if (updateError.message?.includes("JWT expired")) {
+            setError("Your reset link has expired. Please request a new password reset.");
+            return;
+        }
+        throw updateError;
+        }
+
 
       setSuccess(true);
 
       setTimeout(() => {
         navigate('/login');
-      }, 2000);
+      }, 2500);
     } catch (err: any) {
       console.error('Error updating password:', err);
       setError(err.message || 'Failed to update password. Please try again.');
