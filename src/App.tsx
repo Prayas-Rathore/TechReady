@@ -17,7 +17,9 @@ import PricingPage from './pages/PricingPage';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import JobDescriptionSelector from './pages/JobDescriptionSelector';
+import JobDescriptionSelectorfree from './pages/JobDescriptionSelector_free';
 import InterviewSession from './pages/InterviewSession'
+import InterviewSuggestionsPage from './pages/InterviewSuggestionsPage';
 import CVAnalyzerPage from './pages/CVAnalyzerPage';
 import CVDashboardHome from './pages/CVDashboardHome';
 import CVAnalysisPage from './pages/CVAnalysisPage';
@@ -64,7 +66,10 @@ function App() {
                       <Route path="/roadmap" element={<RoadmapGeneratorPage />} />
                       <Route path="/user-dashboard" element={<UserDashboard />} />
                       <Route path="/jobdescription" element={<JobDescriptionSelector />} />
+                      <Route path="/ai_jobdescription" element={<JobDescriptionSelectorfree />} />
                       <Route path="/interview/:sessionId" element={<InterviewSession />} />
+                      {/* <Route path="/interview/:sessionId/suggestions" element={<InterviewSuggestionsPage />} /> */}
+                      <Route path="/interview/:sessionId/suggestions" element={<InterviewSuggestionsPage />} />
                       <Route path="/postroadmap" element={<PostRoadMap />} />
                       <Route path="/job-details" element={<JobDetailsFormPage />} />
                       <Route path="/cv-analyzer" element={<CVAnalyzerPage />} />

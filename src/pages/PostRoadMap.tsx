@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { ChevronLeft, ChevronRight, CheckCircle, Lightbulb, Loader2, ArrowRight } from 'lucide-react';
 import { QUIZ_SECTIONS } from '../data/postroadmapquestion';
 import { supabase } from '../services/SupabaseClient';
+import { useNavigate } from "react-router-dom";
 
 interface SelectedAnswers {
   [questionId: string]: string;
@@ -22,11 +23,15 @@ interface Question {
 }
 
 export default function AssessmentQuizPage() {
+  const navigate = useNavigate();
+
   const [sectionIndex, setSectionIndex] = useState(0);
   const [selected, setSelected] = useState<SelectedAnswers>({});
   const [explanations, setExplanations] = useState<Explanations>({});
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [loadingUserQuizStatus, setLoadingUserQuizStatus] = useState<boolean>(true);
+
 
   const currentSection = QUIZ_SECTIONS[sectionIndex];
   const totalQuestions = QUIZ_SECTIONS.reduce((sum, section) => sum + section.questions.length, 0);
@@ -103,6 +108,86 @@ export default function AssessmentQuizPage() {
     setSelected((prev) => ({ ...prev, [questionId]: optionKey }));
     await explain(questionId, questionText, optionKey, optionText);
   };
+
+  useEffect(() => {
+  async function checkQuizStatus() {
+    try {
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (userError) {
+        console.error("Auth error:", userError.message);
+        return;
+      }
+
+      if (!user) {
+        console.warn("User not logged in");
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("has_taken_roadmap_quiz")
+        .eq("id", user.id)
+        .single();
+
+      if (error) {
+        console.error("DB error:", error.message);
+        return;
+      }
+
+      if (data?.has_taken_roadmap_quiz) {
+        navigate("/user-dashboard", { replace: true });
+        return;
+      }
+
+      setLoadingUserQuizStatus(false);
+    } catch (err) {
+      console.error("Unexpected error:", err);
+    }
+  }
+
+  checkQuizStatus();
+}, [navigate]);
+
+
+async function finishQuiz() {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    // Save completed status
+    await supabase
+      .from("profiles")
+      .update({ has_taken_roadmap_quiz: true })
+      .eq("id", user.id);
+
+    // (OPTIONAL) Save user answers
+    await supabase.from("quiz_results").insert({
+      user_id: user.id,
+      answers: selected,
+      explanations
+    });
+
+    navigate("/user-dashboard");
+  } catch (err) {
+    console.error(err);
+    alert("Something went wrong!");
+  }
+}
+
+
+
+if (loadingUserQuizStatus) {
+  return (
+    <div className="min-h-screen flex items-center justify-center text-slate-600">
+      Checking your test access...
+    </div>
+  );
+}
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-sky-50 p-6">
@@ -235,14 +320,24 @@ export default function AssessmentQuizPage() {
             Previous Section
           </button>
 
-          <button
-            onClick={() => setSectionIndex((prev) => Math.min(prev + 1, QUIZ_SECTIONS.length - 1))}
-            disabled={sectionIndex === QUIZ_SECTIONS.length - 1}
-            className="flex items-center gap-2 px-6 py-3 bg-sky-600 text-white rounded-xl font-semibold hover:bg-sky-700 disabled:opacity-40"
-          >
-            Next Section
-            <ChevronRight className="w-5 h-5" />
-          </button>
+          {sectionIndex !== QUIZ_SECTIONS.length - 1 ? (
+            <button
+              onClick={() => setSectionIndex((prev) => Math.min(prev + 1, QUIZ_SECTIONS.length - 1))}
+              className="flex items-center gap-2 px-6 py-3 bg-sky-600 text-white rounded-xl font-semibold hover:bg-sky-700"
+            >
+              Next Section
+              <ChevronRight className="w-5 h-5" />
+            </button>
+                ) : (
+                  <button
+                    onClick={finishQuiz}
+                    className="px-8 py-3 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700"
+                  >
+                    Finish & Go to Dashboard
+                  </button>
+                )}
+
+          
         </div>
 
       </div>

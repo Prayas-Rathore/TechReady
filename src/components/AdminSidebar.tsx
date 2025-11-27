@@ -119,7 +119,7 @@ export default function AdminSidebar() {
       </div>
 
       <div className="p-4 border-t border-slate-200">
-        <div className="bg-gradient-to-br from-purple-500 via-purple-600 to-pink-600 rounded-xl p-4 text-white">
+        {/* <div className="bg-gradient-to-br from-purple-500 via-purple-600 to-pink-600 rounded-xl p-4 text-white">
           <div className="flex items-center gap-2 mb-3">
             <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
               <Shield className="w-4 h-4" />
@@ -143,7 +143,7 @@ export default function AdminSidebar() {
               <span className="font-semibold">23%</span>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* <button className="w-full mt-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2">
           <FileText className="w-4 h-4" />

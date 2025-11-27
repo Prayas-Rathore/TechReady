@@ -167,16 +167,16 @@ export default function LoginPage() {
 
                 {/* Remember + Forgot */}
                 <div className="flex items-center justify-between">
-                  <label className="flex items-center">
+                  {/* <label className="flex items-center">
                     <input
                       type="checkbox"
                       className="w-4 h-4 rounded border-white/20 bg-white/10 text-cyan-500 focus:ring-2 focus:ring-cyan-400"
                     />
                     <span className="ml-2 text-sm text-slate-300">Remember me</span>
-                  </label>
-                  <Link to="/forgot-password" className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors">
+                  </label> */}
+                  {/* <Link to="/forgot-password" className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors">
                     Forgot password?
-                  </Link>
+                  </Link> */}
                 </div>
 
                 {/* Submit */}
@@ -197,6 +197,18 @@ export default function LoginPage() {
                     </>
                   )}
                 </button>
+                <div className="flex items-center justify-between">
+                  {/* <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      className="w-4 h-4 rounded border-white/20 bg-white/10 text-cyan-500 focus:ring-2 focus:ring-cyan-400"
+                    />
+                    <span className="ml-2 text-sm text-slate-300">Remember me</span>
+                  </label> */}
+                  <Link to="/forgot-password" className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors">
+                    Forgot password?
+                  </Link>
+                </div>
               </form>
 
               <div className="mt-8 text-center">

@@ -23,25 +23,24 @@ serve(async (req: Request) => {
         "Authorization": `Bearer ${Deno.env.get("OPENAI_API_KEY")}`,
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          {
-            role: 'system',
-            content: `Generate exactly 7 interview questions based on this job description. 
-                      Return ONLY valid JSON — no markdown, no code fences, no explanations.
-
-                      Job Description: ${jobDescription}
-
-                      Format: ["question 1", "question 2", "question 3", "question 4", "question 5","question 6","question 7"]`
-          },
-          {
-            role: 'user',
-            content: `Create personalized interview questions for: ${JSON.stringify(jobDescription)}`
-          }
-        ],
-        temperature: 0.7,
-        max_tokens: 3000,
-      }),
+      model: "gpt-4o-mini",
+      max_tokens: 300,
+      temperature: 0.4,
+      messages: [
+        {
+          role: "system",
+          content: `
+            Generate exactly 3 short and technical interview questions based strictly on the job description.
+            Return ONLY valid JSON — no markdown, no extra text, no explanations.
+            Format: ["question 1", "question 2", "question 3"]
+          `
+        },
+        {
+          role: "user",
+          content: `Job Description: ${jobDescription}`
+        }
+      ]
+    }),
     })
 
     const data = await openaiResponse.json()

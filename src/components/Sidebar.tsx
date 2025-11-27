@@ -16,7 +16,7 @@ export default function Sidebar({ role }: SidebarProps) {
     { icon: Video, label: 'Interview Practice', path: '/jobdescription' },
     { icon: Video, label: 'Cv Optimizer', path: '/cv-dashboard' },
     { icon: BookOpen, label: 'Post Job RoadMap', path: '/postroadmap' },
-    // { icon: Trophy, label: 'Achievements', path: '/achievements' },
+    { icon: Trophy, label: 'Free Interview Practice', path: '/ai_jobdescription' },
     // { icon: Target, label: 'Goals', path: '/goals' },
     // { icon: Calendar, label: 'Schedule', path: '/schedule' },
     // { icon: Settings, label: 'Settings', path: '/settings' },
