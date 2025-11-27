@@ -83,6 +83,7 @@ useEffect(() => {
         }
 
 
+      await supabase.auth.signOut();
       setSuccess(true);
 
       setTimeout(() => {
