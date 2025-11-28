@@ -5,37 +5,37 @@ const features = [
   {
     icon: Zap,
     title: 'Real-Time Feedback',
-    description: 'Get instant, actionable insights during and after your mock interview to improve immediately.',
+    description: 'Get instant, brutal-honest AI feedback on your answers to fix mistakes on the spot.',
     gradient: 'from-amber-400 to-orange-500',
   },
   {
     icon: Users,
-    title: 'Industry Expert Interviewers',
-    description: 'Practice with professionals from top companies like Google, Amazon, Microsoft, and more.',
+    title: 'Industry-Level Interview Experience',
+    description: 'Experience high-pressure, real-world interview environments built to train you like top candidates.',
     gradient: 'from-sky-400 to-blue-500',
   },
   {
     icon: FileText,
-    title: 'Resume Review',
-    description: 'Get your resume professionally reviewed and optimized to pass ATS systems and impress recruiters.',
+    title: 'Smart Resume Optimization',
+    description: 'Turn your resume into a recruiter-magnet with AI-powered optimization that beats filtering systems.',
     gradient: 'from-green-400 to-emerald-500',
   },
   {
     icon: Sparkles,
-    title: 'Soft Skills Training',
-    description: 'Master communication, body language, and behavioral questions with personalized coaching.',
+    title: 'Confidence & Communication Mastery ',
+    description: '- Train your speaking, clarity, and body language until you perform like a pro in every interview.',
     gradient: 'from-violet-400 to-purple-500',
   },
   {
     icon: Clock,
-    title: 'Flexible Scheduling',
-    description: 'Book sessions at your convenience with 24/7 availability across all time zones.',
+    title: 'Practice Anytime, Anywhere ',
+    description: 'Train at your own pace with 24/7 AI mock interviews that adapt to your skill level and fit your schedule.',
     gradient: 'from-pink-400 to-rose-500',
   },
   {
     icon: Award,
-    title: 'Performance Analytics',
-    description: 'Track your progress over time with detailed analytics and personalized improvement plans.',
+    title: 'Advanced Performance Tracking ',
+    description: 'See exactly where you’re winning and losing — with smart breakdowns that force real improvement.',
     gradient: 'from-cyan-400 to-teal-500',
   },
 ];
@@ -49,7 +49,7 @@ export default function Features() {
             Everything You Need to Succeed
           </h2>
           <p className="text-xl text-slate-600">
-            Comprehensive tools and expert guidance to help you ace any interview
+            Powerful AI-built tools designed to make you unstoppable in interviews.
           </p>
         </div>
 
@@ -74,12 +74,12 @@ export default function Features() {
         </div>
 
         <div className="mt-16 bg-gradient-to-r from-sky-600 to-blue-600 rounded-3xl p-12 text-center text-white shadow-2xl">
-          <h3 className="text-3xl font-bold mb-4">Ready to Experience the Difference?</h3>
+          <h3 className="text-3xl font-bold mb-4">Your Competition Is Already Training. Are You?</h3>
           <p className="text-sky-100 text-lg mb-8 max-w-2xl mx-auto">
-            Join thousands of successful candidates who transformed their interview skills with our platform
+            Join thousands of ambitious candidates who are using MockitHub to turn interview stress into job offers
           </p>
           <Link to="/signup" className="px-8 py-4 bg-white text-sky-600 rounded-lg hover:bg-slate-50 transition-all hover:shadow-xl hover:scale-105 font-semibold text-lg">
-            Start Your Free Trial
+                Start Free AI Mock Now
           </Link>
         </div>
       </div>

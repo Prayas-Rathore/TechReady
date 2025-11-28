@@ -12,7 +12,7 @@ export default function Hero() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Video className="w-8 h-8 text-sky-600" />
-            <span className="text-2xl font-bold text-slate-900">MockIthub</span>
+            <span className="text-2xl font-bold text-slate-900">MockitHub</span>
           </div>
           <div className="hidden md:flex items-center gap-8">
             <a href="#how-it-works" className="text-slate-600 hover:text-slate-900 transition-colors">How It Works</a>
@@ -37,19 +37,19 @@ export default function Hero() {
             </div>
 
             <h1 className="text-5xl lg:text-6xl font-bold text-slate-900 leading-tight">
-              Crack Your Next Interview with{' '}
+              Stop Failing Interviews Start Getting {' '} 
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-blue-600">
-                Confidence
+                HIRED
               </span>
             </h1>
 
             <p className="text-xl text-slate-600 leading-relaxed">
-              1-on-1 mock interviews with industry experts. Get real-time feedback, improve your skills, and land your dream job.
+              Train with AI. Get Real-time feedback. See Real Improvement. Get Hired Faster.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Link  to="/signup" className="px-8 py-4 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-all hover:shadow-xl hover:scale-105 font-semibold text-lg group">
-                Take A Quiz
+                Start a Mock Test
                 <span className="inline-block ml-2 group-hover:translate-x-1 transition-transform">→</span>
               </Link>
               {/* <button  className="px-8 py-4 bg-white text-slate-700 rounded-lg border-2 border-slate-200 hover:border-sky-300 hover:shadow-lg transition-all font-semibold text-lg">
@@ -98,7 +98,7 @@ export default function Hero() {
                   ))}
                 </div>
                 <p className="text-slate-600 italic">
-                  "The mock interviews helped me identify my weak points and improve drastically. Got my dream job in just 3 weeks!"
+                  "MockitHub is a true game-changer — the AI mock interviews boosted my confidence and helped me land my dream job in just 2 weeks."
                 </p>
               </div>
             </div>

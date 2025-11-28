@@ -63,7 +63,7 @@ export default function CVDashboardLayout() {
                 <h3 className="font-semibold">Pro Tip</h3>
               </div>
               <p className="text-xs text-white/90">
-                Tailor your CV to each job description for better results
+                Turn your CV into a job-winning weapon for every application.
               </p>
             </div>
           </div>

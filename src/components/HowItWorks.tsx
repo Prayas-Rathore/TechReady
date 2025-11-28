@@ -4,25 +4,25 @@ const steps = [
   {
     icon: Search,
     title: 'Choose Your Domain',
-    description: 'Select from technical interviews, HR rounds, behavioral questions, or specific tech stacks.',
+    description: 'Select your role, experience level to get a personalized practice flow built just for you.',
     color: 'from-sky-500 to-blue-500',
   },
   {
     icon: Calendar,
-    title: 'Schedule Interview',
-    description: 'Pick a convenient time slot with an industry expert matched to your needs.',
+    title: '	Start AI Mock Interview ',
+    description: 'Practice with our AI-powered mock interviewer that feels like a real company interview experience.',
     color: 'from-blue-500 to-violet-500',
   },
   {
     icon: MessageSquare,
-    title: 'Get Real-Time Feedback',
-    description: 'Receive detailed insights on your performance, communication, and technical skills.',
+    title: 'Get Smart Feedback',
+    description: 'Receive instant AI insights on your answers, confidence, communication, and technical clarity.',
     color: 'from-violet-500 to-purple-500',
   },
   {
     icon: Trophy,
     title: 'Land Your Dream Job',
-    description: 'Apply your learnings and ace your actual interviews with confidence.',
+    description: 'Walk in confident &  walk out with an offer and a Future.',
     color: 'from-purple-500 to-pink-500',
   },
 ];
@@ -33,10 +33,10 @@ export default function HowItWorks() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-4">
-            How It Works
+            Your Path from Nervous to Hired
           </h2>
           <p className="text-xl text-slate-600">
-            Get started in four simple steps and transform your interview skills
+            Simple yet powerful steps to prepare, practice, and crack interviews.
           </p>
         </div>
 

@@ -3,27 +3,27 @@ import { Video, Linkedin, Twitter, Facebook, Instagram, Mail } from 'lucide-reac
 const footerLinks = {
   product: [
     { name: 'Features', href: '#features' },
-    { name: 'Pricing', href: '#pricing' },
-    { name: 'How It Works', href: '#how-it-works' },
-    { name: 'Success Stories', href: '#testimonials' },
+    { name: ' Win Stories', href: '#pricing' },
+    { name: ' Plans & Pricing', href: '#how-it-works' },
+    { name: 'MockitHub Work', href: '#testimonials' },
   ],
   company: [
     { name: 'About Us', href: '#' },
-    { name: 'Careers', href: '#' },
-    { name: 'Blog', href: '#' },
-    { name: 'Press Kit', href: '#' },
+    { name: 'Media Kit', href: '#' },
+    { name: 'Career Blog', href: '#' },
+    { name: 'Join our Team', href: '#' },
   ],
   resources: [
-    { name: 'Help Center', href: '#' },
-    { name: 'Interview Tips', href: '#' },
-    { name: 'Community', href: '#' },
-    { name: 'FAQ', href: '#faq' },
+    { name: 'Support Hub', href: '#' },
+    { name: 'Quick FAQs', href: '#' },
+    { name: 'Community Space', href: '#' },
+    { name: 'Interview Playbooks', href: '#faq' },
   ],
   legal: [
-    { name: 'Privacy Policy', href: '#' },
-    { name: 'Terms of Service', href: '#' },
-    { name: 'Cookie Policy', href: '#' },
-    { name: 'Refund Policy', href: '#' },
+    { name: 'Users Terms', href: '#' },
+    { name: 'Privacy Promise', href: '#' },
+    { name: 'Cookie Settings', href: '#' },
+    { name: 'Refund Protection', href: '#' },
   ],
 };
 
@@ -42,10 +42,10 @@ export default function Footer() {
           <div className="lg:col-span-2">
             <div className="flex items-center gap-2 mb-4">
               <Video className="w-8 h-8 text-sky-500" />
-              <span className="text-2xl font-bold text-white">Mockithub</span>
+              <span className="text-2xl font-bold text-white">MockitHub</span>
             </div>
             <p className="text-slate-400 leading-relaxed mb-6">
-              Empowering job seekers worldwide with expert-led mock interviews and personalized feedback to land their dream jobs.
+              Built to turn job seekers into top performers through powerful AI mock interviews and real-world feedback .
             </p>
             <div className="flex gap-4">
               {socialLinks.map((social, index) => (
@@ -62,7 +62,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-white font-semibold mb-4">Product</h3>
+            <h3 className="text-white font-semibold mb-4">PRODUCT</h3>
             <ul className="space-y-3">
               {footerLinks.product.map((link, index) => (
                 <li key={index}>
@@ -75,7 +75,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-white font-semibold mb-4">Company</h3>
+            <h3 className="text-white font-semibold mb-4">COMPANY</h3>
             <ul className="space-y-3">
               {footerLinks.company.map((link, index) => (
                 <li key={index}>
@@ -88,7 +88,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-white font-semibold mb-4">Resources</h3>
+            <h3 className="text-white font-semibold mb-4">RESOURCES</h3>
             <ul className="space-y-3">
               {footerLinks.resources.map((link, index) => (
                 <li key={index}>
@@ -101,7 +101,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-white font-semibold mb-4">Legal</h3>
+            <h3 className="text-white font-semibold mb-4">LEGAL</h3>
             <ul className="space-y-3">
               {footerLinks.legal.map((link, index) => (
                 <li key={index}>
@@ -117,7 +117,7 @@ export default function Footer() {
         <div className="border-t border-slate-800 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-slate-400 text-sm">
-              © 2025 Mockithub. All rights reserved.
+              © 2025 MockitHub. All rights reserved.
             </p>
             <div className="flex items-center gap-6 text-sm">
               <a 

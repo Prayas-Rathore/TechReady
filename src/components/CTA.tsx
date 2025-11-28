@@ -10,15 +10,16 @@ export default function CTA() {
         <div className="max-w-4xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-sky-500/20 text-sky-300 rounded-full text-sm font-medium mb-8 border border-sky-500/30">
             <CheckCircle className="w-4 h-4" />
-            Join 10,000+ successful candidates
+             Join 10,000+ Interview winners 
           </div>
 
           <h2 className="text-4xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-            Ready to Nail Your Next Interview?
+            Don't Walk Into Another Interview Unprepared
           </h2>
 
           <p className="text-xl text-slate-300 mb-12 leading-relaxed max-w-2xl mx-auto">
-            Start practicing with industry experts today and transform your interview skills. First session is completely free!
+             TRAIN WITH AI  -   PERFORM LIKE A PRO -  GET HIRED FASTER  
+             <p> YOUR FIRST MOCK IS COMPLETELY FREE! </p>
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -34,15 +35,15 @@ export default function CTA() {
           <div className="mt-12 flex flex-wrap justify-center gap-8 text-slate-400">
             <div className="flex items-center gap-2">
               <CheckCircle className="w-5 h-5 text-sky-400" />
-              <span>No credit card required</span>
+              <span>Zero-risk sign up</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle className="w-5 h-5 text-sky-400" />
-              <span>Cancel anytime</span>
+              <span>Cancel instantly anytime</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle className="w-5 h-5 text-sky-400" />
-              <span>14-day money-back guarantee</span>
+              <span>Guaranteed results or your money back</span>
             </div>
           </div>
         </div>
