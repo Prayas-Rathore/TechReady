@@ -73,7 +73,7 @@ export default function UserDashboard() {
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="flex">
-  <Sidebar role={Number(role) === 1 ? 'admin' : 'user'} />
+      <Sidebar role={Number(role) === 1 ? 'admin' : 'user'} />
         <div className="flex-1">
           <nav className="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -230,9 +230,10 @@ export default function UserDashboard() {
                   </tr>
                 ))}
 
-            </div>
+        </div>
+        
             <div className="bg-white p-4 rounded-xl shadow">
-      <h3 className="text-lg font-semibold mb-3">Recent Interview Sessions</h3>
+        <h3 className="text-lg font-semibold mb-3">Recent Interview Sessions</h3>
 
       <ul className="space-y-3">
         {lastFiveSessions?.map((item) => {
