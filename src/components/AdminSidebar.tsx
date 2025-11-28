@@ -148,7 +148,7 @@ export default function AdminSidebar() {
         {/* <button className="w-full mt-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2">
           <FileText className="w-4 h-4" />
           View Documentation
-        </button> */}
+        </button> v */}
       </div>
     </>
   );
