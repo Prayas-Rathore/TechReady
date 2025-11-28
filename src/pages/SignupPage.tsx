@@ -246,18 +246,18 @@ export default function SignupPage() {
             <div className="mb-8 animate-fadeIn">
               <Link to="/" className="flex items-center gap-3 mb-12">
                 <Video className="w-10 h-10 text-emerald-400" />
-                <span className="text-3xl font-bold text-white">MockIthub</span>
+                <span className="text-3xl font-bold text-white">MockItHub</span>
               </Link>
 
               <h1 className="text-5xl font-bold text-white mb-6 leading-tight">
-                Join thousands of
+                Your Smart Path to 
                 <span className="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-rose-400 to-emerald-400">
-                  successful engineers
+               Cracking Interviews
                 </span>
               </h1>
 
               <p className="text-xl text-slate-300 leading-relaxed mb-8">
-                Get personalized interview prep and land your dream job at top tech companies.
+                Train with AI-powered mock interviews and get hired faster at top companies.
               </p>
             </div>
 

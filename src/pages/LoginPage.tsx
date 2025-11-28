@@ -81,25 +81,25 @@ export default function LoginPage() {
             <div className="mb-8 animate-fadeIn">
               <Link to="/" className="flex items-center gap-3 mb-12">
                 <Video className="w-10 h-10 text-cyan-400" />
-                <span className="text-3xl font-bold text-white">MockIthub</span>
+                <span className="text-3xl font-bold text-white">MockitHub</span>
               </Link>
 
               <h1 className="text-5xl font-bold text-white mb-6 leading-tight">
-                Welcome back to your
+                Welcome Back 
                 <span className="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400">
-                  interview success
+                Time to  Win Interviews.
                 </span>
               </h1>
 
               <p className="text-xl text-slate-300 leading-relaxed mb-8">
-                Continue your journey to landing your dream job at top tech companies.
+                Stay on track with AI-powered mock interviews designed to turn preparation into real job results.
               </p>
             </div>
 
             <div className="space-y-6 animate-fadeIn" style={{ animationDelay: '0.2s' }}>
               <Feature icon={<Sparkles />} title="Personalized Learning" text="AI-powered paths tailored to your goals" />
-              <Feature icon={<Zap />} title="Real-Time Practice" text="Live coding and mock interviews" />
-              <Feature icon={<Shield />} title="Expert Support" text="Guidance from industry professionals" />
+              <Feature icon={<Zap />} title="Real-Time Practice" text="Mock AI interviews to practice" />
+              <Feature icon={<Shield />} title="Smart Performance Tracking" text="AI insights that show exactly how to improve." />
             </div>
           </div>
         </div>
