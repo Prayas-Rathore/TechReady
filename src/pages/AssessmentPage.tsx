@@ -8,6 +8,7 @@ import SuccessScreen from '../components/assessment/SuccessScreen';
 import { AssessmentData } from '../types/assessment';
 import { questions } from '../data/questions';
 import { supabase } from '../services/SupabaseClient';
+import { User } from '@supabase/supabase-js';
 
 export default function AssessmentPage() {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ export default function AssessmentPage() {
   const [answers, setAnswers] = useState<AssessmentData>({});
   const [isComplete, setIsComplete] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
 
   // Build the visible question list based on professional status selection.
   // Build the visible question list based on professional status selection.
@@ -124,101 +126,126 @@ const visibleQuestions = useMemo(() => {
     }
   };
   const handleSubmit = async () => {
-    setIsSaving(true);
+  setIsSaving(true);
 
-    let savedRecord: any = null;
+  let savedRecord: any = null;
 
-    try {
-      const id = guestUserId || localStorage.getItem('guest_user_id') || `guest-${Date.now()}`;
+  try {
+    const id =
+      guestUserId ||
+      localStorage.getItem("guest_user_id") ||
+      `guest-${Date.now()}`;
 
-      console.log('💾 Submitting assessment...');
-      console.log('Guest ID:', id);
-      console.log('Answers:', answers);
+    const payload = {
+      anon_user_id: id,
+      answers: answers,
+      submitted_at: new Date().toISOString(),
+    };
 
-      const payload = {
-        anon_user_id: id,
-        answers: answers,
-        submitted_at: new Date().toISOString(),
-      };
+    const { data, error } = await supabase
+      .from("guest_assessments")
+      .insert([payload])
+      .select();
 
-      const { data, error } = await supabase
-        .from('guest_assessments')
-        .insert([payload])
-        .select();
-
-      if (error) {
-        console.error('❌ Supabase Error:', {
-          message: error.message,
-          details: error.details,
-          hint: error.hint,
-          code: error.code,
-        });
-        throw error;
-      }
-
-      console.log('✅ Saved to Supabase:', data);
-
-      savedRecord = data?.[0] ?? { ...payload };
-
-      // Backup to localStorage
-      try {
-        const resultsKey = 'assessment_results';
-        const stored = localStorage.getItem(resultsKey);
-        let parsed: any = stored ? JSON.parse(stored) : {};
-        if (!parsed || typeof parsed !== 'object') parsed = {};
-
-        parsed[id] = parsed[id] || [];
-        parsed[id].push({
-          answers,
-          timestamp: new Date().toISOString(),
-          supabaseId: savedRecord?.id,
-        });
-        localStorage.setItem(resultsKey, JSON.stringify(parsed));
-        console.log('✅ Assessment also backed up to localStorage');
-      } catch (localErr) {
-        console.warn('⚠️ LocalStorage backup failed (non-critical):', localErr);
-      }
-    } catch (err) {
-      console.error('❌ Failed to save assessment:', err);
-
-      // Fallback: Save only to localStorage if Supabase fails
-      try {
-        const id = guestUserId || localStorage.getItem('guest_user_id') || `guest-${Date.now()}`;
-        const resultsKey = 'assessment_results';
-        const stored = localStorage.getItem(resultsKey);
-        let parsed: any = stored ? JSON.parse(stored) : {};
-        if (!parsed || typeof parsed !== 'object') parsed = {};
-        parsed[id] = parsed[id] || [];
-        parsed[id].push({
-          answers,
-          timestamp: new Date().toISOString(),
-          supabaseFailed: true,
-        });
-        localStorage.setItem(resultsKey, JSON.stringify(parsed));
-        console.log('⚠️ Saved to localStorage as fallback');
-
-        // create a local savedRecord so we can forward something to the roadmap page
-        savedRecord = { anon_user_id: id, answers, submitted_at: new Date().toISOString(), supabaseFailed: true };
-      } catch (fallbackErr) {
-        console.error('❌ Even fallback failed:', fallbackErr);
-      }
-    } finally {
-      setIsSaving(false);
+    if (error) {
+      console.error("❌ Supabase Error:", {
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+        code: error.code,
+      });
+      throw error;
     }
 
-    // Simulate processing time
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    savedRecord = data?.[0] ?? { ...payload };
 
-    setIsComplete(true);
+    // 🔵 UPDATE USER PROFILE FLAG IN SUPABASE (ONLY IF LOGGED IN USER)
+    try {
+      if (user?.id) {
+        await supabase
+          .from("profiles")
+          .update({ has_taken_assessment_quiz: true })
+          .eq("id", user.id);
 
-    // Clear the in-progress answers (assessment is submitted)
-    localStorage.removeItem('assessment_answers');
+        console.log(
+          "✔ Profile updated: has_taken_assessment_quiz = true"
+        );
+      }
+    } catch (profileErr) {
+      console.error("❌ Failed updating profile flag:", profileErr);
+    }
 
-    // Redirect to roadmap page, passing the savedRecord in navigation state
-    setTimeout(() => {
-      navigate('/roadmap', { state: { assessmentData: savedRecord } });
-    }, 3000);
-  };
+    // Backup to localStorage
+    try {
+      const resultsKey = "assessment_results";
+      const stored = localStorage.getItem(resultsKey);
+      let parsed: any = stored ? JSON.parse(stored) : {};
+      if (!parsed || typeof parsed !== "object") parsed = {};
+
+      parsed[id] = parsed[id] || [];
+      parsed[id].push({
+        answers,
+        timestamp: new Date().toISOString(),
+        supabaseId: savedRecord?.id,
+      });
+      localStorage.setItem(resultsKey, JSON.stringify(parsed));
+      console.log("✅ Assessment also backed up to localStorage");
+    } catch (localErr) {
+      console.warn(
+        "⚠️ LocalStorage backup failed (non-critical):",
+        localErr
+      );
+    }
+  } catch (err) {
+    console.error("❌ Failed to save assessment:", err);
+
+    // Fallback: Save only to localStorage if Supabase fails
+    try {
+      const id =
+        guestUserId ||
+        localStorage.getItem("guest_user_id") ||
+        `guest-${Date.now()}`;
+      const resultsKey = "assessment_results";
+      const stored = localStorage.getItem(resultsKey);
+      let parsed: any = stored ? JSON.parse(stored) : {};
+      if (!parsed || typeof parsed !== "object") parsed = {};
+      parsed[id] = parsed[id] || [];
+      parsed[id].push({
+        answers,
+        timestamp: new Date().toISOString(),
+        supabaseFailed: true,
+      });
+      localStorage.setItem(resultsKey, JSON.stringify(parsed));
+      console.log("⚠️ Saved to localStorage as fallback");
+
+      // create a local savedRecord so we can forward something to the roadmap page
+      savedRecord = {
+        anon_user_id: id,
+        answers,
+        submitted_at: new Date().toISOString(),
+        supabaseFailed: true,
+      };
+    } catch (fallbackErr) {
+      console.error("❌ Even fallback failed:", fallbackErr);
+    }
+  } finally {
+    setIsSaving(false);
+  }
+
+  // Simulate processing time
+  await new Promise((resolve) => setTimeout(resolve, 1500));
+
+  setIsComplete(true);
+
+  // Clear the in-progress answers (assessment is submitted)
+  localStorage.removeItem("assessment_answers");
+
+  // Redirect to roadmap page, passing the savedRecord in navigation state
+  setTimeout(() => {
+    navigate("/roadmap", { state: { assessmentData: savedRecord } });
+  }, 3000);
+};
+
 
   const handleSaveAndExit = () => {
     localStorage.setItem('assessment_answers', JSON.stringify(answers));
