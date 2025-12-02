@@ -4,49 +4,47 @@ import { Link } from 'react-router-dom';
 
 const plans = [
   {
-    name: 'Quick Win',
-    price: '29',
+    name: 'Basic Pack',
+    price: '14.99',
     description: 'Perfect for getting started with mock interviews',
     features: [
-      '2 AI mock interviews per month',
-      ' Instant feedback - to improve ',
-      'Email support whenever you need',
-      'community acess for motivation',
-      'Performance tracking dashboard',
+      '	JD Scanner & CV Optimiser',	
+      ' AI Interview Prep ',
+      'Portfolio Branding & Identity',
+      'Buddy Model'
+      
     ],
-    cta: 'Get Started',
+    cta: 'Get Basic',
     highlighted: false,
   },
   {
-    name: 'Career Game-Changer',
-    price: '79',
+    name: 'Starter Pack (Entry Level)',
+    price: '19.99',
     description: 'Most popular choice for serious job seekers ',
     features: [
-      '8  intense AI mock interviews',
-      'Deep Performance analytics',
-      'Smart AI resume optimization',
-      'Priority email & chat support',
-      'Unlimited progress tracking',
-      'Soft skills & confidence training',
-      'Full Interview recording access',
+      'Mindset & Confidence Training',
+       'JD Scanner & CV Optimiser',	
+      'AI Interview Prep ',
+      'Portfolio Branding & Identity',
+      'Buddy Model'
     ],
-    cta: 'Start Free Trial',
+    cta: 'Start Starter',
     highlighted: true,
   },
   {
     name: 'Guaranteed Success',
-    price: '149',
+    price: '29.99',
     description: ' Built for candidates who refuse average and aim for offers.',
     features: [
-      'Unlimited AI mock interviews',
-      'Advanced AI performance intelligence',
-      'Monthly elite resume upgrades',
-      '24/7 VIP priority support',
-
-      '  Career acceleration roadmap',
-      'LinkedIn profile optimization',
+      'Mindset & Confidence Training',
+      'JD Scanner & CV Optimiser',	
+      ' AI Interview Prep ',
+      'Portfolio Branding & Identity',
+      'Buddy Model',
+      'Post-Job Growth Roadmap',
+      
     ],
-    cta: 'Get Started',
+    cta: 'Go Pro',
     highlighted: false,
   },
 ];

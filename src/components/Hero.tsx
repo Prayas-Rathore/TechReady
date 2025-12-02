@@ -12,7 +12,7 @@ export default function Hero() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Video className="w-8 h-8 text-sky-600" />
-            <span className="text-2xl font-bold text-slate-900">MockitHub</span>
+            <span className="text-2xl font-bold text-slate-900">MockITHub</span>
           </div>
           <div className="hidden md:flex items-center gap-8">
             <a href="#how-it-works" className="text-slate-600 hover:text-slate-900 transition-colors">How It Works</a>
@@ -37,14 +37,14 @@ export default function Hero() {
             </div>
 
             <h1 className="text-5xl lg:text-6xl font-bold text-slate-900 leading-tight">
-              Stop Failing Interviews Start Getting {' '} 
+              Crack the Code: Land Your Dream Tech Role - With {' '} 
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-blue-600">
-                HIRED
+                Confidence
               </span>
             </h1>
 
             <p className="text-xl text-slate-600 leading-relaxed">
-              Train with AI. Get Real-time feedback. See Real Improvement. Get Hired Faster.
+              MockITHub equips you with CV optimisation, AI interview prep, portfolio branding, confidence training, Buddy blogs, and a growth roadmap — everything you need to stand out and succeed in tech. 
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
@@ -98,7 +98,7 @@ export default function Hero() {
                   ))}
                 </div>
                 <p className="text-slate-600 italic">
-                  "MockitHub is a true game-changer — the AI mock interviews boosted my confidence and helped me land my dream job in just 2 weeks."
+                  "MockITHub is a true game-changer — the AI mock interviews boosted my confidence and helped me land my dream job in just 2 weeks."
                 </p>
               </div>
             </div>

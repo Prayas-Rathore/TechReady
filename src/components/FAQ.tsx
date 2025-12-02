@@ -3,12 +3,12 @@ import { useState } from 'react';
 
 const faqs = [
   {
-    question: 'How does MockitHub work?',
-    answer: 'MockitHub lets you choose your interview type, start a realistic AI-powered mock session, and practice anytime. After every session, you get instant feedback and clear improvement tips to help you perform better.',
+    question: 'How does MockITHub work?',
+    answer: 'MockITHub lets you choose your interview type, start a realistic AI-powered mock session, and practice anytime. After every session, you get instant feedback and clear improvement tips to help you perform better.',
   },
   {
     question: 'Who runs the mock interviews?',
-    answer: 'MockitHub uses AI trained on real interviews and industry hiring patterns to deliver realistic mock interview experiences. You get expert-level questions, follow-ups, and feedback designed to prepare you like top candidates .',
+    answer: 'MockITHub uses AI trained on real interviews and industry hiring patterns to deliver realistic mock interview experiences. You get expert-level questions, follow-ups, and feedback designed to prepare you like top candidates .',
   },
   {
     question: 'What interview types I can practice?',
@@ -24,7 +24,7 @@ const faqs = [
   },
   {
     question: 'Is there a free trial?',
-    answer: ': Yes — you get a free mock interview to experience MockitHub in action, complete with real-time feedback and performance insights.',
+    answer: ': Yes — you get a free mock interview to experience MockITHub in action, complete with real-time feedback and performance insights.',
   },
   {
     question: 'How does AI feedback help me?',
@@ -32,7 +32,7 @@ const faqs = [
   },
   {
     question: 'Are my sessions recorded?',
-    answer: 'Yes — your sessions are recorded (with your consent) so you can rewatch, analyze, and improve. All recordings stay private inside your MockitHub dashboard.',
+    answer: 'Yes — your sessions are recorded (with your consent) so you can rewatch, analyze, and improve. All recordings stay private inside your MockITHub dashboard.',
   },
 ];
 
@@ -47,7 +47,7 @@ export default function FAQ() {
             Everything You're Wondering (FAQs)
           </h2>
           <p className="text-xl text-slate-600">
-            Quick answers to everything you need to know about MockitHub.
+            Quick answers to everything you need to know about MockITHub.
           </p>
         </div>
 
