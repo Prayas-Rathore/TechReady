@@ -179,7 +179,9 @@ export default function Features() {
           </p>
           <Link
             to="/signup"
-            className="px-8 py-4 bg-white text-sky-600 rounded-lg hover:bg-slate-50 transition-all hover:shadow-xl hover:scale-105 font-semibold text-lg"
+            className="px-6 py-3 sm:px-8 sm:py-4 bg-white text-sky-600 rounded-lg transition-all font-semibold text-base sm:text-lg hover:bg-slate-50 hover:shadow-xl hover:scale-105 animate-buttonPulse will-change-transform"
+
+
           >
             Start Free Trial
           </Link>
