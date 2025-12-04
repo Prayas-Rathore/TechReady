@@ -1,6 +1,8 @@
 // src/services/postService.ts
 import { supabase } from '../SupabaseClient';
 import { Post } from '../../types/buddy.types';
+// Update src/services/postService.ts
+import { createPostNotifications } from '../buddy/notificationService';
 
 const PAGE_SIZE = 10;
 
@@ -30,23 +32,23 @@ export const fetchPosts = async (
 };
 
 // Create post
-export const createPost = async (
-  authorId: string,
-  title: string,
-  content: string
-): Promise<Post> => {
-  const { data, error } = await supabase
-    .from('posts')
-    .insert({ author_id: authorId, title, content })
-    .select(`
-      *,
-      author:profiles!author_id(id, full_name, email)
-    `)
-    .single();
+// export const createPost = async (
+//   authorId: string,
+//   title: string,
+//   content: string
+// ): Promise<Post> => {
+//   const { data, error } = await supabase
+//     .from('posts')
+//     .insert({ author_id: authorId, title, content })
+//     .select(`
+//       *,
+//       author:profiles!author_id(id, full_name, email)
+//     `)
+//     .single();
 
-  if (error) throw error;
-  return data;
-};
+//   if (error) throw error;
+//   return data;
+// };
 
 // Update post
 export const updatePost = async (
@@ -70,4 +72,35 @@ export const deletePost = async (postId: string): Promise<void> => {
     .eq('id', postId);
 
   if (error) throw error;
+};
+
+
+
+// Update createPost function
+export const createPost = async (
+  authorId: string,
+  title: string,
+  content: string
+): Promise<Post> => {
+  const { data, error } = await supabase
+    .from('posts')
+    .insert({ author_id: authorId, title, content })
+    .select(`
+      *,
+      author:profiles!author_id(id, full_name, email)
+    `)
+    .single();
+
+  if (error) throw error;
+
+  // Notify all buddies about the new post
+  const author = Array.isArray(data.author) ? data.author[0] : data.author;
+  await createPostNotifications(
+    authorId,
+    author.full_name || author.email || 'Someone',
+    data.id,
+    title
+  );
+
+  return data;
 };

@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { fetchPosts, createPost, deletePost } from '../../services/buddy/postService';
 import toast from 'react-hot-toast';
 
 interface Post {
@@ -7,13 +8,19 @@ interface Post {
   title: string;
   content: string;
   author_id: string;
-  author_name: string;
   created_at: string;
+  author?: {
+    id: string;
+    full_name: string | null;
+    email: string | null;
+  };
 }
 
 export const PostsPage: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
@@ -25,9 +32,25 @@ export const PostsPage: React.FC = () => {
   const menuRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
 
+  const observer = useRef<IntersectionObserver>();
+  const lastPostRef = useCallback((node: HTMLDivElement) => {
+    if (loading) return;
+    if (observer.current) observer.current.disconnect();
+    
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        setPage(prev => prev + 1);
+      }
+    });
+    
+    if (node) observer.current.observe(node);
+  }, [loading, hasMore]);
+
   useEffect(() => {
-    loadPosts();
-  }, []);
+    if (user) {
+      loadPosts();
+    }
+  }, [page, user]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -41,20 +64,13 @@ export const PostsPage: React.FC = () => {
   }, []);
 
   const loadPosts = async () => {
+    if (!user) return;
+    
     setLoading(true);
     try {
-      // Mock data - replace with actual API call
-      const mockPosts: Post[] = [
-        {
-          id: '1',
-          title: 'Looking for Java Interview Tips',
-          content: 'Hey everyone! I have an upcoming Java developer interview and would love any tips on common questions and best practices.',
-          author_id: user?.id || 'other',
-          author_name: 'John Doe',
-          created_at: new Date().toISOString()
-        }
-      ];
-      setPosts(mockPosts);
+      const { posts: newPosts, hasMore: more } = await fetchPosts(user.id, page);
+      setPosts(prev => page === 0 ? newPosts : [...prev, ...newPosts]);
+      setHasMore(more);
     } catch (error) {
       console.error('Error loading posts:', error);
       toast.error('Failed to load posts');
@@ -64,6 +80,7 @@ export const PostsPage: React.FC = () => {
   };
 
   const handleCreatePost = async () => {
+    if (!user) return;
     if (!title.trim() || !content.trim()) {
       toast.error('Please fill in all fields');
       return;
@@ -71,14 +88,7 @@ export const PostsPage: React.FC = () => {
 
     setCreating(true);
     try {
-      const newPost: Post = {
-        id: Date.now().toString(),
-        title,
-        content,
-        author_id: user?.id || '',
-        author_name: user?.email?.split('@')[0] || 'Anonymous',
-        created_at: new Date().toISOString()
-      };
+      const newPost = await createPost(user.id, title, content);
       setPosts(prev => [newPost, ...prev]);
       toast.success('Post created successfully!');
       setShowCreateModal(false);
@@ -97,6 +107,7 @@ export const PostsPage: React.FC = () => {
 
     setDeleting(true);
     try {
+      await deletePost(selectedPostId);
       setPosts(prev => prev.filter(p => p.id !== selectedPostId));
       toast.success('Post deleted successfully!');
       setShowDeleteModal(false);
@@ -136,7 +147,7 @@ export const PostsPage: React.FC = () => {
     });
   };
 
-  if (loading) {
+  if (loading && page === 0) {
     return (
       <div className="flex justify-center items-center min-h-[300px]">
         <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500" />
@@ -147,15 +158,20 @@ export const PostsPage: React.FC = () => {
   return (
     <div className="max-w-2xl mx-auto space-y-4">
       <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
-        <button
-          onClick={() => setShowCreateModal(true)}
-          className="w-full text-left px-4 py-3 bg-slate-50 hover:bg-slate-100 rounded-full text-slate-500 transition-colors"
-        >
-          What's on your mind?
-        </button>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
+            {(user?.email?.[0] || 'U').toUpperCase()}
+          </div>
+          <button
+            onClick={() => setShowCreateModal(true)}
+            className="flex-1 text-left px-4 py-3 bg-slate-50 hover:bg-slate-100 rounded-full text-slate-500 transition-colors"
+          >
+            What's on your mind?
+          </button>
+        </div>
       </div>
 
-      {posts.length === 0 ? (
+      {posts.length === 0 && !loading ? (
         <div className="bg-white rounded-xl border border-slate-200 p-16 text-center">
           <div className="text-6xl mb-4">💭</div>
           <h3 className="text-xl font-bold text-slate-900 mb-2">Share your thoughts</h3>
@@ -171,29 +187,34 @@ export const PostsPage: React.FC = () => {
         </div>
       ) : (
         <div className="space-y-4">
-          {posts.map((post) => {
+          {posts.map((post, index) => {
             const isAuthor = post.author_id === user?.id;
             const isExpanded = expandedPosts.has(post.id);
             const shouldTruncate = post.content.length > 300;
             const displayContent = !isExpanded && shouldTruncate
               ? post.content.substring(0, 300) + '...'
               : post.content;
+            
+            const author = Array.isArray(post.author) ? post.author[0] : post.author;
+            const authorName = author?.full_name || author?.email?.split('@')[0] || 'Anonymous';
+            const isLast = index === posts.length - 1;
 
             return (
               <div
                 key={post.id}
+                ref={isLast ? lastPostRef : null}
                 className="bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow"
               >
                 <div className="p-5">
                   <div className="flex items-start gap-3 mb-4">
                     <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
-                      {post.author_name[0].toUpperCase()}
+                      {authorName[0].toUpperCase()}
                     </div>
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2">
                         <div>
-                          <h4 className="font-semibold text-slate-900">{post.author_name}</h4>
+                          <h4 className="font-semibold text-slate-900">{authorName}</h4>
                           <p className="text-xs text-slate-500">{formatTimestamp(post.created_at)}</p>
                         </div>
 
@@ -270,6 +291,16 @@ export const PostsPage: React.FC = () => {
         </div>
       )}
 
+      {loading && page > 0 && (
+        <div className="flex justify-center py-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500" />
+        </div>
+      )}
+
+      {!hasMore && posts.length > 0 && (
+        <p className="text-center text-slate-500 py-4 text-sm">No more posts</p>
+      )}
+
       {showCreateModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl max-w-2xl w-full shadow-2xl">
@@ -323,8 +354,13 @@ export const PostsPage: React.FC = () => {
       {showDeleteModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl">
-            <h3 className="text-xl font-bold text-slate-900 mb-2">Delete Post?</h3>
-            <p className="text-slate-600 mb-6">
+            <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-bold text-slate-900 mb-2 text-center">Delete Post?</h3>
+            <p className="text-slate-600 mb-6 text-center">
               This action cannot be undone. Your post will be permanently removed.
             </p>
 

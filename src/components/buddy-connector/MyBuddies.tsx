@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { BuddyConnection } from '../../types/buddy.types';
-import { fetchMyBuddies } from '../../services/buddy/buddyService';
+import { fetchMyBuddies,removeConnection  } from '../../services/buddy/buddyService';
 import toast from 'react-hot-toast';
 
 export const MyBuddies: React.FC = () => {
@@ -51,6 +51,17 @@ export const MyBuddies: React.FC = () => {
       year: 'numeric'
     });
   };
+
+  const handleRemoveConnection = async (requestId: string) => {
+  try {
+    await removeConnection(requestId);
+    setBuddies(prev => prev.filter(b => b.request_id !== requestId));
+    toast.success('Connection removed');
+  } catch (error) {
+    console.error('Error removing connection:', error);
+    toast.error('Failed to remove connection');
+  }
+};
 
   const allDomains = Array.from(
     new Set(buddies.flatMap(b => b.matching_domains.map(d => d.name)))
@@ -162,9 +173,17 @@ export const MyBuddies: React.FC = () => {
 
                   {openMenuId === connection.request_id && (
                     <div className="absolute right-0 mt-1 w-40 bg-white rounded-lg shadow-xl border border-slate-200 py-1 z-10">
-                      <button className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 transition-colors">
-                        Remove Connection
-                      </button>
+                      <button 
+                          onClick={() => {
+                            // ADD THIS
+                            if (confirm('Remove this connection?')) {
+                              handleRemoveConnection(connection.request_id);
+                            }
+                          }}
+                          className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 transition-colors"
+                        >
+                          Remove Connection
+                        </button>
                     </div>
                   )}
                 </div>

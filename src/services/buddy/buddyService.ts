@@ -2,6 +2,7 @@
 
 import { supabase } from '../../services/SupabaseClient';
 import { Domain, BuddySuggestion, ConnectionRequest, BuddyConnection } from '../../types/buddy.types';
+import { createConnectionNotification } from '../buddy/notificationService';
 
 // ==================== DOMAINS ====================
 
@@ -227,17 +228,17 @@ export const fetchIncomingRequests = async (userId: string): Promise<ConnectionR
   }));
 };
 
-export const updateRequestStatus = async (
-  requestId: string,
-  status: 'accepted' | 'rejected'
-): Promise<void> => {
-  const { error } = await supabase
-    .from('connection_requests')
-    .update({ status })
-    .eq('id', requestId);
+// export const updateRequestStatus = async (
+//   requestId: string,
+//   status: 'accepted' | 'rejected'
+// ): Promise<void> => {
+//   const { error } = await supabase
+//     .from('connection_requests')
+//     .update({ status })
+//     .eq('id', requestId);
 
-  if (error) throw error;
-};
+//   if (error) throw error;
+// };
 
 // ==================== MY BUDDIES ====================
 
@@ -326,3 +327,61 @@ export const fetchMyBuddies = async (userId: string): Promise<BuddyConnection[]>
   }
 };
 
+
+
+// Update the updateRequestStatus function
+export const updateRequestStatus = async (
+  requestId: string,
+  status: 'accepted' | 'rejected'
+): Promise<void> => {
+  // Get request details first
+  const { data: request, error: fetchError } = await supabase
+    .from('connection_requests')
+    .select(`
+      sender_id,
+      receiver_id,
+      sender:profiles!sender_id(id, full_name, email),
+      receiver:profiles!receiver_id(id, full_name, email)
+    `)
+    .eq('id', requestId)
+    .single();
+
+  if (fetchError) throw fetchError;
+
+  // Update status
+  const { error } = await supabase
+    .from('connection_requests')
+    .update({ status })
+    .eq('id', requestId);
+
+  if (error) throw error;
+
+  // If accepted, create notifications for both users
+  if (status === 'accepted' && request) {
+    const sender = Array.isArray(request.sender) ? request.sender[0] : request.sender;
+    const receiver = Array.isArray(request.receiver) ? request.receiver[0] : request.receiver;
+
+    await Promise.all([
+      createConnectionNotification(
+        request.sender_id,
+        request.receiver_id,
+        receiver.full_name || receiver.email || 'Someone'
+      ),
+      createConnectionNotification(
+        request.receiver_id,
+        request.sender_id,
+        sender.full_name || sender.email || 'Someone'
+      )
+    ]);
+  }
+};
+
+// Remove connection
+export const removeConnection = async (requestId: string): Promise<void> => {
+  const { error } = await supabase
+    .from('connection_requests')
+    .delete()
+    .eq('id', requestId);
+
+  if (error) throw error;
+};
