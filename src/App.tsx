@@ -34,6 +34,12 @@ import PrivacyPolicyPage from './pages/PrivacyPolicyPage.tsx';
 import CookiesPolicyPage from './pages/CookiesPolicyPage.tsx';
 import TermsOfServicePage from './pages/TermsOfServicePage.tsx';
 import ConsentPolicyPage from './pages/ConsentPolicyPage.tsx';
+import { SubscriptionProvider } from './context/SubscriptionContext';
+import PremiumPage from './components/protection/PremiumPage';
+import SubscriptionSuccess from './pages/SubscriptionSuccess';
+// import { BuddyConnectorPage } from './pages/BuddyConnector/index';
+import BuddyConnectorPage from './components/buddy-connector/index';
+
 
 function App() {
 
