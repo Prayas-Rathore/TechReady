@@ -15,16 +15,17 @@ const footerLinks = {
   ],
   resources: [
     { name: 'Support Hub', href: '#' },
-    { name: 'Quick FAQs', href: '#' },
+    { name: 'Quick FAQs', href: '#faq' },
     { name: 'Community Space', href: '#' },
     { name: 'Interview Playbooks', href: '#faq' },
   ],
-  legal: [
-    { name: 'Users Terms', href: '#' },
-    { name: 'Privacy Promise', href: '#' },
-    { name: 'Cookie Settings', href: '#' },
-    { name: 'Refund Protection', href: '#' },
-  ],
+ legal: [
+  { name: 'Users Terms', href: '/terms-of-service' },
+  { name: 'Privacy Promise', href: '/privacy-policy' },
+  { name: 'Cookie Settings', href: '/cookies-policy' },
+  { name: 'Consent Policy', href: '/consent-policy' },
+],
+
 };
 
 const socialLinks = [
