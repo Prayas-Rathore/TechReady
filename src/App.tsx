@@ -30,6 +30,10 @@ import JobDetailsFormPage from './pages/JobDetailsFormPage';
 // import RoadmapDisplay from './components/roadmap/RoadmapDisplay';
 import UserFormPage from './pages/UserFormPage';
 import UserListPage from './pages/UserListPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage.tsx';
+import CookiesPolicyPage from './pages/CookiesPolicyPage.tsx';
+import TermsOfServicePage from './pages/TermsOfServicePage.tsx';
+import ConsentPolicyPage from './pages/ConsentPolicyPage.tsx';
 
 function App() {
 
@@ -51,7 +55,11 @@ function App() {
                     <Route path="/pricing" element={<PricingPage />} />
                     <Route path="/SuccessScreen" element={<SuccessScreen />} />
                     {/* <Route path="/roadmaptest" element={<RoadmapDisplay />} /> */}
+                      <Route path="/cookies-policy" element={<CookiesPolicyPage />} />
                   {/* Public routes */}
+                     <Route path="/consent-policy" element={<ConsentPolicyPage />} />
+                     <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+                       <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
 
                     <Route element={<ProtectedRoute />}>
                       {/* Start Admin Part */}
