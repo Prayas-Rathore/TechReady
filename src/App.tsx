@@ -32,6 +32,10 @@ import UserFormPage from './pages/UserFormPage';
 import UserListPage from './pages/UserListPage';
 import { SubscriptionProvider } from './context/SubscriptionContext';
 import PremiumPage from './components/protection/PremiumPage';
+import SubscriptionSuccess from './pages/SubscriptionSuccess';
+// import { BuddyConnectorPage } from './pages/BuddyConnector/index';
+import BuddyConnectorPage from './components/buddy-connector/index';
+
 
 function App() {
 
@@ -68,14 +72,16 @@ function App() {
                           {/* Start User Part */}
                           <Route path="/assessment" element={<AssessmentPage />} />
                           {/* <Route path="/roadmap" element={<RoadmapGeneratorPage />} /> */}
-                          <Route 
-                            path="/roadmap" 
-                              element={
-                                    <PremiumPage>
-                                        <RoadmapGeneratorPage />
-                                    </PremiumPage>
-                              } 
+                          <Route path="/roadmap" element={ <RoadmapGeneratorPage />} 
                           />
+                          <Route path="/postroadmap" element={<PremiumPage>
+                                                                <PostRoadMap />
+                                                              </PremiumPage>
+                                                              } />
+
+                          <Route path="/subscription/success" element={<SubscriptionSuccess />} />
+
+                          <Route path="/buddy-connector" element={<BuddyConnectorPage />} />
 
                           <Route path="/user-dashboard" element={<UserDashboard />} />
                           <Route path="/jobdescription" element={<JobDescriptionSelector />} />
@@ -83,7 +89,6 @@ function App() {
                           <Route path="/interview/:sessionId" element={<InterviewSession />} />
                           {/* <Route path="/interview/:sessionId/suggestions" element={<InterviewSuggestionsPage />} /> */}
                           <Route path="/interview/:sessionId/suggestions" element={<InterviewSuggestionsPage />} />
-                          <Route path="/postroadmap" element={<PostRoadMap />} />
                           <Route path="/job-details" element={<JobDetailsFormPage />} />
                           <Route path="/cv-analyzer" element={<CVAnalyzerPage />} />
                           <Route path="/cv-dashboard" element={<CVDashboardLayout />}>

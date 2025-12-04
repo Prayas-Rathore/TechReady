@@ -18,7 +18,7 @@ export default function Sidebar({ role }: SidebarProps) {
     { icon: BookOpen, label: 'Post Job RoadMap', path: '/postroadmap' },
     { icon: Trophy, label: 'Free Interview Practice', path: '/ai_jobdescription' },
     { icon: Target, label: 'Assessment', path: '/assessment' },
-    // { icon: Calendar, label: 'Schedule', path: '/schedule' },
+    { icon: Users, label: 'Buddy Connector', path: '/buddy-connector' },
     // { icon: Settings, label: 'Settings', path: '/settings' },
   ];
 

@@ -1,126 +1,210 @@
+import { Check, Sparkles } from 'lucide-react';
+import { useCreateCheckout, useSubscription } from '../components/hooks/stripe/useSubscription';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { Star, Sparkles } from 'lucide-react';
-import BillingToggle from '../components/pricing/BillingToggle';
-import PricingCard from '../components/pricing/PricingCard';
-import FeatureComparisonTable from '../components/pricing/FeatureComparisonTable';
-import TestimonialCarousel from '../components/pricing/TestimonialCarousel';
-import FAQSection from '../components/pricing/FAQSection';
-import TrustIndicators from '../components/pricing/TrustIndicators';
-import OneTimePurchases from '../components/pricing/OneTimePurchases';
-import PaymentModal from '../components/pricing/PaymentModal';
-import { pricingTiers, oneTimePurchases, testimonials, faqs, PricingTier, OneTimePurchase } from '../data/pricingData';
 
-export default function PricingPage() {
-  const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'annual'>('annual');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<PricingTier | OneTimePurchase | null>(null);
-  const [itemType, setItemType] = useState<'subscription' | 'purchase'>('subscription');
+// Map your plan names to tiers
+const plans = [
+  {
+    name: 'Basic- do not use',
+    tier: 'pro',
+    priceId: 'price_1SZqpYRoRT3gf2HBepdSlxCc',
+    price: '0.10',
+    description: 'Perfect for getting started with mock interviews',
+    features: [
+      '2 AI mock interviews per month',
+      'Instant feedback - to improve',
+      'Email support whenever you need',
+      'Community access for motivation',
+      'Performance tracking dashboard',
+    ],
+    cta: 'Start 3day Free Trial',
+    highlighted: false,
+  },
+  {
+    name: 'Career Game-Changer',
+    tier: 'premium',
+    priceId: 'price_yyyyy', // Replace with your actual Stripe Price ID
+    price: '79',
+    description: 'Most popular choice for serious job seekers',
+    features: [
+      '8 intense AI mock interviews',
+      'Deep Performance analytics',
+      'Smart AI resume optimization',
+      'Priority email & chat support',
+      'Unlimited progress tracking',
+      'Soft skills & confidence training',
+      'Full Interview recording access',
+    ],
+    cta: 'Start Free Trial',
+    highlighted: true,
+  },
+  {
+    name: 'Guaranteed Success',
+    tier: 'elite',
+    priceId: 'price_zzzzz', // Replace with your actual Stripe Price ID
+    price: '149',
+    description: 'Built for candidates who refuse average and aim for offers.',
+    features: [
+      'Unlimited AI mock interviews',
+      'Advanced AI performance intelligence',
+      'Monthly elite resume upgrades',
+      '24/7 VIP priority support',
+      'Career acceleration roadmap',
+      'LinkedIn profile optimization',
+    ],
+    cta: 'Start Free Trial',
+    highlighted: false,
+  },
+];
 
-  const handleSelectPlan = (tier: PricingTier) => {
-    if (tier.ctaText === 'Contact Sales') {
-      window.location.href = 'mailto:sales@interviewpro.com';
-      return;
+export default function Pricing() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const createCheckout = useCreateCheckout();
+  const { data: subscription, isLoading: subscriptionLoading } = useSubscription();
+  const [processingPlan, setProcessingPlan] = useState<string | null>(null);
+
+  const handlePlanSelect = async (plan: typeof plans[0]) => {
+  // Check if user is authenticated
+  if (!user) {
+    localStorage.setItem('pendingSubscription', JSON.stringify({
+      priceId: plan.priceId,
+      tier: plan.tier
+    }));
+    navigate('/signup');
+    return;
+  }
+
+  // Check if user already has an active subscription
+  if (subscription) {
+    alert('You already have an active subscription. Please cancel it first to switch plans.');
+    return;
+  }
+
+  setProcessingPlan(plan.tier);
+
+  try {
+    await createCheckout.mutateAsync({
+      priceId: plan.priceId,
+      tier: plan.tier
+    });
+  } catch (error) {
+    console.error('Error creating checkout:', error);
+    
+    // Show user-friendly error message
+    const errorMessage = error instanceof Error 
+      ? error.message 
+      : 'Failed to start checkout. Please try again.';
+    
+    alert(errorMessage);
+    
+    // If it's an auth error, redirect to login
+    if (errorMessage.includes('log in')) {
+      navigate('/login');
     }
-    setSelectedItem(tier);
-    setItemType('subscription');
-    setIsModalOpen(true);
-  };
-
-  const handlePurchase = (purchase: OneTimePurchase) => {
-    setSelectedItem(purchase);
-    setItemType('purchase');
-    setIsModalOpen(true);
-  };
+  } finally {
+    setProcessingPlan(null);
+  }
+};
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-sky-50">
-      <div className="bg-gradient-to-br from-blue-50 to-purple-50 py-16 px-4">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-md mb-6">
-            <Sparkles className="w-5 h-5 text-blue-600" />
-            <span className="text-sm font-semibold text-slate-900">Limited Time Offer - 33% Off Annual Plans</span>
-          </div>
-
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 mb-4">
-            Choose Your Path to Success
-          </h1>
-
-          <p className="text-xl md:text-2xl text-slate-600 mb-6 max-w-3xl mx-auto">
-            Join 10,000+ developers who landed their dream jobs
-          </p>
-
-          <div className="flex items-center justify-center gap-2 text-slate-600 mb-8">
-            <div className="flex">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-              ))}
-            </div>
-            <span className="font-semibold">4.9/5</span>
-            <span>from 3,451 reviews</span>
-          </div>
-
-          <BillingToggle billingPeriod={billingPeriod} onToggle={setBillingPeriod} />
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 -mt-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          {pricingTiers.map(tier => (
-            <PricingCard
-              key={tier.id}
-              tier={tier}
-              billingPeriod={billingPeriod}
-              onSelect={handleSelectPlan}
-            />
-          ))}
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 mb-16">
-        <FeatureComparisonTable tiers={pricingTiers} onSelectPlan={handleSelectPlan} />
-      </div>
-
-      <TrustIndicators />
-
-      <div className="max-w-7xl mx-auto px-4 py-16">
-        <OneTimePurchases purchases={oneTimePurchases} onPurchase={handlePurchase} />
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 mb-16">
-        <TestimonialCarousel testimonials={testimonials} />
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 mb-16">
-        <FAQSection faqs={faqs} />
-      </div>
-
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 py-16 px-4">
-        <div className="max-w-4xl mx-auto text-center text-white">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Ready to Land Your Dream Job?
+    <section id="pricing" className="py-24 bg-white">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-4">
+            Unlock Your Career Growth
           </h2>
-          <p className="text-xl mb-8 text-blue-100">
-            Start your free trial today. No credit card required.
+          <p className="text-xl text-slate-600">
+            Pick your plan. Practice harder. Get hired faster.
           </p>
-          <button
-            onClick={() => handleSelectPlan(pricingTiers[1])}
-            className="px-8 py-4 bg-white text-blue-600 rounded-xl font-bold text-lg hover:shadow-2xl transition-all hover:scale-105"
-          >
-            Get Started Free →
-          </button>
-          <p className="text-sm text-blue-100 mt-4">
-            Join 10,000+ developers who are already succeeding
+          <p className="text-sm text-green-600 font-semibold mt-2">
+            ✨ 3-Day Free Trial on All Plans - No Credit Card Required
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+          {plans.map((plan, index) => {
+            const isProcessing = processingPlan === plan.tier;
+            const hasActiveSubscription = subscription?.subscription_tier === plan.tier;
+
+            return (
+              <div
+                key={index}
+                className={`relative rounded-3xl p-8 ${
+                  plan.highlighted
+                    ? 'bg-gradient-to-br from-sky-600 to-blue-600 text-white shadow-2xl scale-105 border-4 border-sky-400'
+                    : 'bg-white border-2 border-slate-200 hover:border-sky-300 hover:shadow-xl'
+                } transition-all`}
+              >
+                {plan.highlighted && (
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-amber-400 text-slate-900 px-6 py-2 rounded-full font-semibold text-sm flex items-center gap-2 shadow-lg">
+                    <Sparkles className="w-4 h-4" />
+                    Most Popular
+                  </div>
+                )}
+
+                {hasActiveSubscription && (
+                  <div className="absolute -top-4 right-4 bg-green-500 text-white px-4 py-1 rounded-full font-semibold text-xs shadow-lg">
+                    Active Plan
+                  </div>
+                )}
+
+                <div className="text-center mb-8">
+                  <h3 className={`text-2xl font-bold mb-2 ${plan.highlighted ? 'text-white' : 'text-slate-900'}`}>
+                    {plan.name}
+                  </h3>
+                  <p className={`text-sm mb-6 ${plan.highlighted ? 'text-sky-100' : 'text-slate-600'}`}>
+                    {plan.description}
+                  </p>
+                  <div className="flex items-baseline justify-center gap-2">
+                    <span className={`text-5xl font-bold ${plan.highlighted ? 'text-white' : 'text-slate-900'}`}>
+                      ${plan.price}
+                    </span>
+                    <span className={plan.highlighted ? 'text-sky-100' : 'text-slate-600'}>
+                      /month
+                    </span>
+                  </div>
+                </div>
+
+                <ul className="space-y-4 mb-8">
+                  {plan.features.map((feature, i) => (
+                    <li key={i} className="flex items-start gap-3">
+                      <div className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center ${
+                        plan.highlighted ? 'bg-sky-400' : 'bg-sky-100'
+                      }`}>
+                        <Check className={`w-3 h-3 ${plan.highlighted ? 'text-white' : 'text-sky-600'}`} />
+                      </div>
+                      <span className={plan.highlighted ? 'text-sky-50' : 'text-slate-700'}>
+                        {feature}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+
+                <button
+                  onClick={() => handlePlanSelect(plan)}
+                  disabled={isProcessing || subscriptionLoading || hasActiveSubscription}
+                  className={`w-full py-4 rounded-lg font-semibold transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed ${
+                    plan.highlighted
+                      ? 'bg-white text-sky-600 hover:bg-slate-50 shadow-xl'
+                      : 'bg-slate-900 text-white hover:bg-slate-800'
+                  }`}
+                >
+                  {isProcessing ? 'Processing...' : hasActiveSubscription ? 'Current Plan' : plan.cta}
+                </button>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="text-center mt-12">
+          <p className="text-slate-600 mb-4">
+            All plans include a 3-day free trial and 14-day money-back guarantee
           </p>
         </div>
       </div>
-
-      <PaymentModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        selectedItem={selectedItem}
-        billingPeriod={billingPeriod}
-        itemType={itemType}
-      />
-    </div>
+    </section>
   );
 }
