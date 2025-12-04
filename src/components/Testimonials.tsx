@@ -3,20 +3,18 @@ import { useState, useEffect } from 'react';
 
 const testimonials = [
   {
-    name: 'Sarah Chen',
-    role: 'Software Engineer at Amazon',
-    image: 'SC',
-    content: 'InterviewPro was a game-changer for me. The mock interviews were incredibly realistic, and the feedback I received helped me improve my coding speed and communication. Landed my dream job at Amazon!',
+    name: 'Jenny, 22, Bangalore',
+    image: 'J',
+    content: 'I landed a tech internship two weeks after using MockITHub’s CV and interview tools—I’d still be cold-applying otherwise.',
     rating: 5,
   },
   {
-    name: 'Michael Rodriguez',
-    role: 'Product Manager at Microsoft',
-    image: 'MR',
-    content: 'The behavioral interview prep was outstanding. My interviewer helped me craft compelling stories and frame my experiences perfectly. Got three offers after just two weeks of practice!',
+    name: 'Gerard, 29, London',
+    image: 'G',
+    content: 'As a career-changer from marketing to dev, the mock interviews made all the difference. I walked in confident and got the offer.',
     rating: 5,
   },
-  {
+  /*{
     name: 'Priya Sharma',
     role: 'Data Scientist at Meta',
     image: 'PS',
@@ -43,7 +41,7 @@ const testimonials = [
     image: 'AJ',
     content: 'The detailed analytics helped me track my progress and focus on areas that needed improvement. The platform is professional, easy to use, and incredibly effective.',
     rating: 5,
-  },
+  },*/
 ];
 
 export default function Testimonials() {

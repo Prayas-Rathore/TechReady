@@ -49,7 +49,7 @@ export default function AdminDashboard() {
             <Link to="/" className="flex items-center gap-2">
               <Video className="w-8 h-8 text-purple-600" />
               <div>
-                <span className="text-2xl font-bold text-slate-900">MockIthub</span>
+                <span className="text-2xl font-bold text-slate-900">MockITHub</span>
                 <span className="ml-2 text-xs font-semibold text-purple-600 bg-purple-100 px-2 py-1 rounded">ADMIN</span>
               </div>
             </Link>

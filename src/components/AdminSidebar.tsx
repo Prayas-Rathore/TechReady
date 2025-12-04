@@ -76,7 +76,7 @@ export default function AdminSidebar() {
             <Video className="w-6 h-6 text-white" />
           </div>
           <div>
-            <span className="text-xl font-bold text-slate-900">MockitHub</span>
+            <span className="text-xl font-bold text-slate-900">MockITHub</span>
           </div>
         </div>
         <div className="flex items-center gap-2 mt-2">

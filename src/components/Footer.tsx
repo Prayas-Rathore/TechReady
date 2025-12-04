@@ -15,16 +15,17 @@ const footerLinks = {
   ],
   resources: [
     { name: 'Support Hub', href: '#' },
-    { name: 'Quick FAQs', href: '#' },
+    { name: 'Quick FAQs', href: '#faq' },
     { name: 'Community Space', href: '#' },
     { name: 'Interview Playbooks', href: '#faq' },
   ],
-  legal: [
-    { name: 'Users Terms', href: '#' },
-    { name: 'Privacy Promise', href: '#' },
-    { name: 'Cookie Settings', href: '#' },
-    { name: 'Refund Protection', href: '#' },
-  ],
+ legal: [
+  { name: 'Users Terms', href: '/terms-of-service' },
+  { name: 'Privacy Promise', href: '/privacy-policy' },
+  { name: 'Cookie Settings', href: '/cookies-policy' },
+  { name: 'Consent Policy', href: '/consent-policy' },
+],
+
 };
 
 const socialLinks = [
@@ -42,7 +43,7 @@ export default function Footer() {
           <div className="lg:col-span-2">
             <div className="flex items-center gap-2 mb-4">
               <Video className="w-8 h-8 text-sky-500" />
-              <span className="text-2xl font-bold text-white">MockitHub</span>
+              <span className="text-2xl font-bold text-white">MockITHub</span>
             </div>
             <p className="text-slate-400 leading-relaxed mb-6">
               Built to turn job seekers into top performers through powerful AI mock interviews and real-world feedback .

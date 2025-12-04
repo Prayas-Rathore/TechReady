@@ -30,12 +30,10 @@ import JobDetailsFormPage from './pages/JobDetailsFormPage';
 // import RoadmapDisplay from './components/roadmap/RoadmapDisplay';
 import UserFormPage from './pages/UserFormPage';
 import UserListPage from './pages/UserListPage';
-import { SubscriptionProvider } from './context/SubscriptionContext';
-import PremiumPage from './components/protection/PremiumPage';
-import SubscriptionSuccess from './pages/SubscriptionSuccess';
-// import { BuddyConnectorPage } from './pages/BuddyConnector/index';
-import BuddyConnectorPage from './components/buddy-connector/index';
-
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage.tsx';
+import CookiesPolicyPage from './pages/CookiesPolicyPage.tsx';
+import TermsOfServicePage from './pages/TermsOfServicePage.tsx';
+import ConsentPolicyPage from './pages/ConsentPolicyPage.tsx';
 
 function App() {
 
@@ -58,7 +56,11 @@ function App() {
                     <Route path="/pricing" element={<PricingPage />} />
                     <Route path="/SuccessScreen" element={<SuccessScreen />} />
                     {/* <Route path="/roadmaptest" element={<RoadmapDisplay />} /> */}
+                      <Route path="/cookies-policy" element={<CookiesPolicyPage />} />
                   {/* Public routes */}
+                     <Route path="/consent-policy" element={<ConsentPolicyPage />} />
+                     <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+                       <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
 
 
                         <Route element={<ProtectedRoute />}>
