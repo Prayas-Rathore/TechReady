@@ -44,10 +44,10 @@ export interface FAQ {
 
 export const pricingTiers: PricingTier[] = [
   {
-    id: 'pro',
-    name: 'Pro',
-    tagline: 'For serious job seekers',
-    monthlyPrice: 19,
+    id: 'prod_TWY7vE5NGDjMYE',
+    name: 'Basic',
+    tagline: 'Basic Plan',
+    monthlyPrice: 14.99,
     annualPrice: 149,
     savings: 79,
     badge: null,
@@ -68,10 +68,10 @@ export const pricingTiers: PricingTier[] = [
     ]
   },
   {
-    id: 'premium',
-    name: 'Premium',
+    id: 'prod_TWY5iscQfEziK1',
+    name: 'Starter',
     tagline: 'Most Popular - Best Value',
-    monthlyPrice: 49,
+    monthlyPrice: 19.99,
     annualPrice: 399,
     savings: 189,
     badge: 'MOST POPULAR',
@@ -92,15 +92,15 @@ export const pricingTiers: PricingTier[] = [
     ]
   },
   {
-    id: 'elite',
-    name: 'Elite',
+    id: 'prod_TWY5qoq61HT7BO',
+    name: 'Pro',
     tagline: 'For executives & urgent seekers',
-    monthlyPrice: 99,
+    monthlyPrice: 29.99,
     annualPrice: 799,
     savings: 389,
     badge: 'VIP',
     popular: false,
-    ctaText: 'Contact Sales',
+    ctaText: 'Everything in Pro',
     ctaStyle: 'secondary',
     features: [
       { text: 'Everything in Premium, PLUS:', included: true, bold: true },

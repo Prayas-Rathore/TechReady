@@ -182,53 +182,65 @@ export default function UserDashboard() {
                 </button> */}
               </div>
 
-              {formattedScores?.map((user) => (
-                  <tr key={user.id} className="border-b border-slate-100 hover:bg-slate-50 transition-all">
-                    <td className="py-4 px-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center">
-                          <span className="text-white font-semibold text-sm">
-                            {user.name.charAt(0)}
-                          </span>
-                        </div>
-                        <span className="font-medium text-slate-900">{user.name}</span>
-                      </div>
-                    </td>
+              <table className="w-full">
+  <thead>
+    <tr className="border-b">
+      <th className="py-3 px-4 text-left">Name</th>
+      <th className="py-3 px-4 text-left">Score</th>
+      <th className="py-3 px-4 text-left">Status</th>
+      <th className="py-3 px-4 text-left">Date</th>
+    </tr>
+  </thead>
 
-                    <td className="py-4 px-4 text-slate-600">{user.email}</td>
+  <tbody>
+    {formattedScores?.map((user) => (
+      <tr key={user.id} className="border-b border-slate-100 hover:bg-slate-50 transition-all">
+        <td className="py-4 px-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center">
+              <span className="text-white font-semibold text-sm">
+                {user.name.charAt(0)}
+              </span>
+            </div>
+            <span className="font-medium text-slate-900">{user.name}</span>
+          </div>
+        </td>
 
-                    <td className="py-4 px-4">
-                      <span
-                        className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
-                          user.status === "active"
-                            ? "bg-emerald-100 text-emerald-700"
-                            : user.status === "inactive"
-                            ? "bg-amber-100 text-amber-700"
-                            : "bg-slate-200 text-slate-700"
-                        }`}
-                      >
-                        <span
-                          className={`w-1.5 h-1.5 rounded-full ${
-                            user.status === "active"
-                              ? "bg-emerald-500"
-                              : user.status === "inactive"
-                              ? "bg-amber-500"
-                              : "bg-slate-500"
-                          }`}
-                        ></span>
-                        {user.status === "active"
-                          ? "Improved"
-                          : user.status === "inactive"
-                          ? "Declined"
-                          : "Same"}
-                      </span>
-                    </td>
+        <td className="py-4 px-4 text-slate-600">{user.email}</td>
 
-                    <td className="py-4 px-4 text-slate-600 text-sm">{user.joined}</td>
+        <td className="py-4 px-4">
+          <span
+            className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
+              user.status === "active"
+                ? "bg-emerald-100 text-emerald-700"
+                : user.status === "inactive"
+                ? "bg-amber-100 text-amber-700"
+                : "bg-slate-200 text-slate-700"
+            }`}
+          >
+            <span
+              className={`w-1.5 h-1.5 rounded-full ${
+                user.status === "active"
+                  ? "bg-emerald-500"
+                  : user.status === "inactive"
+                  ? "bg-amber-500"
+                  : "bg-slate-500"
+              }`}
+            ></span>
+            {user.status === "active"
+              ? "Improved"
+              : user.status === "inactive"
+              ? "Declined"
+              : "Same"}
+          </span>
+        </td>
 
-                    
-                  </tr>
-                ))}
+        <td className="py-4 px-4 text-slate-600 text-sm">{user.joined}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
 
         </div>
         
