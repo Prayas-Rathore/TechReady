@@ -136,6 +136,8 @@ export default function PrivacyPolicyPage() {
             Your information may be transferred to and processed in countries other than your country of residence.
             These countries may have different data protection laws. We ensure appropriate safeguards are in place
             to protect your information in accordance with this Privacy Policy.
+          
+          Where required, we use UK-approved data transfer safeguards such as the UK International Data Transfer Agreement (IDTA) or the UK Addendum to the EU Standard Contractual Clauses.
           </p>
         </section>
 

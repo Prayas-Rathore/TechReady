@@ -3,12 +3,12 @@ import { Video, Linkedin, Twitter, Facebook, Instagram, Mail } from 'lucide-reac
 const footerLinks = {
   product: [
     { name: 'Features', href: '#features' },
-    { name: ' Win Stories', href: '#pricing' },
-    { name: ' Plans & Pricing', href: '#how-it-works' },
-    { name: 'MockitHub Work', href: '#testimonials' },
+    { name: 'Win Stories', href: '#testimonials' },
+    { name: ' Plans & Pricing', href: '#pricing' },
+    { name: 'MockitHub Work', href: '#how-it-works' },
   ],
   company: [
-    { name: 'About Us', href: '#' },
+    { name: 'About Us', href: '#about' },
     { name: 'Media Kit', href: '#' },
     { name: 'Career Blog', href: '#' },
     { name: 'Join our Team', href: '#' },
@@ -20,10 +20,10 @@ const footerLinks = {
     { name: 'Interview Playbooks', href: '#faq' },
   ],
  legal: [
-  { name: 'Users Terms', href: '/terms-of-service' },
-  { name: 'Privacy Promise', href: '/privacy-policy' },
-  { name: 'Cookie Settings', href: '/cookies-policy' },
+  { name: 'Privacy Policy', href: '/privacy-policy' },
+  { name: 'Cookies Policy', href: '/cookies-policy' },
   { name: 'Consent Policy', href: '/consent-policy' },
+  { name: 'Terms of Service', href: '/terms-of-service' },
 ],
 
 };
