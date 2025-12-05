@@ -36,7 +36,7 @@ export default function CookiesPolicyPage() {
 
           <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">2.2 Performance and Analytics Cookies</h3>
           <p className="text-slate-700 leading-relaxed mb-3">
-            These cookies help us understand how visitors interact with our platform by collecting anonymous information:
+            These cookies help us understand how visitors interact with our platform by collecting aggregated or pseudonymised information:
           </p>
           <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4">
             <li>Number of visitors and pages viewed</li>
@@ -107,7 +107,10 @@ export default function CookiesPolicyPage() {
                 Cookies from social media platforms for sharing and engagement features
               </p>
             </div>
-          </div>
+          
+          </div><div className="mt-4"></div>
+
+          <p className="text-slate-700 leading-relaxed mb-3">Google Analytics cookies are only set after you provide consent through our cookie banner.</p>
         </section>
 
         <section>

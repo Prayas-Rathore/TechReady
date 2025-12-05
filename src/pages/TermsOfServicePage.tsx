@@ -121,7 +121,9 @@ export default function TermsOfServicePage() {
             <li>Automatic recurring billing for subscription plans</li>
             <li>Pay all applicable fees and taxes</li>
             <li>Update payment information to avoid service interruption</li>
-          </ul>
+          </ul> <p> .</p>
+          <p>Payment card details are processed securely by our payment provider; we do not store full card information.
+</p>
 
           <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">6.3 Cancellation and Refunds</h3>
           <p className="text-slate-700 leading-relaxed">
@@ -180,8 +182,8 @@ export default function TermsOfServicePage() {
             <li>At our discretion with or without notice</li>
           </ul>
           <p className="text-slate-700 leading-relaxed mt-3">
-            Upon termination, your right to use the Services ceases immediately. We may delete your account
-            data in accordance with our data retention policies.
+            Upon termination, your right to use the Services ceases immediately. You may still exercise your data protection rights regarding any retained data as required by law.
+
           </p>
         </section>
 
@@ -189,8 +191,8 @@ export default function TermsOfServicePage() {
           <h2 className="text-2xl font-bold text-slate-900 mb-4">10. Governing Law and Dispute Resolution</h2>
           <p className="text-slate-700 leading-relaxed mb-4">
             These Terms are governed by the laws of the United Kingdom, without regard to conflict of law
-            principles. Any disputes arising from these Terms or the Services shall be resolved through
-            binding arbitration in the United Kingdom, except where prohibited by law.
+            principles. Any disputes arising from these Terms or the Services shall be resolved in the court, unless arbitration is mutually agreed upon.
+
           </p>
           <p className="text-slate-700 leading-relaxed">
             You agree to first attempt to resolve any dispute informally by contacting us at

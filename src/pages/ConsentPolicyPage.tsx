@@ -4,11 +4,11 @@ export default function ConsentPolicyPage() {
   return (
     <PolicyLayout title="Consent Policy" lastUpdated="December 3, 2025">
       <div className="space-y-8">
-        <section>
+        <section> 
           <h2 className="text-2xl font-bold text-slate-900 mb-4">1. Introduction</h2>
           <p className="text-slate-700 leading-relaxed mb-4">
             At MockITHub Ltd ("MockITHub," "we," "us," or "our"), we respect your privacy and are committed
-            to providing you with clear choices about how we collect, use, and share your personal information.
+            to providing you with clear choices about how we collect, use and share your personal information.
             This Consent Policy explains how we obtain and manage your consent for data processing activities.
           </p>
           <p className="text-slate-700 leading-relaxed">
@@ -27,7 +27,7 @@ export default function ConsentPolicyPage() {
           <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4">
             <li>Video and audio recording during mock interviews</li>
             <li>Analysis of your interview performance using AI technology</li>
-            <li>Sharing your anonymized data for research purposes</li>
+            <li>Sharing your anonymised data for research purposes</li>
             <li>Marketing communications and promotional offers</li>
             <li>Using your testimonials and feedback publicly</li>
           </ul>
@@ -43,14 +43,14 @@ export default function ConsentPolicyPage() {
           <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4">
             <li>Essential cookies necessary for platform functionality</li>
             <li>Basic analytics to improve service performance</li>
-            <li>Processing information necessary to fulfill our contract with you</li>
+            <li>Processing information necessary to fulfil our contract with you</li>
             <li>Communication about your account and services</li>
           </ul>
 
           <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">2.3 Opt-In vs. Opt-Out</h3>
           <p className="text-slate-700 leading-relaxed">
             We use an opt-in approach for non-essential data processing, meaning we will ask for your permission
-            before processing your data. For certain activities, you can opt-out at any time through your account
+            before processing your data. For certain activities, you can opt out at any time through your account
             settings.
           </p>
         </section>
@@ -89,9 +89,9 @@ export default function ConsentPolicyPage() {
                 When uploading your CV or resume, we ask for consent to:
               </p>
               <ul className="list-disc list-inside space-y-1 text-slate-700 text-sm ml-4">
-                <li>Parse and analyze your document</li>
+                <li>Parse and analyse your document</li>
                 <li>Extract relevant information</li>
-                <li>Provide optimization recommendations</li>
+                <li>Provide optimisation recommendations</li>
               </ul>
             </div>
 
@@ -183,7 +183,7 @@ export default function ConsentPolicyPage() {
           <h2 className="text-2xl font-bold text-slate-900 mb-4">5. Withdrawing Consent</h2>
           <p className="text-slate-700 leading-relaxed mb-4">
             You have the right to withdraw your consent at any time. Withdrawing consent does not affect the
-            lawfulness of processing based on consent before its withdrawal.
+            lawfulness of processing carried out before its withdrawal.
           </p>
 
           <h3 className="text-xl font-semibold text-slate-800 mb-3">How to Withdraw Consent</h3>
