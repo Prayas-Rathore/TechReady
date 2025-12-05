@@ -7,8 +7,8 @@ const footerLinks = {
     { name: ' Plans & Pricing', href: '#pricing' },
     { name: 'MockitHub Work', href: '#how-it-works' },
   ],
-  company: [
-    { name: 'About Us', href: '#about' },
+  /*company: [
+    { name: 'About Us', href: '#' },
     { name: 'Media Kit', href: '#' },
     { name: 'Career Blog', href: '#' },
     { name: 'Join our Team', href: '#' },
@@ -18,7 +18,7 @@ const footerLinks = {
     { name: 'Quick FAQs', href: '#faq' },
     { name: 'Community Space', href: '#' },
     { name: 'Interview Playbooks', href: '#faq' },
-  ],
+  ],*/
  legal: [
   { name: 'Privacy Policy', href: '/privacy-policy' },
   { name: 'Cookies Policy', href: '/cookies-policy' },
