@@ -1,5 +1,5 @@
 import { Link, useLocation, Outlet } from 'react-router-dom';
-import { Home, FileText, Briefcase, Sparkles, ArrowBigLeftIcon } from 'lucide-react';
+import { Home, FileText, Briefcase, Sparkles, ArrowBigLeftIcon, MailMinus } from 'lucide-react';
 
 export default function CVDashboardLayout() {
   const location = useLocation();
@@ -9,6 +9,7 @@ export default function CVDashboardLayout() {
     { icon: Home, label: 'Home', path: '/cv-dashboard' },
     { icon: FileText, label: 'CV Analysis', path: '/cv-dashboard/analysis' },
     { icon: Briefcase, label: 'JD Generator', path: '/cv-dashboard/jd-generator' },
+    { icon: MailMinus, label: 'Cover Letter', path: '/cv-dashboard/cover-letter' }
   ];
 
   const isActive = (path: string) => {
@@ -56,17 +57,6 @@ export default function CVDashboardLayout() {
             })}
           </nav>
 
-          <div className="p-4 absolute bottom-0 left-0 right-0">
-            <div className="bg-gradient-to-br from-sky-500 to-blue-600 rounded-xl p-4 text-white">
-              <div className="flex items-center gap-2 mb-2">
-                <Sparkles className="w-5 h-5" />
-                <h3 className="font-semibold">Pro Tip</h3>
-              </div>
-              <p className="text-xs text-white/90">
-                Turn your CV into a job-winning weapon for every application.
-              </p>
-            </div>
-          </div>
         </aside>
 
         <main className="flex-1">

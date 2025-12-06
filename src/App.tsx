@@ -25,6 +25,7 @@ import CVDashboardHome from './pages/CVDashboardHome';
 import CVAnalysisPage from './pages/CVAnalysisPage';
 import JDGeneratorPage from './pages/JDGeneratorPage';
 import CVDashboardLayout from './components/CVDashboardLayout';
+import { CoverLetterGenerator } from './pages/CoverLetterGenerator';
 import PostRoadMap from './pages/PostRoadMap';
 import JobDetailsFormPage from './pages/JobDetailsFormPage';
 // import RoadmapDisplay from './components/roadmap/RoadmapDisplay';
@@ -103,6 +104,8 @@ function App() {
                           <Route index element={<CVDashboardHome />} />
                           <Route path="analysis" element={<CVAnalysisPage />} />
                           <Route path="jd-generator" element={<JDGeneratorPage />} />
+                          <Route path="cover-letter" element={<CoverLetterGenerator />} />
+
                           {/* End User Part */}
                         </Route>
                       </Route>
