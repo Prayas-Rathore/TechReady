@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
-  Video, LogOut, BookOpen, Trophy, Target, Clock
+  Video, LogOut, BookOpen, Trophy, Target, Clock, Menu
 } from 'lucide-react';
 import { supabase } from '../services/SupabaseClient';
 import Sidebar from '../components/Sidebar';
@@ -18,6 +18,7 @@ export default function UserDashboard() {
   const { data: totalMs } = useInterviewTime();
   const { data,isLoading } = useLastFiveScores();
   const { data: lastFiveSessions, isLoading: isSessionsLoading } = useLastInterviewSessions();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     // log role for debugging
@@ -73,17 +74,25 @@ export default function UserDashboard() {
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="flex">
-      <Sidebar />
-        <div className="flex-1">
-          <nav className="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <Sidebar isMobileOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+        <div className="flex-1 w-full lg:w-auto">
+          <nav className="bg-white border-b border-slate-200 sticky top-0 z-20">
+        <div className="px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <Link to="/user-dashboard" className="flex items-center gap-2">
-              <Video className="w-8 h-8 text-sky-600" />
-              <span className="text-2xl font-bold text-slate-900">MockIthub</span>
-            </Link>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setIsSidebarOpen(true)}
+                className="lg:hidden p-2 hover:bg-slate-100 rounded-lg transition-colors"
+              >
+                <Menu className="w-6 h-6 text-slate-600" />
+              </button>
+              <Link to="/user-dashboard" className="flex items-center gap-2">
+                <Video className="w-6 h-6 sm:w-8 sm:h-8 text-sky-600" />
+                <span className="text-xl sm:text-2xl font-bold text-slate-900">MockIthub</span>
+              </Link>
+            </div>
 
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-3 sm:gap-6">
               <div className="hidden md:flex items-center gap-2">
                 <div className="w-10 h-10 bg-gradient-to-r from-sky-500 to-blue-600 rounded-full flex items-center justify-center">
                   <span className="text-white font-semibold">
@@ -93,14 +102,13 @@ export default function UserDashboard() {
                 <div>
                   <div className="text-sm font-semibold text-slate-900">
                     {user?.user_metadata?.full_name || 'User'}
-                    {/* <span className="ml-2 text-xs font-medium text-red/70 bg-slate-500/10 px-2 py-0.5 rounded">{Number(role) === 1 ? 'Admin' : 'User'}</span> */}
                   </div>
                   <div className="text-xs text-slate-500">{user?.email}</div>
                 </div>
               </div>
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-2 px-4 py-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-all"
+                className="flex items-center gap-2 px-3 sm:px-4 py-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-all"
               >
                 <LogOut className="w-4 h-4" />
                 <span className="hidden sm:inline">Logout</span>
@@ -110,12 +118,12 @@ export default function UserDashboard() {
         </div>
       </nav>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">
+      <div className="px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
             Welcome back, {user?.user_metadata?.full_name?.split(' ')[0] || 'there'}!
           </h1>
-          <p className="text-slate-600">Continue your interview preparation journey</p>
+          <p className="text-sm sm:text-base text-slate-600">Continue your interview preparation journey</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -174,78 +182,79 @@ export default function UserDashboard() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-slate-900">CV Reports and Analysis</h2>
-                {/* <button className="text-sm text-sky-600 hover:text-sky-700 font-medium">
-                  View All
-                </button> */}
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-6">
+              <div className="flex items-center justify-between mb-4 sm:mb-6">
+                <h2 className="text-lg sm:text-xl font-bold text-slate-900">CV Reports and Analysis</h2>
               </div>
 
-              <table className="w-full">
-  <thead>
-    <tr className="border-b">
-      <th className="py-3 px-4 text-left">Name</th>
-      <th className="py-3 px-4 text-left">Score</th>
-      <th className="py-3 px-4 text-left">Status</th>
-      <th className="py-3 px-4 text-left">Date</th>
-    </tr>
-  </thead>
+              <div className="overflow-x-auto -mx-4 sm:mx-0">
+                <div className="inline-block min-w-full align-middle">
+                  <div className="overflow-hidden">
+                    <table className="min-w-full">
+                      <thead>
+                        <tr className="border-b">
+                          <th className="py-3 px-2 sm:px-4 text-left text-xs sm:text-sm font-medium text-slate-700 whitespace-nowrap">Name</th>
+                          <th className="py-3 px-2 sm:px-4 text-left text-xs sm:text-sm font-medium text-slate-700 whitespace-nowrap">Score</th>
+                          <th className="py-3 px-2 sm:px-4 text-left text-xs sm:text-sm font-medium text-slate-700 whitespace-nowrap">Status</th>
+                          <th className="py-3 px-2 sm:px-4 text-left text-xs sm:text-sm font-medium text-slate-700 whitespace-nowrap">Date</th>
+                        </tr>
+                      </thead>
 
-  <tbody>
-    {formattedScores?.map((user) => (
-      <tr key={user.id} className="border-b border-slate-100 hover:bg-slate-50 transition-all">
-        <td className="py-4 px-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center">
-              <span className="text-white font-semibold text-sm">
-                {user.name.charAt(0)}
-              </span>
-            </div>
-            <span className="font-medium text-slate-900">{user.name}</span>
-          </div>
-        </td>
+                      <tbody>
+                        {formattedScores?.map((user) => (
+                          <tr key={user.id} className="border-b border-slate-100 hover:bg-slate-50 transition-all">
+                            <td className="py-3 sm:py-4 px-2 sm:px-4">
+                              <div className="flex items-center gap-2 sm:gap-3">
+                                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center flex-shrink-0">
+                                  <span className="text-white font-semibold text-xs sm:text-sm">
+                                    {user.name.charAt(0)}
+                                  </span>
+                                </div>
+                                <span className="font-medium text-slate-900 text-xs sm:text-sm truncate max-w-[120px] sm:max-w-none">{user.name}</span>
+                              </div>
+                            </td>
 
-        <td className="py-4 px-4 text-slate-600">{user.email}</td>
+                            <td className="py-3 sm:py-4 px-2 sm:px-4 text-slate-600 text-xs sm:text-sm whitespace-nowrap">{user.email}</td>
 
-        <td className="py-4 px-4">
-          <span
-            className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
-              user.status === "active"
-                ? "bg-emerald-100 text-emerald-700"
-                : user.status === "inactive"
-                ? "bg-amber-100 text-amber-700"
-                : "bg-slate-200 text-slate-700"
-            }`}
-          >
-            <span
-              className={`w-1.5 h-1.5 rounded-full ${
-                user.status === "active"
-                  ? "bg-emerald-500"
-                  : user.status === "inactive"
-                  ? "bg-amber-500"
-                  : "bg-slate-500"
-              }`}
-            ></span>
-            {user.status === "active"
-              ? "Improved"
-              : user.status === "inactive"
-              ? "Declined"
-              : "Same"}
-          </span>
-        </td>
+                            <td className="py-3 sm:py-4 px-2 sm:px-4">
+                              <span
+                                className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
+                                  user.status === "active"
+                                    ? "bg-emerald-100 text-emerald-700"
+                                    : user.status === "inactive"
+                                    ? "bg-amber-100 text-amber-700"
+                                    : "bg-slate-200 text-slate-700"
+                                }`}
+                              >
+                                <span
+                                  className={`w-1.5 h-1.5 rounded-full ${
+                                    user.status === "active"
+                                      ? "bg-emerald-500"
+                                      : user.status === "inactive"
+                                      ? "bg-amber-500"
+                                      : "bg-slate-500"
+                                  }`}
+                                ></span>
+                                {user.status === "active"
+                                  ? "Improved"
+                                  : user.status === "inactive"
+                                  ? "Declined"
+                                  : "Same"}
+                              </span>
+                            </td>
 
-        <td className="py-4 px-4 text-slate-600 text-sm">{user.joined}</td>
-      </tr>
-    ))}
-  </tbody>
-</table>
-
-
+                            <td className="py-3 sm:py-4 px-2 sm:px-4 text-slate-600 text-xs sm:text-sm whitespace-nowrap">{user.joined}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
         </div>
         
-            <div className="bg-white p-4 rounded-xl shadow">
-        <h3 className="text-lg font-semibold mb-3">Recent Interview Sessions</h3>
+            <div className="bg-white p-4 sm:p-6 rounded-xl shadow">
+        <h3 className="text-base sm:text-lg font-semibold mb-3">Recent Interview Sessions</h3>
 
       <ul className="space-y-3">
         {lastFiveSessions?.map((item) => {
@@ -261,21 +270,21 @@ export default function UserDashboard() {
           return (
             <li
               key={item.id}
-              className="p-3 bg-gray-50 rounded-lg flex justify-between items-center"
+              className="p-3 bg-gray-50 rounded-lg flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-3"
             >
-              <div className="flex flex-col">
-                <p className="font-medium">
+              <div className="flex flex-col flex-1 min-w-0">
+                <p className="font-medium text-sm sm:text-base truncate">
                   {item.job_description_text.slice(0, 40)}...
                 </p>
 
-                <span className="text-gray-500 text-sm">
+                <span className="text-gray-500 text-xs sm:text-sm">
                   {new Date(item.created_at).toLocaleDateString()}
                 </span>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3">
                 <span
-                  className={`px-2 py-1 rounded-full text-xs ${
+                  className={`px-2 py-1 rounded-full text-xs whitespace-nowrap ${
                     item.status === "completed"
                       ? "bg-green-100 text-green-700"
                       : item.status === "in_progress"
@@ -287,7 +296,7 @@ export default function UserDashboard() {
                 </span>
 
                 {duration !== null && (
-                  <span className="text-sm text-gray-600">
+                  <span className="text-xs sm:text-sm text-gray-600 whitespace-nowrap">
                     {duration} min
                   </span>
                 )}

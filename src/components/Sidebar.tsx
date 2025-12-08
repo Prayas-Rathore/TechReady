@@ -1,10 +1,14 @@
 import { Link, useLocation } from 'react-router-dom';
 import {
-  LayoutDashboard, Video, BookOpen, Trophy, Target, Users
+  LayoutDashboard, Video, BookOpen, Trophy, Target, Users, X
 } from 'lucide-react';
-// import { FeatureLock } from './protection/FeatureLock';
 
-export default function Sidebar() {
+interface SidebarProps {
+  isMobileOpen?: boolean;
+  onClose?: () => void;
+}
+
+export default function Sidebar({ isMobileOpen, onClose }: SidebarProps) {
   const location = useLocation();
 
   const menuItems = [
@@ -25,52 +29,56 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="w-64 bg-white border-r border-slate-200 min-h-screen sticky top-0 overflow-y-auto">
-      <div className="p-6">
-        <Link to="/user-dashboard" className="flex items-center gap-2 mb-8">
-          <Video className="w-8 h-8 text-sky-600" />
-        </Link>
+    <>
+      <aside className={`
+        fixed lg:sticky top-0 left-0 z-40 w-64 bg-white border-r border-slate-200 h-screen overflow-y-auto
+        transition-transform duration-300 ease-in-out
+        ${isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+      `}>
+        <div className="p-6">
+          <div className="flex items-center justify-between mb-8">
+            <Link to="/user-dashboard" className="flex items-center gap-2">
+              <Video className="w-8 h-8 text-sky-600" />
+            </Link>
+            <button
+              onClick={onClose}
+              className="lg:hidden p-2 hover:bg-slate-100 rounded-lg transition-colors"
+            >
+              <X className="w-5 h-5 text-slate-600" />
+            </button>
+          </div>
 
-        <nav className="space-y-1">
-          {menuItems.map((item) => {
-            const Icon = item.icon;
-            const active = isActive(item.path);
+          <nav className="space-y-1">
+            {menuItems.map((item) => {
+              const Icon = item.icon;
+              const active = isActive(item.path);
 
-            // if (item.locked) {
-            //   return (
-            //     <FeatureLock key={item.path} icon={Icon} label={item.label}>
-            //       <Link
-            //         to={item.path}
-            //         className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
-            //           active
-            //             ? 'bg-sky-50 text-sky-600 font-medium'
-            //             : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-            //         }`}
-            //       >
-            //         <Icon className="w-5 h-5" />
-            //         <span>{item.label}</span>
-            //       </Link>
-            //     </FeatureLock>
-            //   );
-            // }
+              return (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  onClick={onClose}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                    active
+                      ? 'bg-sky-50 text-sky-600 font-medium'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  }`}
+                >
+                  <Icon className="w-5 h-5" />
+                  <span>{item.label}</span>
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
+      </aside>
 
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
-                  active
-                    ? 'bg-sky-50 text-sky-600 font-medium'
-                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-                }`}
-              >
-                <Icon className="w-5 h-5" />
-                <span>{item.label}</span>
-              </Link>
-            );
-          })}
-        </nav>
-      </div>
-    </aside>
+      {isMobileOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
+          onClick={onClose}
+        />
+      )}
+    </>
   );
 }
