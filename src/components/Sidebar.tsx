@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, Video, BookOpen, Trophy, Target, Users
 } from 'lucide-react';
-import { FeatureLock } from './protection/FeatureLock';
+// import { FeatureLock } from './protection/FeatureLock';
 
 export default function Sidebar() {
   const location = useLocation();
@@ -36,23 +36,23 @@ export default function Sidebar() {
             const Icon = item.icon;
             const active = isActive(item.path);
 
-            if (item.locked) {
-              return (
-                <FeatureLock key={item.path} icon={Icon} label={item.label}>
-                  <Link
-                    to={item.path}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
-                      active
-                        ? 'bg-sky-50 text-sky-600 font-medium'
-                        : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-                    }`}
-                  >
-                    <Icon className="w-5 h-5" />
-                    <span>{item.label}</span>
-                  </Link>
-                </FeatureLock>
-              );
-            }
+            // if (item.locked) {
+            //   return (
+            //     <FeatureLock key={item.path} icon={Icon} label={item.label}>
+            //       <Link
+            //         to={item.path}
+            //         className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+            //           active
+            //             ? 'bg-sky-50 text-sky-600 font-medium'
+            //             : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+            //         }`}
+            //       >
+            //         <Icon className="w-5 h-5" />
+            //         <span>{item.label}</span>
+            //       </Link>
+            //     </FeatureLock>
+            //   );
+            // }
 
             return (
               <Link
