@@ -7,54 +7,51 @@ import { useState } from 'react';
 // Map your plan names to tiers
 const plans = [
   {
-    name: 'Basic- do not use',
-    tier: 'pro',
-    priceId: 'price_1SZqpYRoRT3gf2HBepdSlxCc',
+    name: 'Basic',
+    tier: 'basic',
+    priceId: 'price_1SZqpYRoRT3gf2HBepdSlxCc',// Stripe Price ID
     price: '0.10',
     description: 'Perfect for getting started with mock interviews',
     features: [
-      '2 AI mock interviews per month',
-      'Instant feedback - to improve',
-      'Email support whenever you need',
-      'Community access for motivation',
-      'Performance tracking dashboard',
+      'JD Scanner & CV Optimiser',
+      'AI Interview Prep',
+      'Portfolio Branding & Identity',
+      'Buddy Model',
     ],
-    cta: 'Start 3day Free Trial',
+    cta: 'Subscribe Now',
     highlighted: false,
   },
   {
-    name: 'Career Game-Changer',
-    tier: 'premium',
-    priceId: 'price_yyyyy', // Replace with your actual Stripe Price ID
-    price: '79',
+    name: 'Starter',
+    tier: 'starter',
+    priceId: 'price_1SZUz0RoRT3gf2HBR9xgbG4A', // Stripe Price ID
+    price: '19.99',
     description: 'Most popular choice for serious job seekers',
     features: [
-      '8 intense AI mock interviews',
-      'Deep Performance analytics',
-      'Smart AI resume optimization',
-      'Priority email & chat support',
-      'Unlimited progress tracking',
-      'Soft skills & confidence training',
-      'Full Interview recording access',
+      'Mindset & Confidence Training',
+      'JD Scanner & CV Optimiser',
+      'AI Interview Prep',
+      'Portfolio Branding & Identity',
+      'Buddy Model'
     ],
-    cta: 'Start Free Trial',
+    cta: 'Subscribe Now',
     highlighted: true,
   },
   {
-    name: 'Guaranteed Success',
-    tier: 'elite',
-    priceId: 'price_zzzzz', // Replace with your actual Stripe Price ID
-    price: '149',
+    name: 'Pro',
+    tier: 'pro',
+    priceId: 'price_1SZUzjRoRT3gf2HBFWeafWaP', // Stripe Price ID
+    price: '29.99',
     description: 'Built for candidates who refuse average and aim for offers.',
     features: [
-      'Unlimited AI mock interviews',
-      'Advanced AI performance intelligence',
-      'Monthly elite resume upgrades',
-      '24/7 VIP priority support',
-      'Career acceleration roadmap',
-      'LinkedIn profile optimization',
+      'Mindset & Confidence Training',
+      'JD Scanner & CV Optimiser',
+      'AI Interview Prep',
+      'Portfolio Branding & Identity',
+      'Buddy Model',
+      'Post-Job Growth Roadmap'
     ],
-    cta: 'Start Free Trial',
+    cta: 'Subscribe Now',
     highlighted: false,
   },
 ];

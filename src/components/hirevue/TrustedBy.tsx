@@ -39,7 +39,7 @@ export default function TrustedBy() {
 
         <div className="text-center mt-12">
           <p className="text-slate-600">
-            Join <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-purple-600">10,000+</span> companies using TalentVue
+            Join <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-purple-600">100+</span> companies using TalentVue
           </p>
         </div>
       </div>

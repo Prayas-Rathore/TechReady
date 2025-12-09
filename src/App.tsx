@@ -40,6 +40,8 @@ import PremiumPage from './components/protection/PremiumPage';
 import SubscriptionSuccess from './pages/SubscriptionSuccess';
 // import { BuddyConnectorPage } from './pages/BuddyConnector/index';
 import BuddyConnectorPage from './components/buddy-connector/index';
+import LandingPage3 from './pages/LandingPage3.tsx';
+import InterviewPro from './pages/InterviewProPage.tsx';
 
 
 function App() {
@@ -53,8 +55,8 @@ function App() {
                     <SubscriptionProvider>
             <Routes>
                   {/* Public routes */}
-                    <Route path="/" element={<InterviewProPage />} />
-                    <Route path="/talentvue" element={<HireVuePage />} />
+                    <Route path="/" element={<LandingPage3 />} />
+                    <Route path="/old-landing" element={<InterviewPro />} />
                     <Route path="/test" element={<TestConnectionPage />} />
                     <Route path="/forgot-password" element={<ForgotPasswordPage />} />
                     <Route path="/update-password" element={<UpdatePasswordPage />} />
@@ -90,7 +92,12 @@ function App() {
 
                           <Route path="/subscription/success" element={<SubscriptionSuccess />} />
 
-                          <Route path="/buddy-connector" element={<BuddyConnectorPage />} />
+                          <Route path="/buddy-connector" element={
+                            <PremiumPage requiredTier="pro">
+
+                            <BuddyConnectorPage />
+                            </PremiumPage>
+                            } />
 
                           <Route path="/user-dashboard" element={<UserDashboard />} />
                           <Route path="/jobdescription" element={<JobDescriptionSelector />} />

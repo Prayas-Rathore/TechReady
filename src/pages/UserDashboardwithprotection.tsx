@@ -10,6 +10,7 @@ import { useInterviewCount } from '../components/hooks/useInterviewCount';
 import { useInterviewTime } from "../components/hooks/useInterviewCount";
 import { useLastFiveScores } from "../components/hooks/useLastFiveScores";
 import { useLastInterviewSessions } from '../components/hooks/useLastInterviewSessions';
+import { useSubscription } from '../context/SubscriptionContext';
 
 export default function UserDashboard() {
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ export default function UserDashboard() {
   const { data,isLoading } = useLastFiveScores();
   const { data: lastFiveSessions, isLoading: isSessionsLoading } = useLastInterviewSessions();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { tier, isPremium, isFree, hasTierAccess, tierDisplayName } = useSubscription();
 
   useEffect(() => {
     // log role for debugging
@@ -124,6 +126,7 @@ export default function UserDashboard() {
             Welcome back, {user?.user_metadata?.full_name?.split(' ')[0] || 'there'}!
           </h1>
           <p className="text-sm sm:text-base text-slate-600">Continue your interview preparation journey</p>
+          <div>Current Plan: {tierDisplayName}</div> 
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">

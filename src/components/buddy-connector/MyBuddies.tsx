@@ -88,11 +88,11 @@ export const MyBuddies: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900">My Network</h2>
-          <p className="text-slate-600 mt-1">
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-900">My Network</h2>
+          <p className="text-sm sm:text-base text-slate-600 mt-1">
             {buddies.length} connection{buddies.length !== 1 ? 's' : ''}
           </p>
         </div>
@@ -130,79 +130,132 @@ export const MyBuddies: React.FC = () => {
       </div>
 
       {buddies.length === 0 ? (
-        <div className="bg-slate-50 rounded-2xl p-16 text-center">
-          <div className="text-6xl mb-4">👥</div>
-          <h3 className="text-xl font-bold text-slate-900 mb-2">Build Your Network</h3>
-          <p className="text-slate-600">
+        <div className="bg-slate-50 rounded-2xl p-8 sm:p-16 text-center">
+          <div className="text-5xl sm:text-6xl mb-4">👥</div>
+          <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-2">Build Your Network</h3>
+          <p className="text-sm sm:text-base text-slate-600">
             Start connecting with people to build your study network!
           </p>
         </div>
       ) : filteredBuddies.length === 0 ? (
-        <div className="bg-slate-50 rounded-2xl p-12 text-center">
-          <div className="text-5xl mb-4">🔍</div>
-          <h3 className="text-lg font-bold text-slate-900 mb-2">No matches found</h3>
-          <p className="text-slate-600">
+        <div className="bg-slate-50 rounded-2xl p-8 sm:p-12 text-center">
+          <div className="text-4xl sm:text-5xl mb-4">🔍</div>
+          <h3 className="text-base sm:text-lg font-bold text-slate-900 mb-2">No matches found</h3>
+          <p className="text-sm sm:text-base text-slate-600">
             Try adjusting your search or filters
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="space-y-3 md:space-y-0 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:gap-4">
           {filteredBuddies.map((connection) => (
-            <div
-              key={connection.request_id}
-              className="bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-lg transition-shadow"
-            >
-              <div className="h-20 bg-gradient-to-br from-blue-400 via-purple-400 to-pink-400" />
-
-              <div className="relative px-4 pb-4">
-                <div className="absolute -top-10 left-1/2 -translate-x-1/2">
-                  <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-2xl shadow-lg border-4 border-white">
+            <div key={connection.request_id}>
+              <div className="md:hidden bg-white rounded-lg border border-slate-200 p-3 hover:shadow-md transition-all">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-md flex-shrink-0">
                     {(connection.buddy.full_name?.[0] || connection.buddy.email?.[0] || 'U').toUpperCase()}
                   </div>
-                </div>
 
-                <div className="absolute top-2 right-2" ref={openMenuId === connection.request_id ? menuRef : null}>
-                  <button
-                    onClick={() => setOpenMenuId(openMenuId === connection.request_id ? null : connection.request_id)}
-                    className="p-1.5 hover:bg-slate-100 rounded-full transition-colors"
-                  >
-                    <svg className="w-5 h-5 text-slate-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-                    </svg>
-                  </button>
-
-                  {openMenuId === connection.request_id && (
-                    <div className="absolute right-0 mt-1 w-40 bg-white rounded-lg shadow-xl border border-slate-200 py-1 z-10">
-                      <button 
-                          onClick={() => {
-                            // ADD THIS
-                            if (confirm('Remove this connection?')) {
-                              handleRemoveConnection(connection.request_id);
-                            }
-                          }}
-                          className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 transition-colors"
-                        >
-                          Remove Connection
-                        </button>
-                    </div>
-                  )}
-                </div>
-
-                <div className="pt-12 text-center">
-                  <h3 className="font-semibold text-slate-900 truncate mb-0.5">
-                    {connection.buddy.full_name || connection.buddy.email?.split('@')[0] || 'Anonymous'}
-                  </h3>
-                  <p className="text-xs text-slate-500 mb-3">
-                    {connection.matching_domains.length} common interest{connection.matching_domains.length !== 1 ? 's' : ''}
-                  </p>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-sm text-slate-900 truncate">
+                      {connection.buddy.full_name || connection.buddy.email?.split('@')[0] || 'Anonymous'}
+                    </h3>
+                    <p className="text-xs text-slate-500">
+                      {connection.matching_domains.length} common interest{connection.matching_domains.length !== 1 ? 's' : ''}
+                    </p>
+                  </div>
 
                   <button
                     onClick={() => window.location.href = `mailto:${connection.buddy.email}`}
                     disabled={!connection.buddy.email}
-                    className="w-full py-2 px-3 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-colors disabled:bg-slate-300 disabled:cursor-not-allowed"
+                    className="px-3 py-1.5 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors disabled:bg-slate-300 disabled:cursor-not-allowed flex-shrink-0"
                   >
                     Message
                   </button>
+
+                  <div className="relative" ref={openMenuId === connection.request_id ? menuRef : null}>
+                    <button
+                      onClick={() => setOpenMenuId(openMenuId === connection.request_id ? null : connection.request_id)}
+                      className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors flex-shrink-0"
+                    >
+                      <svg className="w-5 h-5 text-slate-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                      </svg>
+                    </button>
+
+                    {openMenuId === connection.request_id && (
+                      <div className="absolute right-0 mt-1 w-40 bg-white rounded-lg shadow-xl border border-slate-200 py-1 z-50">
+                        <button
+                          onClick={() => {
+                            if (confirm('Remove this connection?')) {
+                              handleRemoveConnection(connection.request_id);
+                            }
+                            setOpenMenuId(null);
+                          }}
+                          className="w-full px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 transition-colors font-medium"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="hidden md:block bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-lg transition-all">
+                <div className="h-20 bg-gradient-to-br from-blue-400 via-purple-400 to-pink-400" />
+
+                <div className="relative px-3 pb-3">
+                  <div className="absolute -top-10 left-1/2 -translate-x-1/2">
+                    <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-2xl shadow-xl border-4 border-white">
+                      {(connection.buddy.full_name?.[0] || connection.buddy.email?.[0] || 'U').toUpperCase()}
+                    </div>
+                  </div>
+
+                  <div className="pt-12 text-center">
+                    <h3 className="font-semibold text-base text-slate-900 truncate mb-1 px-2">
+                      {connection.buddy.full_name || connection.buddy.email?.split('@')[0] || 'Anonymous'}
+                    </h3>
+                    <p className="text-xs text-slate-500 mb-3">
+                      {connection.matching_domains.length} common interest{connection.matching_domains.length !== 1 ? 's' : ''}
+                    </p>
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => window.location.href = `mailto:${connection.buddy.email}`}
+                        disabled={!connection.buddy.email}
+                        className="flex-1 py-2 px-3 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-colors disabled:bg-slate-300 disabled:cursor-not-allowed"
+                      >
+                        Message
+                      </button>
+
+                      <div className="relative" ref={openMenuId === connection.request_id ? menuRef : null}>
+                        <button
+                          onClick={() => setOpenMenuId(openMenuId === connection.request_id ? null : connection.request_id)}
+                          className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+                        >
+                          <svg className="w-5 h-5 text-slate-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                          </svg>
+                        </button>
+
+                        {openMenuId === connection.request_id && (
+                          <div className="absolute right-0 mt-1 w-40 bg-white rounded-lg shadow-xl border border-slate-200 py-1 z-50">
+                            <button
+                              onClick={() => {
+                                if (confirm('Remove this connection?')) {
+                                  handleRemoveConnection(connection.request_id);
+                                }
+                                setOpenMenuId(null);
+                              }}
+                              className="w-full px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 transition-colors font-medium"
+                            >
+                              Remove Connection
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

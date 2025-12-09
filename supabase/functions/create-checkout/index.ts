@@ -150,7 +150,7 @@ serve(async (req: Request) => {
       'payment_method_types[0]': 'card',
       'line_items[0][price]': priceId,
       'line_items[0][quantity]': '1',
-      'subscription_data[trial_period_days]': '3',
+      // 'subscription_data[trial_period_days]': '3',
       'subscription_data[metadata][supabase_user_id]': userId,
       'subscription_data[metadata][tier]': tier,
       success_url: `${origin}/subscription/success?session_id={CHECKOUT_SESSION_ID}`,

@@ -16,9 +16,6 @@ export default function HireVueHero() {
             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center shadow-lg">
               <Play className="w-5 h-5 text-white fill-white" />
             </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
-              TalentVue
-            </span>
           </div>
 
           <div className="hidden lg:flex items-center gap-8">
