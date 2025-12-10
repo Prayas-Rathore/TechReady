@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
-  Video, LogOut, BookOpen, Trophy, Target, Clock, Menu
+  Video, LogOut, BookOpen, CircleDollarSign, CalendarClock, Clock, Menu
 } from 'lucide-react';
 import { supabase } from '../services/SupabaseClient';
 import Sidebar from '../components/Sidebar';
@@ -10,7 +10,7 @@ import { useInterviewCount } from '../components/hooks/useInterviewCount';
 import { useInterviewTime } from "../components/hooks/useInterviewCount";
 import { useLastFiveScores } from "../components/hooks/useLastFiveScores";
 import { useLastInterviewSessions } from '../components/hooks/useLastInterviewSessions';
-import { useSubscription } from '../context/SubscriptionContext';
+import { useDaysremain } from '../components/hooks/useInterviewCount';
 
 export default function UserDashboard() {
   const navigate = useNavigate();
@@ -18,9 +18,9 @@ export default function UserDashboard() {
   const { data: count } = useInterviewCount();
   const { data: totalMs } = useInterviewTime();
   const { data,isLoading } = useLastFiveScores();
+  const { data: subscription } = useDaysremain();
   const { data: lastFiveSessions, isLoading: isSessionsLoading } = useLastInterviewSessions();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { tier, isPremium, isFree, hasTierAccess, tierDisplayName } = useSubscription();
 
   useEffect(() => {
     // log role for debugging
@@ -51,6 +51,12 @@ export default function UserDashboard() {
     const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
     return `${hours}h ${minutes}m`;
   }
+
+  function capitalizeFirst(value?: string) {
+  if (!value) return "";
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
 
   const formattedScores = data?.map((item, index) => {
   const prev = data[index + 1]?.score;
@@ -126,7 +132,6 @@ export default function UserDashboard() {
             Welcome back, {user?.user_metadata?.full_name?.split(' ')[0] || 'there'}!
           </h1>
           <p className="text-sm sm:text-base text-slate-600">Continue your interview preparation journey</p>
-          <div>Current Plan: {tierDisplayName}</div> 
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -139,34 +144,37 @@ export default function UserDashboard() {
                 +12%
               </span> */}
             </div>
-            <div className="text-3xl font-bold text-slate-900 mb-1">10/{isLoading ? "..." : count}</div>
+            <div className="text-3xl font-bold text-slate-900 mb-1">{isLoading ? "..." : count}</div>
             <div className="text-sm text-slate-600">Interview Practice Attempted</div>
           </div>
 
           <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 hover:shadow-md transition-all">
             <div className="flex items-center justify-between mb-4">
               <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center">
-                <Trophy className="w-6 h-6 text-white" />
+                <CircleDollarSign className="w-6 h-6 text-white" />
               </div>
-              <span className="text-sm font-medium text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">
+              {/* <span className="text-sm font-medium text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">
                 +8
-              </span>
+              </span> */}
             </div>
-            <div className="text-3xl font-bold text-slate-900 mb-1">156</div>
-            <div className="text-sm text-slate-600">Points Earned</div>
+            
+            <div className="text-3xl font-bold text-slate-900 mb-1">{capitalizeFirst(subscription?.subscription_tier) || "Free"}</div>
+            <div className="text-sm text-slate-600">Subsciption Plan</div>
           </div>
 
           <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 hover:shadow-md transition-all">
             <div className="flex items-center justify-between mb-4">
               <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-rose-600 rounded-xl flex items-center justify-center">
-                <Target className="w-6 h-6 text-white" />
+                <CalendarClock className="w-6 h-6 text-white" />
               </div>
-              <span className="text-sm font-medium text-sky-600 bg-sky-50 px-3 py-1 rounded-full">
+              {/* <span className="text-sm font-medium text-sky-600 bg-sky-50 px-3 py-1 rounded-full">
                 75%
-              </span>
+              </span> */}
             </div>
-            <div className="text-3xl font-bold text-slate-900 mb-1">18/24</div>
-            <div className="text-sm text-slate-600">Weekly Goal</div>
+            <div className="text-3xl font-bold text-slate-900 mb-1">
+              {subscription?.days_left ?? 0}
+            </div>
+            <div className="text-sm text-slate-600">Days Left</div>
           </div>
 
           <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 hover:shadow-md transition-all">

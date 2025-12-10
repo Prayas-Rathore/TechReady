@@ -103,3 +103,46 @@ export async function getLastFiveInterviewSessions() {
 
   return data;
 }
+
+
+export async function getplandayleft() {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return null;
+
+  const { data, error } = await supabase
+    .from("subscriptions")
+    .select(`
+      id,
+      subscription_tier,
+      status,
+      current_period_end
+    `)
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false })
+    .limit(1);
+
+  if (error || !data?.length) return null;
+
+  const subscription = data[0];
+  const endDate = new Date(subscription.current_period_end);
+  const now = new Date();
+
+  // FULL PRECISION CALCULATION
+  const msRemaining = endDate.getTime() - now.getTime();
+
+  const daysLeft = Math.max(
+    Math.ceil(msRemaining / (1000 * 60 * 60 * 24)),
+    0
+  );
+
+  return {
+    ...subscription,
+    days_left: daysLeft,
+  };
+}
+
+
+

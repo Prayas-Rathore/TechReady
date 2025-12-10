@@ -42,24 +42,24 @@ export const predefinedJobDescriptions: JobDescription[] = [
     description: 'Looking for a talented UX/UI Designer to create intuitive and beautiful user experiences. You will conduct user research, create wireframes and prototypes, and collaborate with developers to implement designs. Strong portfolio required.',
     category: 'Design'
   },
-  {
-    id: 'sales-representative',
-    title: 'Sales Representative',
-    description: 'Seeking a motivated Sales Representative to drive revenue growth. You will prospect new clients, conduct product demos, negotiate contracts, and maintain customer relationships. Strong communication and persuasion skills are essential.',
-    category: 'Sales'
-  },
-  {
-    id: 'hr-specialist',
-    title: 'Human Resources Specialist',
-    description: 'We need an HR Specialist to manage recruitment, employee relations, and HR policies. Responsibilities include conducting interviews, onboarding new hires, managing benefits, and ensuring compliance with labor laws.',
-    category: 'Human Resources'
-  },
-  {
-    id: 'customer-service',
-    title: 'Customer Service Representative',
-    description: 'Looking for a friendly Customer Service Representative to assist customers with inquiries and issues. You will provide support via phone, email, and chat, resolve complaints, and ensure customer satisfaction.',
-    category: 'Customer Service'
-  },
+  // {
+  //   id: 'sales-representative',
+  //   title: 'Sales Representative',
+  //   description: 'Seeking a motivated Sales Representative to drive revenue growth. You will prospect new clients, conduct product demos, negotiate contracts, and maintain customer relationships. Strong communication and persuasion skills are essential.',
+  //   category: 'Sales'
+  // },
+  // {
+  //   id: 'hr-specialist',
+  //   title: 'Human Resources Specialist',
+  //   description: 'We need an HR Specialist to manage recruitment, employee relations, and HR policies. Responsibilities include conducting interviews, onboarding new hires, managing benefits, and ensuring compliance with labor laws.',
+  //   category: 'Human Resources'
+  // },
+  // {
+  //   id: 'customer-service',
+  //   title: 'Customer Service Representative',
+  //   description: 'Looking for a friendly Customer Service Representative to assist customers with inquiries and issues. You will provide support via phone, email, and chat, resolve complaints, and ensure customer satisfaction.',
+  //   category: 'Customer Service'
+  // },
   {
     id: 'qa-engineer',
     title: 'QA Engineer',

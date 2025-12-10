@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import {
-  LayoutDashboard, Video, BookOpen, Trophy, Target, Users, X
+  LayoutDashboard, Video, BookOpen, Trophy, Target, Users, X,MapPin ,StickyNote
 } from 'lucide-react';
 import { useSubscription } from '../context/SubscriptionContext';
 
@@ -17,10 +17,10 @@ export default function Sidebar({ isMobileOpen, onClose }: SidebarProps) {
     { icon: LayoutDashboard, label: 'Dashboard', path: '/user-dashboard' },
     { icon: Video, label: 'Interview Practice', path: '/jobdescription', paidOnly: true }, // ✅ Only paid users
     { icon: Trophy, label: 'Interview Practice', path: '/ai_jobdescription', freeOnly: true }, // ✅ Only free users
-    { icon: Video, label: 'Cv Optimizer', path: '/cv-dashboard' }, 
+    { icon: StickyNote, label: 'Cv Optimizer', path: '/cv-dashboard' }, 
     { icon: Target, label: 'Assessment', path: '/assessment'}, // ✅ Only paid users
     { icon: Users, label: 'Buddy Connector', path: '/buddy-connector'},
-    { icon: BookOpen, label: 'Post Job RoadMap', path: '/postroadmap', requiresPro: true },
+    { icon: MapPin, label: 'Post Job RoadMap', path: '/postroadmap', requiresPro: true },
   ];
 
   const isActive = (path: string) => {
