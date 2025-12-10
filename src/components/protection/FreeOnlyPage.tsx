@@ -1,15 +1,8 @@
-// src/components/protection/FreeOnlyPage.tsx
 import { Navigate } from "react-router-dom";
 import { useSubscription } from "../../context/SubscriptionContext";
 
-export default function FreeOnlyPage({ 
-  children,
-  redirectTo = "/user-dashboard" // ✅ Where to send paid users
-}: { 
-  children: any;
-  redirectTo?: string;
-}) {
-  const { loading, isFree } = useSubscription();
+export default function FreeOnlyPage({ children }: { children: any }) {
+  const { loading, isFree, tier, isPremium  } = useSubscription();
 
   if (loading) {
     return (
@@ -19,11 +12,11 @@ export default function FreeOnlyPage({
     );
   }
 
-  // ✅ If user has ANY paid plan, redirect them away
+  // ✅ If user has paid plan (basic/starter/pro), block access
   if (!isFree) {
-    return <Navigate to={redirectTo} replace />;
+    return <Navigate to="/pricing" replace />;
   }
 
-  // ✅ Only free users can see this
+  // ✅ Only free users can access
   return children;
 }

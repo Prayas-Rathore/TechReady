@@ -85,15 +85,7 @@ function App() {
               ======================================== */}
               
               {/* FREE PLAN ONLY */}
-               {/* ✅ FREE PLAN ONLY - Paid users redirected to dashboard */}
-              <Route 
-                path="/ai_jobdescription" 
-                element={
-                  <FreeOnlyPage redirectTo="/jobdescription">
-                    <JobDescriptionSelectorfree />
-                  </FreeOnlyPage>
-                } 
-              />
+              <Route path="/ai_jobdescription" element={<JobDescriptionSelectorfree />}/>
 
               {/* ANY PAID PLAN (Basic, Starter, Pro) */}
               <Route 
@@ -104,6 +96,15 @@ function App() {
                   </PremiumPage>
                 } 
               />
+
+                <Route 
+                path="/jobdescription" 
+                element={
+                  <PremiumPage allowedPlans={["basic", "starter", "pro"]}>
+                <JobDescriptionSelector />
+                  </PremiumPage>
+              } 
+                />
               
               <Route 
                 path="/roadmap" 
@@ -178,7 +179,6 @@ function App() {
               {/* NO PLAN RESTRICTION (All authenticated users) */}
               <Route path="/subscription/success" element={<SubscriptionSuccess />} />
               <Route path="/user-dashboard" element={<UserDashboard />} />
-              <Route path="/jobdescription" element={<JobDescriptionSelector />} />
               <Route path="/job-details" element={<JobDetailsFormPage />} />
             </Route>
           </Routes>
