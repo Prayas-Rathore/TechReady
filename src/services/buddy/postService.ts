@@ -17,9 +17,12 @@ export const fetchPosts = async (
   const { data, error, count } = await supabase
     .from('posts')
     .select(`
-      *,
-      author:profiles!author_id(id, full_name, email)
-    `, { count: 'exact' })
+            id,
+            title,
+            content,
+            created_at,
+            author:profiles!posts_author_id_fkey(id, sudo_name)
+          `)
     .order('created_at', { ascending: false })
     .range(from, to);
 
@@ -86,9 +89,12 @@ export const createPost = async (
     .from('posts')
     .insert({ author_id: authorId, title, content })
     .select(`
-      *,
-      author:profiles!author_id(id, full_name, email)
-    `)
+  id,
+  title,
+  content,
+  created_at,
+  author:profiles!posts_author_id_fkey(id, sudo_name)
+`)
     .single();
 
   if (error) throw error;

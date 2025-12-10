@@ -1,26 +1,41 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { DomainSelector } from './DomainSelector';
 import { Suggestions } from './Suggestions';
 import { IncomingRequests } from './IncomingRequests';
 import { MyBuddies } from './MyBuddies';
 import { Navigate } from 'react-router-dom';
 import { PostsPage } from './Posts';
 import { SocialLayout } from './SocialLayout';
+import { SetupProfile } from './SetupProfile';
 import { fetchIncomingRequests } from '../../services/buddy/buddyService';
+import { supabase } from '../../services/SupabaseClient';
 
-type PageType = 'domains' | 'suggestions' | 'requests' | 'buddies' | 'post';
+type PageType = 'suggestions' | 'requests' | 'buddies' | 'post';
 
 export const BuddyConnectorPage: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState<PageType>('post');
+  const [currentPage, setCurrentPage] = useState<PageType>('suggestions');
   const [pendingRequestsCount, setPendingRequestsCount] = useState(0);
+  const [hasSudoName, setHasSudoName] = useState<boolean | null>(null);
   const { user, loading, isAuthenticated } = useAuth();
 
   useEffect(() => {
     if (user) {
+      checkSudoName();
       loadPendingRequestsCount();
     }
   }, [user]);
+
+  const checkSudoName = async () => {
+    if (!user) return;
+    
+    const { data } = await supabase
+      .from('profiles')
+      .select('sudo_name')
+      .eq('id', user.id)
+      .single();
+
+    setHasSudoName(!!data?.sudo_name);
+  };
 
   const loadPendingRequestsCount = async () => {
     if (!user) return;
@@ -32,7 +47,7 @@ export const BuddyConnectorPage: React.FC = () => {
     }
   };
 
-  if (loading) {
+  if (loading || hasSudoName === null) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" />
@@ -44,10 +59,13 @@ export const BuddyConnectorPage: React.FC = () => {
     return <Navigate to="/login" replace />;
   }
 
+  // Show setup if no sudo_name
+  if (!hasSudoName) {
+    return <SetupProfile />;
+  }
+
   const renderContent = () => {
     switch (currentPage) {
-      case 'domains':
-        return <DomainSelector />;
       case 'suggestions':
         return <Suggestions />;
       case 'requests':

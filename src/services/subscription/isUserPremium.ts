@@ -1,19 +1,3 @@
-// export function isUserPremium(profile: any) {
-//   if (!profile) return false;
-
-//   const validStatus = ["trialing", "active"];
-//   const validPlans = ["starter", "basic", "pro"];
-
-//   const isStatusValid = validStatus.includes(profile.subscription_status);
-//   const isPlanValid = validPlans.includes(profile.plan_type);
-
-//   const isNotExpired =
-//     profile.subscription_end &&
-//     new Date(profile.subscription_end) > new Date();
-
-//   return isStatusValid && isPlanValid && isNotExpired;
-// }
-
 export const isUserPremium = (profile: any): boolean => {
   if (!profile) return false;
 
@@ -42,6 +26,15 @@ export const hasTierAccess = (
   const requiredLevel = tierHierarchy.indexOf(requiredTier?.toLowerCase());
   
   return userLevel >= requiredLevel;
+};
+
+// ✅ NEW: Check if user has EXACT plan(s) - non-hierarchical
+export const hasExactPlan = (
+  userTier: string,
+  allowedPlans: string[]
+): boolean => {
+  const tier = userTier?.toLowerCase();
+  return allowedPlans.map(p => p.toLowerCase()).includes(tier);
 };
 
 // ✅ Get tier display name

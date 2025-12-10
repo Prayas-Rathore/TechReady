@@ -37,6 +37,7 @@ import TermsOfServicePage from './pages/TermsOfServicePage.tsx';
 import ConsentPolicyPage from './pages/ConsentPolicyPage.tsx';
 import { SubscriptionProvider } from './context/SubscriptionContext';
 import PremiumPage from './components/protection/PremiumPage';
+import FreeOnlyPage from './components/protection/FreeOnlyPage';
 import SubscriptionSuccess from './pages/SubscriptionSuccess';
 // import { BuddyConnectorPage } from './pages/BuddyConnector/index';
 import BuddyConnectorPage from './components/buddy-connector/index';
@@ -50,77 +51,143 @@ function App() {
   return (
     
     <Router>
-      {/* Protected routes wrapped in AuthProvider */}
-        <AuthProvider>
-                    <SubscriptionProvider>
-            <Routes>
-                  {/* Public routes */}
-                    <Route path="/" element={<LandingPage3 />} />
-                    <Route path="/old-landing" element={<InterviewPro />} />
-                    <Route path="/test" element={<TestConnectionPage />} />
-                    <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-                    <Route path="/update-password" element={<UpdatePasswordPage />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/signup" element={<Signup />} />
-                    <Route path="/pricing" element={<PricingPage />} />
-                    <Route path="/SuccessScreen" element={<SuccessScreen />} />
-                    {/* <Route path="/roadmaptest" element={<RoadmapDisplay />} /> */}
-                      <Route path="/cookies-policy" element={<CookiesPolicyPage />} />
-                  {/* Public routes */}
-                     <Route path="/consent-policy" element={<ConsentPolicyPage />} />
-                     <Route path="/terms-of-service" element={<TermsOfServicePage />} />
-                       <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+      <AuthProvider>
+        <SubscriptionProvider>
+          <Routes>
+            {/* ========================================
+                PUBLIC ROUTES (No authentication needed)
+            ======================================== */}
+            <Route path="/" element={<LandingPage3 />} />
+            <Route path="/old-landing" element={<InterviewPro />} />
+            <Route path="/test" element={<TestConnectionPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/update-password" element={<UpdatePasswordPage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/pricing" element={<PricingPage />} />
+            <Route path="/SuccessScreen" element={<SuccessScreen />} />
+            <Route path="/cookies-policy" element={<CookiesPolicyPage />} />
+            <Route path="/consent-policy" element={<ConsentPolicyPage />} />
+            <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
 
+            {/* ========================================
+                PROTECTED ROUTES (Authentication required)
+            ======================================== */}
+            <Route element={<ProtectedRoute />}>
+              {/* ADMIN ROUTES */}
+              <Route path="/admin-dashboard" element={<AdminDashboard />} />
+              <Route path="/admin/users" element={<UserListPage />} />
+              <Route path="/admin/users/edit/:id" element={<UserFormPage />} />
 
-                        <Route element={<ProtectedRoute />}>
-                          {/* Start Admin Part */}
-                          <Route path="/admin-dashboard" element={<AdminDashboard />} />
-                          <Route path="/admin/users" element={<UserListPage />} />
-                          <Route path="/admin/users/edit/:id" element={<UserFormPage />} /> 
-                          {/* End Admin Part */}
+              {/* ========================================
+                  USER ROUTES WITH PLAN RESTRICTIONS
+              ======================================== */}
+              
+              {/* FREE PLAN ONLY */}
+               {/* ✅ FREE PLAN ONLY - Paid users redirected to dashboard */}
+              <Route 
+                path="/ai_jobdescription" 
+                element={
+                  <FreeOnlyPage redirectTo="/jobdescription">
+                    <JobDescriptionSelectorfree />
+                  </FreeOnlyPage>
+                } 
+              />
 
-                        
-                          {/* Start User Part */}
-                          <Route path="/assessment" element={<AssessmentPage />} />
-                          {/* <Route path="/roadmap" element={<RoadmapGeneratorPage />} /> */}
-                          <Route path="/roadmap" element={ <RoadmapGeneratorPage />} 
-                          />
-                          <Route path="/postroadmap" element={<PremiumPage requiredTier="pro">
-                                                                <PostRoadMap />
-                                                              </PremiumPage>
-                                                              } />
+              {/* ANY PAID PLAN (Basic, Starter, Pro) */}
+              <Route 
+                path="/assessment" 
+                element={
+                  <PremiumPage requiredTier="basic">
+                    <AssessmentPage />
+                  </PremiumPage>
+                } 
+              />
+              
+              <Route 
+                path="/roadmap" 
+                element={
+                  <PremiumPage requiredTier="basic">
+                    <RoadmapGeneratorPage />
+                  </PremiumPage>
+                } 
+              />
 
-                          <Route path="/subscription/success" element={<SubscriptionSuccess />} />
+              <Route 
+                path="/interview/:sessionId" 
+                element={
+                  <PremiumPage requiredTier="basic">
+                    <InterviewSession />
+                  </PremiumPage>
+                } 
+              />
 
-                          <Route path="/buddy-connector" element={
-                            <PremiumPage requiredTier="basic">
+              <Route 
+                path="/interview/:sessionId/suggestions" 
+                element={
+                  <PremiumPage requiredTier="basic">
+                    <InterviewSuggestionsPage />
+                  </PremiumPage>
+                } 
+              />
 
-                            <BuddyConnectorPage />
-                            </PremiumPage>
-                            } />
+              <Route 
+                path="/cv-analyzer" 
+                element={
+                  <PremiumPage requiredTier="basic">
+                    <CVAnalyzerPage />
+                  </PremiumPage>
+                } 
+              />
 
-                          <Route path="/user-dashboard" element={<UserDashboard />} />
-                          <Route path="/jobdescription" element={<JobDescriptionSelector />} />
-                          <Route path="/ai_jobdescription" element={<JobDescriptionSelectorfree />} />
-                          <Route path="/interview/:sessionId" element={<InterviewSession />} />
-                          {/* <Route path="/interview/:sessionId/suggestions" element={<InterviewSuggestionsPage />} /> */}
-                          <Route path="/interview/:sessionId/suggestions" element={<InterviewSuggestionsPage />} />
-                          <Route path="/job-details" element={<JobDetailsFormPage />} />
-                          <Route path="/cv-analyzer" element={<CVAnalyzerPage />} />
-                          <Route path="/cv-dashboard" element={<CVDashboardLayout />}>
-                          <Route index element={<CVDashboardHome />} />
-                          <Route path="analysis" element={<CVAnalysisPage />} />
-                          <Route path="jd-generator" element={<JDGeneratorPage />} />
-                          <Route path="cover-letter" element={<CoverLetterGenerator />} />
+              <Route 
+                path="/cv-dashboard" 
+                element={
+                  <PremiumPage requiredTier="basic">
+                    <CVDashboardLayout />
+                  </PremiumPage>
+                }
+              >
+                <Route index element={<CVDashboardHome />} />
+                <Route path="analysis" element={<CVAnalysisPage />} />
+                <Route path="jd-generator" element={<JDGeneratorPage />} />
+                <Route path="cover-letter" element={<CoverLetterGenerator />} />
+              </Route>
 
-                          {/* End User Part */}
-                        </Route>
-                      </Route>
-            </Routes>
-              </SubscriptionProvider>
-        </AuthProvider>
+              {/* PRO PLAN ONLY */}
+              <Route 
+                path="/postroadmap" 
+                element={
+                  <PremiumPage requiredTier="pro">
+                    <PostRoadMap />
+                  </PremiumPage>
+                } 
+              />
+
+              <Route 
+                path="/buddy-connector" 
+                element={
+                  <PremiumPage allowedPlans={["basic", "starter", "pro"]}>
+                    <BuddyConnectorPage />
+                  </PremiumPage>
+                } 
+              />
+              
+
+              {/* NO PLAN RESTRICTION (All authenticated users) */}
+              <Route path="/subscription/success" element={<SubscriptionSuccess />} />
+              <Route path="/user-dashboard" element={<UserDashboard />} />
+              <Route path="/jobdescription" element={<JobDescriptionSelector />} />
+              <Route path="/job-details" element={<JobDetailsFormPage />} />
+            </Route>
+          </Routes>
+        </SubscriptionProvider>
+      </AuthProvider>
     </Router>
   );
 }
 
 export default App;
+
+// basic,starter,pro

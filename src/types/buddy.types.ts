@@ -15,12 +15,12 @@ export interface UserDomain {
   created_at: string;
 }
 
+// Update interface
 export interface BuddySuggestion {
   id: string;
-  full_name: string | null;
-  email: string | null;
-  matching_domains: Domain[];
+  sudo_name: string;
   match_count: number;
+  matching_domains: Domain[];
 }
 
 export interface ConnectionRequest {
