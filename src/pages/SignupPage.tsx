@@ -79,7 +79,7 @@ export default function SignupPage() {
                 <div className="lg:hidden mb-6">
                   <Link to="/" className="inline-flex items-center gap-2">
                     <Video className="w-8 h-8 text-emerald-400" />
-                    <span className="text-2xl font-bold text-white">InterviewPro</span>
+                    <span className="text-2xl font-bold text-white">MockITHub</span>
                   </Link>
                 </div>
                 <h2 className="text-3xl font-bold text-white mb-2">Create Account</h2>
@@ -246,7 +246,7 @@ export default function SignupPage() {
             <div className="mb-8 animate-fadeIn">
               <Link to="/" className="flex items-center gap-3 mb-12">
                 <Video className="w-10 h-10 text-emerald-400" />
-                <span className="text-3xl font-bold text-white">MockItHub</span>
+                <span className="text-3xl font-bold text-white">MockITHub</span>
               </Link>
 
               <h1 className="text-5xl font-bold text-white mb-6 leading-tight">

@@ -2,26 +2,26 @@ import { Star, Quote } from 'lucide-react';
 
 const testimonials = [
   {
-    name: 'Sarah Chen',
-    role: 'Software Engineer at Amazon',
-    image: 'SC',
-    content: 'InterviewPro was a game-changer for me. The mock interviews were incredibly realistic, and the feedback I received helped me improve my coding speed and communication. Landed my dream job at Amazon!',
+    name: 'Jenny, ',
+    role: '22, Bangalore',
+    image: 'J',
+    content: 'I landed a tech internship in just two weeks after using MockITHub’s CV and interview tools—I’d still be cold-applying otherwise.',
     rating: 5,
   },
   {
-    name: 'Michael Rodriguez',
-    role: 'Product Manager at Microsoft',
-    image: 'MR',
-    content: 'The behavioral interview prep was outstanding. My interviewer helped me craft compelling stories and frame my experiences perfectly. Got three offers after just two weeks of practice!',
+    name: 'Gerard',
+    role: '29, London',
+    image: 'G',
+    content: 'As a career-changer from marketing to dev, the mock interviews made all the difference. I walked in confident and got the offer.',
     rating: 5,
   },
-  {
+ /* {
     name: 'Priya Sharma',
     role: 'Data Scientist at Meta',
     image: 'PS',
     content: 'I was struggling with technical interviews until I found InterviewPro. The industry experts provided insights I could never get from books or videos. Highly recommend!',
     rating: 5,
-  },
+  },*/
 ];
 
 export default function TestimonialsSection() {

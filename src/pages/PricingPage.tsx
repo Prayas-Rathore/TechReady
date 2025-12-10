@@ -10,7 +10,7 @@ const plans = [
     name: 'Basic',
     tier: 'basic',
     priceId: 'price_1SZqpYRoRT3gf2HBepdSlxCc',// Stripe Price ID
-    price: '0.10',
+    price: '14.99',
     description: 'Perfect for getting started with mock interviews',
     features: [
       'JD Scanner & CV Optimiser',
