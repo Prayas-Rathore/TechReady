@@ -8,8 +8,8 @@ import { useState } from 'react';
 const plans = [
   {
     name: 'Basic',
-    tier: 'basic',
-    priceId: 'price_1SZqpYRoRT3gf2HBepdSlxCc',// Stripe Price ID
+    tier: 'pro',
+    priceId: 'price_1SZV1iRoRT3gf2HBjXbwcGXf',// Stripe Price ID
     price: '14.99',
     description: 'Perfect for getting started with mock interviews',
     features: [
@@ -23,7 +23,7 @@ const plans = [
   },
   {
     name: 'Starter',
-    tier: 'starter',
+    tier: 'pro',
     priceId: 'price_1SZUz0RoRT3gf2HBR9xgbG4A', // Stripe Price ID
     price: '19.99',
     description: 'Most popular choice for serious job seekers',

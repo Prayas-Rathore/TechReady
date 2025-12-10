@@ -85,7 +85,7 @@ function App() {
                           {/* <Route path="/roadmap" element={<RoadmapGeneratorPage />} /> */}
                           <Route path="/roadmap" element={ <RoadmapGeneratorPage />} 
                           />
-                          <Route path="/postroadmap" element={<PremiumPage>
+                          <Route path="/postroadmap" element={<PremiumPage requiredTier="pro">
                                                                 <PostRoadMap />
                                                               </PremiumPage>
                                                               } />
@@ -93,7 +93,7 @@ function App() {
                           <Route path="/subscription/success" element={<SubscriptionSuccess />} />
 
                           <Route path="/buddy-connector" element={
-                            <PremiumPage requiredTier="pro">
+                            <PremiumPage requiredTier="basic">
 
                             <BuddyConnectorPage />
                             </PremiumPage>
