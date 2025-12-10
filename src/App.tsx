@@ -99,7 +99,7 @@ function App() {
               <Route 
                 path="/assessment" 
                 element={
-                  <PremiumPage requiredTier="basic">
+                  <PremiumPage allowedPlans={["basic", "starter", "pro"]}>
                     <AssessmentPage />
                   </PremiumPage>
                 } 
@@ -108,7 +108,7 @@ function App() {
               <Route 
                 path="/roadmap" 
                 element={
-                  <PremiumPage requiredTier="basic">
+                  <PremiumPage allowedPlans={["basic", "starter", "pro"]}>
                     <RoadmapGeneratorPage />
                   </PremiumPage>
                 } 
@@ -117,7 +117,7 @@ function App() {
               <Route 
                 path="/interview/:sessionId" 
                 element={
-                  <PremiumPage requiredTier="basic">
+                  <PremiumPage allowedPlans={["basic", "starter", "pro"]}>
                     <InterviewSession />
                   </PremiumPage>
                 } 
@@ -126,7 +126,7 @@ function App() {
               <Route 
                 path="/interview/:sessionId/suggestions" 
                 element={
-                  <PremiumPage requiredTier="basic">
+                  <PremiumPage allowedPlans={["basic", "starter", "pro"]}>
                     <InterviewSuggestionsPage />
                   </PremiumPage>
                 } 
@@ -135,7 +135,7 @@ function App() {
               <Route 
                 path="/cv-analyzer" 
                 element={
-                  <PremiumPage requiredTier="basic">
+                  <PremiumPage allowedPlans={["basic", "starter", "pro"]}>
                     <CVAnalyzerPage />
                   </PremiumPage>
                 } 
@@ -144,7 +144,7 @@ function App() {
               <Route 
                 path="/cv-dashboard" 
                 element={
-                  <PremiumPage requiredTier="basic">
+                  <PremiumPage allowedPlans={["basic", "starter", "pro"]}>
                     <CVDashboardLayout />
                   </PremiumPage>
                 }
