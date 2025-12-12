@@ -19,7 +19,7 @@ export const SocialLayout: React.FC<SocialLayoutProps> = ({
 
   const navItems = [
     { id: 'post', label: 'Feed', icon: '🏠', mobileIcon: '🏠' },
-    { id: 'domains', label: 'Interests', icon: '🎯', mobileIcon: '🎯' },
+    // { id: 'profile', label: 'Profile', icon: '🎯', mobileIcon: '🎯' },
     { id: 'suggestions', label: 'Discover', icon: '🔍', mobileIcon: '🔍' },
     { id: 'requests', label: 'Notifications', icon: '🔔', mobileIcon: '🔔', badge: pendingRequestsCount },
     { id: 'buddies', label: 'Network', icon: '👥', mobileIcon: '👥' },

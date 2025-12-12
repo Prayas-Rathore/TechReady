@@ -15,16 +15,16 @@ export default function HeroSection() {
               </span>
             </div>
 
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight animate-fadeIn" style={{ animationDelay: '0.1s' }}>
-              Crack Your Next Interview with
-              <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 animate-gradient">
+            <h1 className="text-5xl sm:text-6xl lg:text-6xl font-bold leading-tight animate-fadeIn" style={{ animationDelay: '0.1s' }}>
+              Crack the Code: Land Your Dream Tech Role - With &nbsp;
+              
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 animate-gradient">
                 Confidence
               </span>
             </h1>
 
             <p className="text-xl text-slate-300 leading-relaxed animate-fadeIn" style={{ animationDelay: '0.2s' }}>
-              1-on-1 mock interviews with industry experts. Get real-time feedback, improve your skills, and land your dream job at top tech companies.
+              MockITHub equips you with CV optimisation, AI interview prep, portfolio branding, confidence training, Buddy blogs, and a growth roadmap — everything you need to stand out and succeed in tech. 
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 animate-fadeIn" style={{ animationDelay: '0.3s' }}>
@@ -32,18 +32,18 @@ export default function HeroSection() {
                 to="/assessment"
                 className="group px-8 py-4 bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 text-white rounded-xl font-semibold text-lg hover:shadow-2xl hover:shadow-purple-500/50 hover:scale-105 transition-all flex items-center justify-center gap-2"
               >
-                <span>Start Free Assessment</span>
+                <span>Start AI Mock</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
-              <button className="px-8 py-4 bg-white/10 backdrop-blur-xl border border-white/20 text-white rounded-xl font-semibold text-lg hover:bg-white/20 transition-all flex items-center justify-center gap-2">
+              {/* <button className="px-8 py-4 bg-white/10 backdrop-blur-xl border border-white/20 text-white rounded-xl font-semibold text-lg hover:bg-white/20 transition-all flex items-center justify-center gap-2">
                 <Video className="w-5 h-5" />
                 <span>Watch Demo</span>
-              </button>
+              </button> */}
             </div>
 
             <div className="grid grid-cols-3 gap-6 pt-8 animate-fadeIn" style={{ animationDelay: '0.4s' }}>
               <div className="text-center">
-                <div className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">10K+</div>
+                <div className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">100+</div>
                 <div className="text-sm text-slate-400 mt-1">Success Stories</div>
               </div>
               <div className="text-center">

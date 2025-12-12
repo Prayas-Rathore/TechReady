@@ -53,130 +53,165 @@ export const saveUserDomains = async (userId: string, domainIds: string[]): Prom
 
 // ==================== SUGGESTIONS ====================
 
+// export const fetchSuggestions = async (userId: string): Promise<BuddySuggestion[]> => {
+//   try {
+//     // Step 1: Get current user's domain IDs
+//     const { data: userDomains, error: userDomainsError } = await supabase
+//       .from('user_domains')
+//       .select('domain_id')
+//       .eq('user_id', userId);
+
+//     if (userDomainsError) throw userDomainsError;
+    
+//     const userDomainIds = userDomains?.map(d => d.domain_id) || [];
+    
+//     if (userDomainIds.length === 0) {
+//       console.log('No domains selected by user');
+//       return [];
+//     }
+
+//     console.log('User domain IDs:', userDomainIds);
+
+//     // Step 2: Find users who share at least one domain
+//     const { data: matchingUsers, error: matchingError } = await supabase
+//       .from('user_domains')
+//       .select(`
+//         user_id,
+//         domain_id,
+//         domains (
+//           id,
+//           name,
+//           icon,
+//           category
+//         )
+//       `)
+//       .in('domain_id', userDomainIds)
+//       .neq('user_id', userId);
+
+//     if (matchingError) throw matchingError;
+
+//     console.log('Matching users raw:', matchingUsers);
+
+//     if (!matchingUsers || matchingUsers.length === 0) {
+//       console.log('No matching users found');
+//       return [];
+//     }
+
+//     // Step 3: Group by user and count matches
+//     const userMatchMap = new Map<string, {
+//       userId: string;
+//       matchingDomainIds: string[];
+//       matchingDomains: Domain[];
+//     }>();
+
+//     matchingUsers.forEach((match: any) => {
+//       if (!userMatchMap.has(match.user_id)) {
+//         userMatchMap.set(match.user_id, {
+//           userId: match.user_id,
+//           matchingDomainIds: [],
+//           matchingDomains: []
+//         });
+//       }
+      
+//       const userMatch = userMatchMap.get(match.user_id)!;
+//       userMatch.matchingDomainIds.push(match.domain_id);
+      
+//       // domains is an object, not an array
+//       if (match.domains) {
+//         userMatch.matchingDomains.push(match.domains as Domain);
+//       }
+//     });
+
+//     console.log('User match map:', Array.from(userMatchMap.entries()));
+
+//     // Step 4: Get user profiles for matched users
+//     const matchedUserIds = Array.from(userMatchMap.keys());
+    
+//     const { data: profiles, error: profilesError } = await supabase
+//       .from('profiles')
+//       .select('id, full_name, email')
+//       .in('id', matchedUserIds);
+
+//     if (profilesError) throw profilesError;
+
+//     console.log('Profiles:', profiles);
+
+//     // Step 5: Filter out users with existing connection requests
+//     const { data: existingRequests, error: requestsError } = await supabase
+//       .from('connection_requests')
+//       .select('sender_id, receiver_id, status')
+//       .or(`sender_id.eq.${userId},receiver_id.eq.${userId}`);
+
+//     if (requestsError) throw requestsError;
+
+//     const excludedUserIds = new Set<string>();
+//     existingRequests?.forEach(req => {
+//       if (req.sender_id === userId) {
+//         excludedUserIds.add(req.receiver_id);
+//       } else {
+//         excludedUserIds.add(req.sender_id);
+//       }
+//     });
+
+//     console.log('Excluded user IDs:', Array.from(excludedUserIds));
+
+//     // Step 6: Build suggestions
+//     const suggestions: BuddySuggestion[] = (profiles || [])
+//       .filter(profile => !excludedUserIds.has(profile.id))
+//       .map(profile => {
+//         const match = userMatchMap.get(profile.id)!;
+//         return {
+//           id: profile.id,
+//           full_name: profile.full_name,
+//           email: profile.email,
+//           matching_domains: match.matchingDomains,
+//           match_count: match.matchingDomainIds.length
+//         };
+//       })
+//       .sort((a, b) => b.match_count - a.match_count);
+
+//     console.log('Final suggestions:', suggestions);
+//     return suggestions;
+
+//   } catch (error) {
+//     console.error('Error in fetchSuggestions:', error);
+//     throw error;
+//   }
+// };
+
+// Replace fetchSuggestions function
 export const fetchSuggestions = async (userId: string): Promise<BuddySuggestion[]> => {
-  try {
-    // Step 1: Get current user's domain IDs
-    const { data: userDomains, error: userDomainsError } = await supabase
-      .from('user_domains')
-      .select('domain_id')
-      .eq('user_id', userId);
+  // Get all users except current user and existing connections
+  const { data: existingConnections } = await supabase
+    .from('connection_requests')
+    .select('sender_id, receiver_id')
+    .or(`sender_id.eq.${userId},receiver_id.eq.${userId}`);
 
-    if (userDomainsError) throw userDomainsError;
-    
-    const userDomainIds = userDomains?.map(d => d.domain_id) || [];
-    
-    if (userDomainIds.length === 0) {
-      console.log('No domains selected by user');
-      return [];
-    }
+  const connectedUserIds = new Set<string>();
+  existingConnections?.forEach(conn => {
+    connectedUserIds.add(conn.sender_id);
+    connectedUserIds.add(conn.receiver_id);
+  });
 
-    console.log('User domain IDs:', userDomainIds);
+  const { data: profiles, error } = await supabase
+    .from('profiles')
+    .select('id, sudo_name, created_at')
+    .neq('id', userId)
+    .not('sudo_name', 'is', null);
 
-    // Step 2: Find users who share at least one domain
-    const { data: matchingUsers, error: matchingError } = await supabase
-      .from('user_domains')
-      .select(`
-        user_id,
-        domain_id,
-        domains (
-          id,
-          name,
-          icon,
-          category
-        )
-      `)
-      .in('domain_id', userDomainIds)
-      .neq('user_id', userId);
+  if (error) throw error;
 
-    if (matchingError) throw matchingError;
+  // Filter out connected users
+  const suggestions = profiles
+    ?.filter(profile => !connectedUserIds.has(profile.id))
+    .map(profile => ({
+      id: profile.id,
+      sudo_name: profile.sudo_name,
+      match_count: 0,
+      matching_domains: []
+    })) || [];
 
-    console.log('Matching users raw:', matchingUsers);
-
-    if (!matchingUsers || matchingUsers.length === 0) {
-      console.log('No matching users found');
-      return [];
-    }
-
-    // Step 3: Group by user and count matches
-    const userMatchMap = new Map<string, {
-      userId: string;
-      matchingDomainIds: string[];
-      matchingDomains: Domain[];
-    }>();
-
-    matchingUsers.forEach((match: any) => {
-      if (!userMatchMap.has(match.user_id)) {
-        userMatchMap.set(match.user_id, {
-          userId: match.user_id,
-          matchingDomainIds: [],
-          matchingDomains: []
-        });
-      }
-      
-      const userMatch = userMatchMap.get(match.user_id)!;
-      userMatch.matchingDomainIds.push(match.domain_id);
-      
-      // domains is an object, not an array
-      if (match.domains) {
-        userMatch.matchingDomains.push(match.domains as Domain);
-      }
-    });
-
-    console.log('User match map:', Array.from(userMatchMap.entries()));
-
-    // Step 4: Get user profiles for matched users
-    const matchedUserIds = Array.from(userMatchMap.keys());
-    
-    const { data: profiles, error: profilesError } = await supabase
-      .from('profiles')
-      .select('id, full_name, email')
-      .in('id', matchedUserIds);
-
-    if (profilesError) throw profilesError;
-
-    console.log('Profiles:', profiles);
-
-    // Step 5: Filter out users with existing connection requests
-    const { data: existingRequests, error: requestsError } = await supabase
-      .from('connection_requests')
-      .select('sender_id, receiver_id, status')
-      .or(`sender_id.eq.${userId},receiver_id.eq.${userId}`);
-
-    if (requestsError) throw requestsError;
-
-    const excludedUserIds = new Set<string>();
-    existingRequests?.forEach(req => {
-      if (req.sender_id === userId) {
-        excludedUserIds.add(req.receiver_id);
-      } else {
-        excludedUserIds.add(req.sender_id);
-      }
-    });
-
-    console.log('Excluded user IDs:', Array.from(excludedUserIds));
-
-    // Step 6: Build suggestions
-    const suggestions: BuddySuggestion[] = (profiles || [])
-      .filter(profile => !excludedUserIds.has(profile.id))
-      .map(profile => {
-        const match = userMatchMap.get(profile.id)!;
-        return {
-          id: profile.id,
-          full_name: profile.full_name,
-          email: profile.email,
-          matching_domains: match.matchingDomains,
-          match_count: match.matchingDomainIds.length
-        };
-      })
-      .sort((a, b) => b.match_count - a.match_count);
-
-    console.log('Final suggestions:', suggestions);
-    return suggestions;
-
-  } catch (error) {
-    console.error('Error in fetchSuggestions:', error);
-    throw error;
-  }
+  return suggestions;
 };
 
 // ==================== CONNECTION REQUESTS ====================
@@ -248,13 +283,13 @@ export const fetchMyBuddies = async (userId: string): Promise<BuddyConnection[]>
     const { data: connections, error: connectionsError } = await supabase
       .from('connection_requests')
       .select(`
-        id,
-        sender_id,
-        receiver_id,
-        created_at,
-        sender:profiles!sender_id(id, full_name, email),
-        receiver:profiles!receiver_id(id, full_name, email)
-      `)
+  id,
+  sender_id,
+  receiver_id,
+  sender:profiles!connection_requests_sender_id_fkey(id, sudo_name),
+  receiver:profiles!connection_requests_receiver_id_fkey(id, sudo_name)
+`)
+
       .eq('status', 'accepted')
       .or(`sender_id.eq.${userId},receiver_id.eq.${userId}`)
       .order('created_at', { ascending: false });

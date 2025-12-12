@@ -1,32 +1,10 @@
-// import { createContext, useContext, useEffect, useState } from "react";
-// import { isUserPremium } from "../services/subscription/isUserPremium";
-// import { useProfile } from "../components/hooks/subscription/useProfile";
-
-// const SubscriptionContext = createContext<any>(null);
-
-// export const SubscriptionProvider = ({ children }: any) => {
-//   const { profile, loading } = useProfile();
-//   const [isPremium, setIsPremium] = useState(false);
-
-//   useEffect(() => {
-//     if (!profile) return;
-//     console.log("=== SUBSCRIPTION CONTEXT PROFILE ===");
-//   console.log(profile);
-//     setIsPremium(isUserPremium(profile));
-//   }, [profile]);
-
-//   return (
-//     <SubscriptionContext.Provider value={{ profile, isPremium, loading }}>
-//       {children}
-//     </SubscriptionContext.Provider>
-//   );
-// };
-
-// export const useSubscription = () => useContext(SubscriptionContext);
-
-
 import { createContext, useContext, useEffect, useState } from "react";
-import { isUserPremium, hasTierAccess, getTierDisplayName } from "../services/subscription/isUserPremium";
+import { 
+  isUserPremium, 
+  hasTierAccess, 
+  hasExactPlan, 
+  getTierDisplayName 
+} from "../services/subscription/isUserPremium";
 import { useProfile } from "../components/hooks/subscription/useProfile";
 
 interface SubscriptionContextType {
@@ -36,6 +14,7 @@ interface SubscriptionContextType {
   tier: string;
   tierDisplayName: string;
   hasTierAccess: (requiredTier: string) => boolean;
+  hasExactPlan: (allowedPlans: string[]) => boolean; // ✅ NEW
   isFree: boolean;
 }
 
@@ -66,6 +45,10 @@ export const SubscriptionProvider = ({ children }: any) => {
     return hasTierAccess(tier, requiredTier);
   };
 
+  const checkExactPlan = (allowedPlans: string[]) => {
+    return hasExactPlan(tier, allowedPlans);
+  };
+
   return (
     <SubscriptionContext.Provider 
       value={{ 
@@ -75,6 +58,7 @@ export const SubscriptionProvider = ({ children }: any) => {
         tier,
         tierDisplayName: getTierDisplayName(tier),
         hasTierAccess: checkTierAccess,
+        hasExactPlan: checkExactPlan, // ✅ NEW
         isFree
       }}
     >

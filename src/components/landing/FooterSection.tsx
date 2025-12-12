@@ -9,7 +9,7 @@ export default function FooterSection() {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <Video className="w-6 h-6 text-cyan-400" />
-              <span className="text-xl font-bold text-white">InterviewPro</span>
+              <span className="text-xl font-bold text-white">MockITHub</span>
             </div>
             <p className="text-slate-400">
               AI-powered interview preparation platform helping you land your dream job.
@@ -39,12 +39,13 @@ export default function FooterSection() {
               <li><Link to="/privacy-policy" className="hover:text-white transition-colors">Privacy</Link></li>
               <li><Link to="/terms-of-service" className="hover:text-white transition-colors">Terms</Link></li>
               <li><Link to="/cookies-policy" className="hover:text-white transition-colors">Cookies</Link></li>
+              <li><Link to="/consent-policy" className="hover:text-white transition-colors">Consent</Link></li>
             </ul>
           </div>
         </div>
 
         <div className="pt-8 border-t border-white/10 text-center text-slate-400">
-          <p>&copy; {new Date().getFullYear()} InterviewPro. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} MockITHub. All rights reserved.</p>
         </div>
       </div>
     </footer>

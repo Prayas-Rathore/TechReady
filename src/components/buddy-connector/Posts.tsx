@@ -214,7 +214,7 @@ export const PostsPage: React.FC = () => {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2">
                         <div>
-                          <h4 className="font-semibold text-slate-900">{authorName}</h4>
+                          <h4 className="font-semibold text-slate-900">{post.author.sudo_name}</h4>
                           <p className="text-xs text-slate-500">{formatTimestamp(post.created_at)}</p>
                         </div>
 
@@ -265,7 +265,7 @@ export const PostsPage: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="border-t border-slate-200 px-5 py-3 flex items-center gap-6">
+                {/* <div className="border-t border-slate-200 px-5 py-3 flex items-center gap-6">
                   <button className="flex items-center gap-2 text-slate-500 hover:text-blue-500 transition-colors text-sm">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
@@ -284,7 +284,7 @@ export const PostsPage: React.FC = () => {
                     </svg>
                     <span>Share</span>
                   </button>
-                </div>
+                </div> */}
               </div>
             );
           })}

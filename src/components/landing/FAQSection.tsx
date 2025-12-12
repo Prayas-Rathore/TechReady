@@ -3,24 +3,44 @@ import { Plus, Minus } from 'lucide-react';
 
 const faqs = [
   {
-    question: 'How does InterviewPro work?',
-    answer: 'InterviewPro connects you with industry experts for 1-on-1 mock interviews. Simply choose your interview type, schedule a session at your convenience, and practice in a realistic environment. After each session, you receive detailed feedback and actionable insights to improve your performance.',
+    question: 'How does MockITHub work?',
+    answer: 'MockITHub is an online AI-powered interview platform that simulates real job interviews. You select your job role, interview type, and experience level, and the AI conducts a realistic mock interview while analyzing your answers in real time.',
   },
   {
-    question: 'Who are the interviewers?',
-    answer: 'Our interviewers are experienced professionals from top tech companies like Google, Amazon, Microsoft, Meta, and more. They have conducted hundreds of real interviews and know exactly what hiring managers look for.',
+    question: 'Is MockITHub an AI interview platform?',
+    answer: 'Yes. MockITHub uses advanced AI to ask interview questions, evaluate your responses, analyze communication skills, and provide instant, data-driven feedback after each session.',
   },
   {
-    question: 'What types of interviews can I practice?',
-    answer: 'We offer mock interviews for various formats including technical coding interviews, system design, behavioral questions, HR rounds, case studies, and domain-specific interviews.',
+    question: 'What types of interviews can I practice on MockITHub?',
+    answer: 'You can practice technical interviews, behavioral interviews, HR rounds, system design interviews, and role-specific interviews tailored to your job profile.',
   },
   {
-    question: 'How long are the mock interview sessions?',
-    answer: 'Standard mock interview sessions are 45-60 minutes long, similar to real interviews. This includes the interview itself and a feedback session. You can also book shorter 30-minute focused sessions.',
+    question: 'How long is an AI mock interview session?',
+    answer: 'Most AI mock interview sessions last between 30 to 60 minutes, depending on the interview type you choose. You can also take shorter focused practice sessions.',
   },
   {
-    question: 'Do you offer a free trial?',
-    answer: 'Yes! We offer a free trial session so you can experience the quality of our mock interviews before committing to a paid plan. This includes one complete mock interview with feedback.',
+    question: 'Do I receive feedback after the interview?',
+    answer: 'Yes. After each session, MockITHub provides detailed AI-generated feedback including strengths, weaknesses, answer quality, confidence level, communication clarity, and improvement suggestions.',
+  },
+  {
+    question: 'Can I practice interviews unlimited times?',
+    answer: 'With MockITHub, you can take multiple mock interviews to continuously improve your skills. Your past interview data and performance reports help you track progress over time.',
+  },
+  {
+    question: 'Does MockITHub support different job roles and experience levels?',
+    answer: 'Yes. MockITHub customizes interview questions based on your selected job role, technology stack, and experience level—from freshers to experienced professionals.',
+  },
+  {
+    question: 'Is MockITHub suitable for students and working professionals?',
+    answer: 'MockITHub is designed for students, job seekers, and working professionals preparing for placements, job switches, internships, and high-stakes interviews.',
+  },
+  {
+    question: 'Are the interviews conducted online?',
+    answer: 'Yes. All interviews are conducted completely online using AI, allowing you to practice anytime and from anywhere without scheduling with a human interviewer.',
+  },
+  {
+    question: 'Is MockITHub free to use?',
+    answer: 'MockITHub offers free AI mock interviews with optional premium features for advanced analytics, detailed reports, and personalized interview preparation.',
   },
 ];
 

@@ -15,7 +15,7 @@ export default function PolicyLayout({ title, lastUpdated, children }: PolicyLay
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
               <Video className="w-7 h-7 text-sky-600" />
-              <span className="text-xl font-bold text-slate-900">MockIthub</span>
+              <span className="text-xl font-bold text-slate-900">MockITHub</span>
             </Link>
             <Link
               to="/"
@@ -63,7 +63,7 @@ export default function PolicyLayout({ title, lastUpdated, children }: PolicyLay
             <div className="flex items-center gap-2">
               <Video className="w-5 h-5 text-sky-600" />
               <span className="text-slate-600 text-sm">
-                © 2024 MockIthub. All rights reserved.
+                © 2024 MockITHub. All rights reserved.
               </span>
             </div>
             <div className="flex flex-wrap justify-center gap-4 sm:gap-6 text-sm">

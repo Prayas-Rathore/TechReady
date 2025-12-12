@@ -63,21 +63,28 @@ export const MyBuddies: React.FC = () => {
   }
 };
 
-  const allDomains = Array.from(
-    new Set(buddies.flatMap(b => b.matching_domains.map(d => d.name)))
-  );
-  const filters = ['All', ...allDomains.slice(0, 5)];
+  // const allDomains = Array.from(
+  //   new Set(buddies.flatMap(b => b.matching_domains.map(d => d.name)))
+  // );
+  // const filters = ['All', ...allDomains.slice(0, 5)];
+
+  // const filteredBuddies = buddies.filter(connection => {
+  //   const matchesSearch = searchQuery === '' ||
+  //     connection.buddy.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //     connection.buddy.email?.toLowerCase().includes(searchQuery.toLowerCase());
+
+  //   const matchesFilter = selectedFilter === 'All' ||
+  //     connection.matching_domains.some(d => d.name === selectedFilter);
+
+  //   return matchesSearch && matchesFilter;
+  // });
 
   const filteredBuddies = buddies.filter(connection => {
-    const matchesSearch = searchQuery === '' ||
-      connection.buddy.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      connection.buddy.email?.toLowerCase().includes(searchQuery.toLowerCase());
+  const matchesSearch = searchQuery === '' ||
+    connection.buddy.sudo_name?.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesFilter = selectedFilter === 'All' ||
-      connection.matching_domains.some(d => d.name === selectedFilter);
-
-    return matchesSearch && matchesFilter;
-  });
+  return matchesSearch;
+});
 
   if (loading) {
     return (
@@ -111,7 +118,7 @@ export const MyBuddies: React.FC = () => {
         </svg>
       </div>
 
-      <div className="overflow-x-auto -mx-4 px-4 scrollbar-hide">
+      {/* <div className="overflow-x-auto -mx-4 px-4 scrollbar-hide">
         <div className="flex gap-2 pb-2">
           {filters.map((filter) => (
             <button
@@ -127,7 +134,7 @@ export const MyBuddies: React.FC = () => {
             </button>
           ))}
         </div>
-      </div>
+      </div> */}
 
       {buddies.length === 0 ? (
         <div className="bg-slate-50 rounded-2xl p-8 sm:p-16 text-center">
@@ -152,26 +159,17 @@ export const MyBuddies: React.FC = () => {
               <div className="md:hidden bg-white rounded-lg border border-slate-200 p-3 hover:shadow-md transition-all">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-md flex-shrink-0">
-                    {(connection.buddy.full_name?.[0] || connection.buddy.email?.[0] || 'U').toUpperCase()}
-                  </div>
+  {(connection.buddy.sudo_name?.[0] || 'U').toUpperCase()}
+</div>
 
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-sm text-slate-900 truncate">
-                      {connection.buddy.full_name || connection.buddy.email?.split('@')[0] || 'Anonymous'}
-                    </h3>
-                    <p className="text-xs text-slate-500">
-                      {connection.matching_domains.length} common interest{connection.matching_domains.length !== 1 ? 's' : ''}
-                    </p>
-                  </div>
-
-                  <button
-                    onClick={() => window.location.href = `mailto:${connection.buddy.email}`}
-                    disabled={!connection.buddy.email}
-                    className="px-3 py-1.5 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors disabled:bg-slate-300 disabled:cursor-not-allowed flex-shrink-0"
-                  >
-                    Message
-                  </button>
-
+  <h3 className="font-semibold text-sm text-slate-900 truncate">
+    @{connection.buddy.sudo_name}
+  </h3>
+  <p className="text-xs text-slate-500">Connected</p>
+</div>
+<div className="flex-1"></div>
+                 
                   <div className="relative" ref={openMenuId === connection.request_id ? menuRef : null}>
                     <button
                       onClick={() => setOpenMenuId(openMenuId === connection.request_id ? null : connection.request_id)}
@@ -207,17 +205,15 @@ export const MyBuddies: React.FC = () => {
                 <div className="relative px-3 pb-3">
                   <div className="absolute -top-10 left-1/2 -translate-x-1/2">
                     <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-2xl shadow-xl border-4 border-white">
-                      {(connection.buddy.full_name?.[0] || connection.buddy.email?.[0] || 'U').toUpperCase()}
+                      {(connection.buddy.sudo_name?.[0] || 'U').toUpperCase()}
                     </div>
                   </div>
 
                   <div className="pt-12 text-center">
                     <h3 className="font-semibold text-base text-slate-900 truncate mb-1 px-2">
-                      {connection.buddy.full_name || connection.buddy.email?.split('@')[0] || 'Anonymous'}
+                       {connection.buddy.sudo_name}
                     </h3>
-                    <p className="text-xs text-slate-500 mb-3">
-                      {connection.matching_domains.length} common interest{connection.matching_domains.length !== 1 ? 's' : ''}
-                    </p>
+                      <p className="text-xs text-slate-500 mb-3">Connected</p>
 
                     <div className="flex items-center gap-2">
                       <button
@@ -225,7 +221,7 @@ export const MyBuddies: React.FC = () => {
                         disabled={!connection.buddy.email}
                         className="flex-1 py-2 px-3 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-colors disabled:bg-slate-300 disabled:cursor-not-allowed"
                       >
-                        Message
+                        Remove
                       </button>
 
                       <div className="relative" ref={openMenuId === connection.request_id ? menuRef : null}>

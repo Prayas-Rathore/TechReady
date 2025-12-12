@@ -3,45 +3,44 @@ import { Check } from 'lucide-react';
 
 const plans = [
   {
-    name: 'Starter',
-    price: 'Free',
-    period: 'forever',
+    name: 'Basic Pack',
+    price: '$14.99',
+    period: '/month',
     description: 'Perfect for getting started',
     features: [
-      'Initial skill assessment',
-      'Basic roadmap generation',
-      '3 practice sessions',
-      'Community support'
+      'JD Scanner & CV Optimiser',
+      'AI Interview Prep',
+      'Portfolio Branding & Identity',
+      'Buddy Model',
     ],
     popular: false
   },
   {
-    name: 'Professional',
-    price: '$49',
+    name: 'Starter Pack',
+    price: '$19.99',
     period: '/month',
     description: 'Most popular choice',
     features: [
-      'Unlimited practice sessions',
-      'Advanced AI feedback',
-      'Custom learning paths',
-      'Expert mentorship',
-      '1-on-1 mock interviews',
-      'Priority support'
+      '	Mindset & Confidence Training',
+       'JD Scanner & CV Optimiser',
+      'AI Interview Prep',
+      'Portfolio Branding & Identity',
+      'Buddy Model',
     ],
     popular: true
   },
   {
-    name: 'Enterprise',
-    price: '$99',
+    name: 'Pro Pack',
+    price: '$29.99',
     period: '/month',
     description: 'For serious candidates',
     features: [
-      'Everything in Professional',
-      'Unlimited expert sessions',
-      'Interview guarantees',
-      'Resume reviews',
-      'Salary negotiation help',
-      'Dedicated success manager'
+     '	Mindset & Confidence Training',
+       'JD Scanner & CV Optimiser',
+      'AI Interview Prep',
+      'Portfolio Branding & Identity',
+      'Buddy Model',
+      'Post-Job Growth Roadmap'
     ],
     popular: false
   }
@@ -53,8 +52,8 @@ export default function PricingSection() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl sm:text-5xl font-bold mb-4">
-            Choose Your
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400">Success Plan</span>
+           
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400"> Choose Your Success Plan</span>
           </h2>
           <p className="text-xl text-slate-400 max-w-2xl mx-auto">
             Flexible pricing for every career stage

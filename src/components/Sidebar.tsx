@@ -1,7 +1,8 @@
 import { Link, useLocation } from 'react-router-dom';
 import {
-  LayoutDashboard, Video, BookOpen, Trophy, Target, Users, X
+  LayoutDashboard, Video, BookOpen, Trophy, Target, Users, X,MapPin ,StickyNote
 } from 'lucide-react';
+import { useSubscription } from '../context/SubscriptionContext';
 
 interface SidebarProps {
   isMobileOpen?: boolean;
@@ -10,15 +11,16 @@ interface SidebarProps {
 
 export default function Sidebar({ isMobileOpen, onClose }: SidebarProps) {
   const location = useLocation();
+  const { isFree, isPremium,tier } = useSubscription(); // ✅ Get both statuses
 
   const menuItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/user-dashboard' },
-    { icon: Video, label: 'Interview Practice', path: '/jobdescription' },
-    { icon: Video, label: 'Cv Optimizer', path: '/cv-dashboard' },
-    { icon: BookOpen, label: 'Post Job RoadMap', path: '/postroadmap', locked: true },
-    { icon: Trophy, label: 'Free Interview Practice', path: '/ai_jobdescription' },
-    { icon: Target, label: 'Assessment', path: '/assessment' },
-    { icon: Users, label: 'Buddy Connector', path: '/buddy-connector' },
+    { icon: Video, label: 'Interview Practice', path: '/jobdescription', paidOnly: true }, // ✅ Only paid users
+    { icon: Trophy, label: 'Interview Practice', path: '/ai_jobdescription', freeOnly: true }, // ✅ Only free users
+    { icon: StickyNote, label: 'Cv Optimizer', path: '/cv-dashboard' }, 
+    { icon: Target, label: 'Assessment', path: '/assessment'}, // ✅ Only paid users
+    { icon: Users, label: 'Buddy Connector', path: '/buddy-connector'},
+    { icon: MapPin, label: 'Post Job RoadMap', path: '/postroadmap', requiresPro: true },
   ];
 
   const isActive = (path: string) => {
@@ -28,6 +30,22 @@ export default function Sidebar({ isMobileOpen, onClose }: SidebarProps) {
     return location.pathname.startsWith(path);
   };
 
+  // ✅ Filter menu items based on subscription
+  const visibleMenuItems = menuItems.filter(item => {
+    // Hide free-only items for paid users
+    if (item.freeOnly && !isFree) {
+      return false;
+    }
+    
+    // ✅ Hide paid-only items for free users
+    if (item.paidOnly && !isPremium) {
+      return false;
+    }
+    
+    return true;
+  });
+
+  
   return (
     <>
       <aside className={`
@@ -49,24 +67,30 @@ export default function Sidebar({ isMobileOpen, onClose }: SidebarProps) {
           </div>
 
           <nav className="space-y-1">
-            {menuItems.map((item) => {
+            {visibleMenuItems.map((item) => {
               const Icon = item.icon;
               const active = isActive(item.path);
 
               return (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  onClick={onClose}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
-                    active
-                      ? 'bg-sky-50 text-sky-600 font-medium'
-                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-                  }`}
-                >
-                  <Icon className="w-5 h-5" />
-                  <span>{item.label}</span>
-                </Link>
+               // In the render:
+<Link
+  key={item.path}
+  to={item.path}
+  onClick={onClose}
+  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+    active
+      ? 'bg-sky-50 text-sky-600 font-medium'
+      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+  }`}
+>
+  <Icon className="w-5 h-5" />
+  <span>{item.label}</span>
+  {item.requiresPro && tier !== 'pro' && (
+    <span className="ml-auto text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
+      Pro
+    </span>
+  )}
+</Link>
               );
             })}
           </nav>
