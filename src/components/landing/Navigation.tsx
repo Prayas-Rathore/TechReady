@@ -20,9 +20,11 @@ export default function Navigation({ scrollY }: NavigationProps) {
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
 
+
             MockITHub
 
              
+
 
             </span>
           </Link>
