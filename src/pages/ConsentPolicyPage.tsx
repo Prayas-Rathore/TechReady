@@ -9,7 +9,9 @@ export default function ConsentPolicyPage() {
           <p className="text-slate-700 leading-relaxed mb-4">
             At MockITHub Ltd ("MockITHub," "we," "us," or "our"), we respect your privacy and are committed
             to providing you with clear choices about how we collect, use, and share your personal information.
-            This Consent Policy explains how we obtain and manage your consent for data processing activities.
+            This Consent Policy explains how we obtain and manage your consent for data processing activities.</p>
+           <p className="text-slate-700 leading-relaxed mb-4">
+            This policy follows UK GDPR, the Data Protection Act 2018, and PECR, and explains how we obtain, record, manage, and withdraw consent.
           </p>
           <p className="text-slate-700 leading-relaxed">
             This policy should be read in conjunction with our Privacy Policy and Cookies Policy, which provide
@@ -30,6 +32,8 @@ export default function ConsentPolicyPage() {
             <li>Sharing your anonymized data for research purposes</li>
             <li>Marketing communications and promotional offers</li>
             <li>Using your testimonials and feedback publicly</li>
+            <li>Consent for AI-based profiling and behavioural/career assessments</li>
+            <li>Consent for processing any sensitive data voluntarily provided</li>
           </ul>
           <p className="text-slate-700 leading-relaxed mt-3">
             Explicit consent is obtained through clear affirmative action, such as checking a box or clicking
@@ -42,7 +46,7 @@ export default function ConsentPolicyPage() {
           </p>
           <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4">
             <li>Essential cookies necessary for platform functionality</li>
-            <li>Basic analytics to improve service performance</li>
+            
             <li>Processing information necessary to fulfill our contract with you</li>
             <li>Communication about your account and services</li>
           </ul>
@@ -232,7 +236,7 @@ export default function ConsentPolicyPage() {
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">7. Parental Consent</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">7. Children and Consent</h2>
           <p className="text-slate-700 leading-relaxed">
             MockITHub is not intended for users under 18 years of age. If we discover that we have collected
             personal information from a child under 18 without parental consent, we will delete that information
@@ -259,7 +263,7 @@ export default function ConsentPolicyPage() {
         <section>
           <h2 className="text-2xl font-bold text-slate-900 mb-4">9. Updates to This Policy</h2>
           <p className="text-slate-700 leading-relaxed">
-            We may update this Consent Policy to reflect changes in our practices or legal requirements. Material
+            This policy is reviewed every 12 months or after significant regulatory or platform changes. Material
             changes will be communicated to you, and we may request renewed consent where necessary. The "Last
             Updated" date indicates when the policy was last revised.
           </p>

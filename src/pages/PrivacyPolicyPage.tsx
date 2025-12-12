@@ -11,7 +11,9 @@ export default function PrivacyPolicyPage() {
             and your right to privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard
             your information when you use our interview preparation platform and services.
           </p>
-          <p className="text-slate-700 leading-relaxed">
+          <p className="text-slate-700 leading-relaxed mb-4">
+             This Privacy Policy follows UK GDPR, the Data Protection Act 2018, PECR, and international privacy principles.
+          </p><p className="text-slate-700 leading-relaxed">
             By using MockITHub, you agree to the collection and use of information in accordance with this policy.
             If you do not agree with our policies and practices, please do not use our services.
           </p>
@@ -30,6 +32,9 @@ export default function PrivacyPolicyPage() {
             <li>Professional information (resume/CV, work experience, skills)</li>
             <li>Payment and billing information</li>
             <li>Communication preferences</li>
+            <li>Interview responses (audio, video, text)</li>
+           <li> Career history and job descriptions</li>
+            <li>Account settings and preferences</li>
           </ul>
 
           <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">2.2 Usage Data</h3>
@@ -50,6 +55,7 @@ export default function PrivacyPolicyPage() {
             We use cookies and similar tracking technologies to enhance your experience. Please refer to our
             Cookies Policy for detailed information about our use of cookies.
           </p>
+         <p> Advertising cookies and analytics cookies are only used with explicit consent.</p>
         </section>
 
         <section>
@@ -101,6 +107,7 @@ export default function PrivacyPolicyPage() {
             Privacy Policy, unless a longer retention period is required by law. When you delete your account,
             we will delete or anonymize your personal information within a reasonable timeframe.
           </p>
+          <p>Specific retention periods apply (e.g., CVs 12–24 months, interview recordings 12 months, analytics up to 26 months).</p>
         </section>
 
         <section>
@@ -154,7 +161,7 @@ export default function PrivacyPolicyPage() {
             If you have any questions about this Privacy Policy, please contact us:
           </p>
           <div className="bg-slate-50 border border-slate-200 rounded-lg p-6 space-y-2">
-            <p className="text-slate-700"><strong>Email:</strong> privacy@mockithub.com</p>
+            <p className="text-slate-700"><strong>Email:</strong> support@mockithub.com</p>
             <p className="text-slate-700"><strong>Address:</strong> MockITHub Ltd, United Kingdom</p>
             <p className="text-slate-700"><strong>Website:</strong> www.mockithub.com</p>
           </div>
