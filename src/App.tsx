@@ -85,7 +85,11 @@ function App() {
               ======================================== */}
               
               {/* FREE PLAN ONLY */}
-              <Route path="/ai_jobdescription" element={<JobDescriptionSelectorfree />}/>
+              <Route path="/ai_jobdescription" element={  <PremiumPage allowedPlans={["basic", "starter", "pro"]}>
+
+                <JobDescriptionSelectorfree />
+              </PremiumPage>
+                }/>
 
               {/* ANY PAID PLAN (Basic, Starter, Pro) */}
               <Route 
