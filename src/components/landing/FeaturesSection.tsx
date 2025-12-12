@@ -20,7 +20,9 @@ const features = [
   {
     icon: FileText,
     title: 'Portfolio Branding & Identity;',
-     tagline: 'Your career, your brand: stand out everywhere.',
+
+     tagline: 'Your career, your brand: stand out everywhere with a cover letter',
+
      description: 'Your portfolio isn’t just projects—it’s your personal brand. Align your CV, portfolio, and online presence under one identity recruiters remember.',
      benefit: 'Benefit: Professional, confident, hire-ready.',
     gradient: 'from-green-400 to-emerald-500',
@@ -38,16 +40,18 @@ const features = [
     icon: Clock,
     title: ' Buddy Model',
     tagline: 'You’re not alone',
-    description: 'Connect with peers, post blogs, job posts and important insights.',
-    benefit: 'Benefit: Motivation, help each other.',
+
+    description: 'Connect with peers, share blogs, discover job opportunities, and access interview preparation tips — all in one hub.',
+    benefit: 'Benefit: Stay motivated, build confidence, and support each other’s growth',
+
     gradient: 'from-pink-400 to-rose-500',
   },
   {
     icon: Award,
     title: ' Post-Job Growth Roadmap',
     tagline: 'We don’t stop at “you’re hired."',
-    description: 'From first-day jitters to passing your probation, we guide your early career journey.',
-    benefit: 'Benifit: Long-term success, not just a job.',
+
+    description: 'From first-day jitters to the first few months, we guide your early career journey.',
 
     gradient: 'from-cyan-400 to-teal-500',
   },

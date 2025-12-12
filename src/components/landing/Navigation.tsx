@@ -19,7 +19,13 @@ export default function Navigation({ scrollY }: NavigationProps) {
               <div className="absolute inset-0 bg-cyan-400 blur-xl opacity-50 group-hover:opacity-70 transition-opacity" />
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
-              MockITHub
+
+
+            MockITHub
+
+             
+
+
             </span>
           </Link>
 

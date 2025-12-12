@@ -16,7 +16,9 @@ export default function TermsOfServicePage() {
             "we," "us," or "our"). We reserve the right to modify these Terms at any time, and your continued
             use of the Services constitutes acceptance of any changes.
           </p>
-        </section>
+         <p className="text-slate-700 leading-relaxed">
+          These Terms comply with UK GDPR, the Consumer Rights Act 2015, E-commerce Regulations, PECR, and relevant international standards.
+          </p> </section>
 
         <section>
           <h2 className="text-2xl font-bold text-slate-900 mb-4">2. Description of Services</h2>
@@ -30,6 +32,10 @@ export default function TermsOfServicePage() {
             <li>Interview question banks and practice materials</li>
             <li>Personalized learning paths and recommendations</li>
             <li>Performance tracking and analytics</li>
+            <li>Buddy model (blogs, insights, professional community)</li>
+            <li>Post-job support and early employment roadmap</li>
+            <li>Mindset and confidence AI training</li>
+            <li>Portfolio branding and personal identity features</li>
           </ul>
         </section>
 
@@ -46,6 +52,7 @@ export default function TermsOfServicePage() {
             <li>Be at least 18 years of age</li>
             <li>Not create an account using false or misleading information</li>
             <li>Not create multiple accounts for fraudulent purposes</li>
+             <li>Have the legal capacity to enter into a contract.</li>
           </ul>
 
           <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">3.2 Account Security</h3>
@@ -73,6 +80,8 @@ export default function TermsOfServicePage() {
             <li>Share your account credentials with others</li>
             <li>Use the Services for any illegal or unauthorized purpose</li>
             <li>Interfere with or disrupt the Services</li>
+            <li>Not attempt to manipulate AI feedback or scoring</li>
+            <li>Not use the Services for recruitment or commercial hiring without permission</li>
           </ul>
         </section>
 
@@ -125,9 +134,7 @@ export default function TermsOfServicePage() {
 
           <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">6.3 Cancellation and Refunds</h3>
           <p className="text-slate-700 leading-relaxed">
-            You may cancel your subscription at any time. Cancellations take effect at the end of the current
-            billing period. We do not provide refunds for partial subscription periods, except as required by
-            law or at our discretion.
+            Refunds follow UK Consumer Contract Regulations. No refunds are available once digital services are accessed. A 14-day cooling-off period applies only if no paid content or tools have been used. Refunds for incorrect purchases or technical issues may be granted only if no content was accessed. Chargebacks may result in suspension. (Use the full Word doc text.)
           </p>
         </section>
 
@@ -178,6 +185,7 @@ export default function TermsOfServicePage() {
             <li>For fraudulent or illegal activity</li>
             <li>For extended inactivity</li>
             <li>At our discretion with or without notice</li>
+            
           </ul>
           <p className="text-slate-700 leading-relaxed mt-3">
             Upon termination, your right to use the Services ceases immediately. We may delete your account
