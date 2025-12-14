@@ -73,24 +73,24 @@ export default function Sidebar({ isMobileOpen, onClose }: SidebarProps) {
 
               return (
                // In the render:
-<Link
-  key={item.path}
-  to={item.path}
-  onClick={onClose}
-  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
-    active
-      ? 'bg-sky-50 text-sky-600 font-medium'
-      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-  }`}
->
-  <Icon className="w-5 h-5" />
-  <span>{item.label}</span>
-  {item.requiresPro && tier !== 'pro' && (
-    <span className="ml-auto text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
-      Pro
-    </span>
-  )}
-</Link>
+              <Link
+                key={item.path}
+                to={item.path}
+                onClick={onClose}
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                  active
+                    ? 'bg-sky-50 text-sky-600 font-medium'
+                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                }`}
+              >
+                <Icon className="w-5 h-5" />
+                <span>{item.label}</span>
+                {item.requiresPro && tier !== 'Pro' && (
+                  <span className="ml-auto text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
+                    Pro
+                  </span>
+                )}
+              </Link>
               );
             })}
           </nav>

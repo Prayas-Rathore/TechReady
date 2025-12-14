@@ -3,6 +3,7 @@ export const isUserPremium = (profile: any): boolean => {
 
   const tier = profile.subscription_tier?.toLowerCase();
   const status = profile.status;
+  console.log("User tier:", tier, "Status:", status);
 
   // ✅ Free users are not premium
   if (tier === "free" || status === "none") return false;
@@ -40,10 +41,10 @@ export const hasExactPlan = (
 // ✅ Get tier display name
 export const getTierDisplayName = (tier: string): string => {
   const names: Record<string, string> = {
-    free: "Free",
-    basic: "Basic",
-    starter: "Starter",
-    pro: "Pro"
+    free: "free",
+    basic: "basic",
+    starter: "starter",
+    pro: "pro"
   };
   return names[tier?.toLowerCase()] || "Free";
 };
