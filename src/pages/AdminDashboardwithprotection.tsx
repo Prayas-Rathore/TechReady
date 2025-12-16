@@ -2,24 +2,37 @@ import { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   LogOut, Users, BookOpen, DollarSign, TrendingUp,
-  Activity, UserCheck, AlertCircle, Calendar, BarChart3,
-  Settings, Filter, Search, ChevronDown, Eye, Edit, Trash2
+  Activity, UserCheck, Calendar, BarChart3,
+ ChevronDown,
 } from 'lucide-react';
 import { supabase } from '../services/SupabaseClient';
-// import { useAuth } from '../context/AuthContext';
 import AdminSidebar from '../components/AdminSidebar';
-import { useTotalUsers, useNewUsersThisMonth,useGetTotalSession } from "..//components/hooks/admin/useAnalytics";
+import {
+  useTotalUsers,
+  useNewUsersThisMonth,
+  useGetTotalSession,
+  useUserGrowthData,
+  useRevenueData,
+  useSessionsData,
+  useActivityData
+} from "..//components/hooks/admin/useAnalytics";
+import RevenueChart from '../components/admin/RevenueChart';
+import UserGrowthChart from '../components/admin/UserGrowthChart';
+import SessionsChart from '../components/admin/SessionsChart';
+import ActivityDistributionChart from '../components/admin/ActivityDistributionChart';
 
 export default function AdminDashboard() {
     const navigate = useNavigate();
     const [admin, setAdmin] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('analytics');
-    // const { user,role } = useAuth();
-  // const [recentUsers] = useState<any[]>([]);
    const { data: totalUsers, isLoading: totalLoading } = useTotalUsers();
   const { data: newUsersThisMonth, isLoading: newUsersLoading } = useNewUsersThisMonth();
   const { data: totalSessions, isLoading:totalSessionsLoading } = useGetTotalSession();
+  const { data: userGrowthData, isLoading: userGrowthLoading } = useUserGrowthData();
+  const { data: revenueData, isLoading: revenueLoading } = useRevenueData();
+  const { data: sessionsData, isLoading: sessionsLoading } = useSessionsData();
+  const { data: activityData, isLoading: activityLoading } = useActivityData();
   const [recentUsers, setRecentUsers] = useState<any[]>([]);
 
   
@@ -162,7 +175,7 @@ useEffect(() => {
                 +5.3%
               </span>
             </div>
-            <div className="text-3xl font-bold mb-1">{totalSessions ? "...":totalSessionsLoading}</div>
+            <div className="text-3xl font-bold mb-1">{totalSessionsLoading ? "..." : totalSessions}</div>
             <div className="text-orange-100">Sessions Completed</div>
           </div>
         </div>
@@ -375,10 +388,54 @@ useEffect(() => {
             )}
 
             {activeTab === 'analytics' && (
-              <div className="text-center py-12">
-                <BarChart3 className="w-16 h-16 text-slate-400 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-slate-900 mb-2">Advanced Analytics</h3>
-                <p className="text-slate-600">Detailed analytics and reports would be displayed here</p>
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div className="bg-white rounded-xl p-6 border border-slate-200">
+                    <h3 className="text-lg font-bold text-slate-900 mb-4">User Growth Trend</h3>
+                    {userGrowthLoading ? (
+                      <div className="h-[300px] flex items-center justify-center">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+                      </div>
+                    ) : (
+                      <UserGrowthChart data={userGrowthData} />
+                    )}
+                  </div>
+
+                  <div className="bg-white rounded-xl p-6 border border-slate-200">
+                    <h3 className="text-lg font-bold text-slate-900 mb-4">Weekly Sessions</h3>
+                    {sessionsLoading ? (
+                      <div className="h-[300px] flex items-center justify-center">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+                      </div>
+                    ) : (
+                      <SessionsChart data={sessionsData} />
+                    )}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div className="bg-white rounded-xl p-6 border border-slate-200">
+                    <h3 className="text-lg font-bold text-slate-900 mb-4">Revenue Overview (Last 30 Days)</h3>
+                    {revenueLoading ? (
+                      <div className="h-[300px] flex items-center justify-center">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+                      </div>
+                    ) : (
+                      <RevenueChart data={revenueData} />
+                    )}
+                  </div>
+
+                  <div className="bg-white rounded-xl p-6 border border-slate-200">
+                    <h3 className="text-lg font-bold text-slate-900 mb-4">Activity Distribution</h3>
+                    {activityLoading ? (
+                      <div className="h-[300px] flex items-center justify-center">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+                      </div>
+                    ) : (
+                      <ActivityDistributionChart data={activityData} />
+                    )}
+                  </div>
+                </div>
               </div>
             )}
           </div>
