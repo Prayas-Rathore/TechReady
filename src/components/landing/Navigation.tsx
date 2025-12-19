@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Video, Menu, X } from 'lucide-react';
+import LogoImage from '../../assets/images/MockIT Hub Final 1.svg';
 
 interface NavigationProps {
   scrollY: number;
@@ -15,13 +16,13 @@ export default function Navigation({ scrollY }: NavigationProps) {
         <div className="flex items-center justify-between h-20">
           <Link to="/" className="flex items-center gap-3 group">
             <div className="relative">
-              <Video className="w-9 h-9 text-cyan-400 group-hover:text-cyan-300 transition-colors relative z-10" />
+              {/* <Video className="w-9 h-9 text-cyan-400 group-hover:text-cyan-300 transition-colors relative z-10" /> */}
               <div className="absolute inset-0 bg-cyan-400 blur-xl opacity-50 group-hover:opacity-70 transition-opacity" />
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
 
 
-            MockITHub
+            <img src={LogoImage} alt="MockITHub Logo" className="h-8 w-auto" />
 
              
 

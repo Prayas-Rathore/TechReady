@@ -171,7 +171,7 @@ export default function JobDescriptionSelector() {
           </button>
 
           <p className="text-center text-xs text-slate-500 mt-4">
-            AI will generate 5 personalized interview questions based on your job description
+            AI will generate 7 personalized interview questions based on your job description
           </p>
         </div>
       </div>

@@ -1,15 +1,16 @@
 import { Check, Sparkles } from 'lucide-react';
-import { useCreateCheckout, useSubscription } from '../components/hooks/stripe/useSubscription';
+import { useCreateCheckout } from '../components/hooks/stripe/useSubscription';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { supabase } from '../services/SupabaseClient';
 
-// Map your plan names to tiers
+// ✅ Fixed tier mapping - must match Stripe metadata
 const plans = [
   {
     name: 'Basic',
-    tier: 'pro',
-    priceId: 'price_1SZV1iRoRT3gf2HBjXbwcGXf',// Stripe Price ID
+    tier: 'basic',
+    priceId: 'price_1SZV1iRoRT3gf2HBjXbwcGXf',
     price: '14.99',
     description: 'Perfect for getting started with mock interviews',
     features: [
@@ -23,8 +24,8 @@ const plans = [
   },
   {
     name: 'Starter',
-    tier: 'pro',
-    priceId: 'price_1SZUz0RoRT3gf2HBR9xgbG4A', // Stripe Price ID
+    tier: 'starter', 
+    priceId: 'price_1SZUz0RoRT3gf2HBR9xgbG4A',
     price: '19.99',
     description: 'Most popular choice for serious job seekers',
     features: [
@@ -40,7 +41,7 @@ const plans = [
   {
     name: 'Pro',
     tier: 'pro',
-    priceId: 'price_1SZUzjRoRT3gf2HBFWeafWaP', // Stripe Price ID
+    priceId: 'price_1SZUzjRoRT3gf2HBFWeafWaP',
     price: '29.99',
     description: 'Built for candidates who refuse average and aim for offers.',
     features: [
@@ -56,55 +57,119 @@ const plans = [
   },
 ];
 
+// ✅ Optimized subscription hook
+const useCurrentSubscription = () => {
+  const { user } = useAuth();
+  const [subscription, setSubscription] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+
+    const fetchSubscription = async () => {
+      const { data, error } = await supabase
+        .from("subscriptions")
+        .select("subscription_tier, status")
+        .eq("user_id", user.id)
+        .in("status", ["active", "trialing"])
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (!error && data) {
+        setSubscription(data);
+      } else {
+        // No active subscription = FREE plan
+        setSubscription({ 
+          subscription_tier: "free", 
+          status: "none"
+        });
+      }
+      setLoading(false);
+    };
+
+    fetchSubscription();
+
+    // ✅ Real-time subscription updates
+    const channel = supabase
+      .channel('subscription-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'subscriptions',
+          filter: `user_id=eq.${user.id}`
+        },
+        () => {
+          fetchSubscription();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user]);
+
+  return { subscription, loading };
+};
+
 export default function Pricing() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const createCheckout = useCreateCheckout();
-  const { data: subscription, isLoading: subscriptionLoading } = useSubscription();
+  const { subscription, loading: subscriptionLoading } = useCurrentSubscription();
   const [processingPlan, setProcessingPlan] = useState<string | null>(null);
 
+  // ✅ Memoized current tier
+  const currentTier = useMemo(() => 
+    subscription?.subscription_tier || 'free', 
+    [subscription]
+  );
+
   const handlePlanSelect = async (plan: typeof plans[0]) => {
-  // Check if user is authenticated
-  if (!user) {
-    localStorage.setItem('pendingSubscription', JSON.stringify({
-      priceId: plan.priceId,
-      tier: plan.tier
-    }));
-    navigate('/signup');
-    return;
-  }
-
-  // Check if user already has an active subscription
-  if (subscription) {
-    alert('You already have an active subscription. Please cancel it first to switch plans.');
-    return;
-  }
-
-  setProcessingPlan(plan.tier);
-
-  try {
-    await createCheckout.mutateAsync({
-      priceId: plan.priceId,
-      tier: plan.tier
-    });
-  } catch (error) {
-    console.error('Error creating checkout:', error);
-    
-    // Show user-friendly error message
-    const errorMessage = error instanceof Error 
-      ? error.message 
-      : 'Failed to start checkout. Please try again.';
-    
-    alert(errorMessage);
-    
-    // If it's an auth error, redirect to login
-    if (errorMessage.includes('log in')) {
-      navigate('/login');
+    if (!user) {
+      localStorage.setItem('pendingSubscription', JSON.stringify({
+        priceId: plan.priceId,
+        tier: plan.tier
+      }));
+      navigate('/signup');
+      return;
     }
-  } finally {
-    setProcessingPlan(null);
-  }
-};
+
+    // ✅ Better subscription check
+    if (subscription && subscription.status === 'active' && currentTier !== 'free') {
+      alert('You already have an active subscription. Please cancel it first to switch plans.');
+      return;
+    }
+
+    setProcessingPlan(plan.tier);
+
+    try {
+      await createCheckout.mutateAsync({
+        priceId: plan.priceId,
+        tier: plan.tier
+      });
+    } catch (error) {
+      console.error('Error creating checkout:', error);
+      
+      const errorMessage = error instanceof Error 
+        ? error.message 
+        : 'Failed to start checkout. Please try again.';
+      
+      alert(errorMessage);
+      
+      if (errorMessage.includes('log in')) {
+        navigate('/login');
+      }
+    } finally {
+      setProcessingPlan(null);
+    }
+  };
 
   return (
     <section id="pricing" className="py-24 bg-white">
@@ -116,19 +181,16 @@ export default function Pricing() {
           <p className="text-xl text-slate-600">
             Pick your plan. Practice harder. Get hired faster.
           </p>
-          <p className="text-sm text-green-600 font-semibold mt-2">
-            ✨ 3-Day Free Trial on All Plans - No Credit Card Required
-          </p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          {plans.map((plan, index) => {
+          {plans.map((plan) => {
             const isProcessing = processingPlan === plan.tier;
-            const hasActiveSubscription = subscription?.subscription_tier === plan.tier;
+            const hasActiveSubscription = currentTier === plan.tier; // ✅ Fixed comparison
 
             return (
               <div
-                key={index}
+                key={plan.tier}
                 className={`relative rounded-3xl p-8 ${
                   plan.highlighted
                     ? 'bg-gradient-to-br from-sky-600 to-blue-600 text-white shadow-2xl scale-105 border-4 border-sky-400'
@@ -194,12 +256,6 @@ export default function Pricing() {
               </div>
             );
           })}
-        </div>
-
-        <div className="text-center mt-12">
-          <p className="text-slate-600 mb-4">
-            All plans include a 3-day free trial and 14-day money-back guarantee
-          </p>
         </div>
       </div>
     </section>

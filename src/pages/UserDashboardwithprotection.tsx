@@ -158,7 +158,7 @@ export default function UserDashboard() {
               </span> */}
             </div>
             
-            <div className="text-3xl font-bold text-slate-900 mb-1">{capitalizeFirst(subscription?.subscription_tier) || "Free"}</div>
+            <div className="text-3xl font-bold text-slate-900 mb-1">{capitalizeFirst(subscription?.subscription_tier) || "----"}</div>
             <div className="text-sm text-slate-600">Subsciption Plan</div>
           </div>
 

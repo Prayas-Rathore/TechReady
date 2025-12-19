@@ -4,6 +4,7 @@ import {
   MailMinus
 } from 'lucide-react';
 import { useSubscription } from '../context/SubscriptionContext';
+import LogoImage from '../assets/images/MockIT Hub Final 1.svg';
 
 interface SidebarProps {
   isMobileOpen?: boolean;
@@ -64,7 +65,7 @@ export default function Sidebar({ isMobileOpen, onClose }: SidebarProps) {
         <div className="p-6">
           <div className="flex items-center justify-between mb-8">
             <Link to="/user-dashboard" className="flex items-center gap-2">
-              <Video className="w-8 h-8 text-sky-600" />
+              <img src={LogoImage} alt="MockITHub Logo" className="h-8 w-auto" />
             </Link>
             <button
               onClick={onClose}

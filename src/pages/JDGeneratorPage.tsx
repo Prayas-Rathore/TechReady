@@ -335,7 +335,7 @@ export default function JDGeneratorPage() {
         <div className="p-6 lg:p-8 flex flex-col items-center space-y-6">
           {/* Action Buttons */}
           <div className="w-full max-w-[210mm] flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-slate-900">Generated CV (A4 Format)</h2>
+            <h2 className="text-2xl font-bold text-slate-900">AI Generated CV</h2>
             <div className="flex gap-2">
               <button
                 onClick={handlePrint}
