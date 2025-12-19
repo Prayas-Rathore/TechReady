@@ -112,7 +112,7 @@ export default function LoginPage() {
                 <div className="lg:hidden mb-6">
                   <Link to="/" className="inline-flex items-center gap-2">
                     <Video className="w-8 h-8 text-cyan-400" />
-                    <span className="text-2xl font-bold text-white">InterviewPro</span>
+                    <span className="text-2xl font-bold text-white">MockITHub</span>
                   </Link>
                 </div>
                 <h2 className="text-3xl font-bold text-white mb-2">Welcome Back</h2>

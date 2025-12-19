@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Video,
-  Star,
   Users,
   Brain,
   Target,
@@ -46,7 +45,7 @@ export default function LandingPage2() {
                 <div className="absolute inset-0 bg-cyan-400 blur-xl opacity-50 group-hover:opacity-70 transition-opacity" />
               </div>
               <span className="text-2xl font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
-                InterviewPro
+                MockITHub
               </span>
             </Link>
 
@@ -456,7 +455,7 @@ export default function LandingPage2() {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <Video className="w-6 h-6 text-cyan-400" />
-                <span className="text-xl font-bold text-white">InterviewPro</span>
+                <span className="text-xl font-bold text-white">MockITHub</span>
               </div>
               <p className="text-slate-400">
                 AI-powered interview preparation platform helping you land your dream job.
@@ -491,7 +490,7 @@ export default function LandingPage2() {
           </div>
 
           <div className="pt-8 border-t border-white/10 text-center text-slate-400">
-            <p>&copy; {new Date().getFullYear()} InterviewPro. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} MockITHub. All rights reserved.</p>
           </div>
         </div>
       </footer>

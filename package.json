@@ -26,6 +26,7 @@
     "react-hot-toast": "^2.6.0",
     "react-router-dom": "^7.9.4",
     "react-webcam": "^7.2.0",
+    "recharts": "^3.6.0",
     "supabase": "^2.51.0"
   },
   "devDependencies": {

@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { CoverLetterService } from '../services/cv-analysis/coverLetterService'
 import { CoverLetterRequest } from '../types/coverLetter'
+import { ArrowLeft } from 'lucide-react'
+import { useNavigate } from 'react-router-dom';
 
 export const CoverLetterGenerator: React.FC = () => {
   const [jobTitle, setJobTitle] = useState('')
@@ -12,6 +14,7 @@ export const CoverLetterGenerator: React.FC = () => {
   const [isGenerating, setIsGenerating] = useState(false)
   const [error, setError] = useState('')
   const [savedCoverLetterId, setSavedCoverLetterId] = useState<string | null>(null)
+  const navigate = useNavigate();
 
   // Validation for button enable/disable
   const isFormValid = () => {
@@ -136,7 +139,15 @@ export const CoverLetterGenerator: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">AI Cover Letter Generator</h1>
+       {/* ✅ Add Back Button */}
+  <button
+    onClick={() => navigate(-1)}
+    className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
+  >
+    <ArrowLeft className="w-5 h-5" />
+    <span>Back</span>
+  </button>
+      <h1 className="text-3xl font-bold mb-6">AI Profiling</h1>
 
       <div className="space-y-4 mb-6">
         <div>
@@ -236,7 +247,7 @@ export const CoverLetterGenerator: React.FC = () => {
               Generating...
             </>
           ) : (
-            '✨ Generate Cover Letter'
+            '✨ Generate'
           )}
         </button>
       </div>
@@ -244,7 +255,7 @@ export const CoverLetterGenerator: React.FC = () => {
       {generatedLetter && (
         <div className="mt-8">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold">Your Cover Letter</h2>
+            <h2 className="text-2xl font-bold">Your Profiling</h2>
             <div className="flex gap-2">
               <button
                 onClick={handleCopy}

@@ -80,7 +80,7 @@ export default function CVDashboardHome() {
     <div className="p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">CV Tools Dashboard</h1>
+          <h1 className="text-3xl font-bold text-slate-900 mb-2">CV Optimizer Dashboard</h1>
           <p className="text-slate-600">Track your CV optimization and job description generation</p>
         </div>
 

@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import InterviewProPage from './pages/InterviewProPage';
-import HireVuePage from './pages/HireVuePage';
+// import InterviewProPage from './pages/InterviewProPage';
+// import HireVuePage from './pages/HireVuePage';
 import AssessmentPage from './pages/AssessmentPage';
 import TestConnectionPage from './pages/TestConnectionPage';
 import Login from './pages/LoginPage';
@@ -12,8 +12,6 @@ import AdminDashboard from './pages/AdminDashboardwithprotection';
 import RoadmapGeneratorPage from './pages/RoadmapGeneratorPage';
 import SuccessScreen from './components/assessment/SuccessScreen';
 import PricingPage from './pages/PricingPage';
-// import VoiceRecorderPage from './pages/VoiceRecorderPage';
-// import CameraWithVoice from './pages/CameraWithVoice';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import JobDescriptionSelector from './pages/JobDescriptionSelector';
@@ -28,7 +26,6 @@ import CVDashboardLayout from './components/CVDashboardLayout';
 import { CoverLetterGenerator } from './pages/CoverLetterGenerator';
 import PostRoadMap from './pages/PostRoadMap';
 import JobDetailsFormPage from './pages/JobDetailsFormPage';
-// import RoadmapDisplay from './components/roadmap/RoadmapDisplay';
 import UserFormPage from './pages/UserFormPage';
 import UserListPage from './pages/UserListPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage.tsx';
@@ -39,17 +36,12 @@ import { SubscriptionProvider } from './context/SubscriptionContext';
 import PremiumPage from './components/protection/PremiumPage';
 import FreeOnlyPage from './components/protection/FreeOnlyPage';
 import SubscriptionSuccess from './pages/SubscriptionSuccess';
-// import { BuddyConnectorPage } from './pages/BuddyConnector/index';
 import BuddyConnectorPage from './components/buddy-connector/index';
 import LandingPage3 from './pages/LandingPage3.tsx';
 import InterviewPro from './pages/InterviewProPage.tsx';
 
-
 function App() {
-
-
   return (
-    
     <Router>
       <AuthProvider>
         <SubscriptionProvider>
@@ -84,14 +76,17 @@ function App() {
                   USER ROUTES WITH PLAN RESTRICTIONS
               ======================================== */}
               
-              {/* FREE PLAN ONLY */}
-              <Route path="/ai_jobdescription" element={  <FreeOnlyPage>
+              {/* ✅ FREE PLAN ONLY */}
+              <Route 
+                path="/ai_jobdescription" 
+                element={
+                  <FreeOnlyPage>
+                    <JobDescriptionSelectorfree />
+                  </FreeOnlyPage>
+                }
+              />
 
-                <JobDescriptionSelectorfree />
-              </FreeOnlyPage>
-                }/>
-
-              {/* ANY PAID PLAN (Basic, Starter, Pro) */}
+              {/* ✅ ANY PAID PLAN (Basic, Starter, Pro) */}
               <Route 
                 path="/assessment" 
                 element={
@@ -101,14 +96,14 @@ function App() {
                 } 
               />
 
-                <Route 
+              <Route 
                 path="/jobdescription" 
                 element={
                   <PremiumPage allowedPlans={["basic", "starter", "pro"]}>
-                <JobDescriptionSelector />
+                    <JobDescriptionSelector />
                   </PremiumPage>
-              } 
-                />
+                } 
+              />
               
               <Route 
                 path="/roadmap" 
@@ -157,15 +152,15 @@ function App() {
                 <Route index element={<CVDashboardHome />} />
                 <Route path="analysis" element={<CVAnalysisPage />} />
                 <Route path="jd-generator" element={<JDGeneratorPage />} />
-                <Route path="cover-letter" element={<CoverLetterGenerator />} />
+                {/* <Route path="cover-letter" element={<CoverLetterGenerator />} /> */}
               </Route>
 
-              {/* PRO PLAN ONLY */}
+                            {/* ✅ Cover Letter - Standalone (No Sidebar) */}
               <Route 
-                path="/postroadmap" 
+                path="/cv-dashboard/cover-letter" 
                 element={
-                  <PremiumPage requiredTier="pro">
-                    <PostRoadMap />
+                  <PremiumPage allowedPlans={["basic", "starter", "pro"]}>
+                    <CoverLetterGenerator />
                   </PremiumPage>
                 } 
               />
@@ -178,9 +173,18 @@ function App() {
                   </PremiumPage>
                 } 
               />
-              
 
-              {/* NO PLAN RESTRICTION (All authenticated users) */}
+              {/* ✅ PRO PLAN ONLY */}
+              <Route 
+                path="/postroadmap" 
+                element={
+                  <PremiumPage allowedPlans={["pro"]}>
+                    <PostRoadMap />
+                  </PremiumPage>
+                } 
+              />
+
+              {/* ✅ NO PLAN RESTRICTION (All authenticated users) */}
               <Route path="/subscription/success" element={<SubscriptionSuccess />} />
               <Route path="/user-dashboard" element={<UserDashboard />} />
               <Route path="/job-details" element={<JobDetailsFormPage />} />
@@ -193,5 +197,3 @@ function App() {
 }
 
 export default App;
-
-// basic,starter,pro

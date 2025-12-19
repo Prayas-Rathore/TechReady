@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation, Outlet } from 'react-router-dom';
-import { Home, FileText, Briefcase, Sparkles, ArrowBigLeftIcon, MailMinus, Menu, X } from 'lucide-react';
+import { Home, FileText, Briefcase, Sparkles, ArrowBigLeftIcon, Menu, X } from 'lucide-react';
 
 export default function CVDashboardLayout() {
   const location = useLocation();
@@ -10,8 +10,8 @@ export default function CVDashboardLayout() {
     { icon: ArrowBigLeftIcon, label: 'Back', path: '/user-dashboard' },
     { icon: Home, label: 'Home', path: '/cv-dashboard' },
     { icon: FileText, label: 'CV Analysis', path: '/cv-dashboard/analysis' },
-    { icon: Briefcase, label: 'JD Generator', path: '/cv-dashboard/jd-generator' },
-    { icon: MailMinus, label: 'Cover Letter', path: '/cv-dashboard/cover-letter' }
+    { icon: Briefcase, label: 'JD to CV Generator', path: '/cv-dashboard/jd-generator' },
+    // { icon: MailMinus, label: 'Cover Letter', path: '/cv-dashboard/cover-letter' }
   ];
 
   const isActive = (path: string) => {

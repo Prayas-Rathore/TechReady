@@ -18,14 +18,22 @@
 //   return children;
 // }
 
+// src/components/protection/PremiumPage.tsx
 import { Navigate } from "react-router-dom";
 import { useSubscription } from "../../context/SubscriptionContext";
 
+interface PremiumPageProps {
+  children: any;
+  requiredTier?: string; // ✅ Hierarchical: "basic" gives access to basic+starter+pro
+  allowedPlans?: string[]; // ✅ Specific: ["basic", "pro"] gives access to ONLY basic and pro
+}
+
 export default function PremiumPage({ 
   children, 
-  requiredTier = "basic" // ✅ Default minimum tier (any paid plan)
-}: any) {
-  const { loading, hasTierAccess } = useSubscription();
+  requiredTier,
+  allowedPlans
+}: PremiumPageProps) {
+  const { loading, hasTierAccess, hasExactPlan, tier } = useSubscription();
 
   if (loading) {
     return (
@@ -35,8 +43,19 @@ export default function PremiumPage({
     );
   }
 
-  // ✅ Check if user has required tier
-  if (!hasTierAccess(requiredTier)) {
+  // ✅ Check access based on which prop is provided
+  let hasAccess = false;
+
+  if (allowedPlans && allowedPlans.length > 0) {
+    // Use exact plan matching
+    hasAccess = hasExactPlan(allowedPlans);
+  } else if (requiredTier) {
+    // Use hierarchical tier access
+    hasAccess = hasTierAccess(requiredTier);
+  }
+
+  // ✅ If no access, redirect to pricing
+  if (!hasAccess) {
     return <Navigate to="/pricing" replace />;
   }
 

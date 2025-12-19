@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import {
-  LayoutDashboard, Video, BookOpen, Trophy, Target, Users, X,MapPin ,StickyNote
+  LayoutDashboard, Video, BookOpen, Trophy, Target, Users, X,MapPin ,StickyNote,
+  MailMinus
 } from 'lucide-react';
 import { useSubscription } from '../context/SubscriptionContext';
 
@@ -13,12 +14,19 @@ export default function Sidebar({ isMobileOpen, onClose }: SidebarProps) {
   const location = useLocation();
   const { isFree, isPremium,tier } = useSubscription(); // ✅ Get both statuses
 
+  // // ✅ TEMPORARY DEBUG
+  // console.log("=== SIDEBAR DEBUG ===");
+  // console.log("isFree:", isFree);
+  // console.log("isPremium:", isPremium);
+  // console.log("tier:", tier);
+
   const menuItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/user-dashboard' },
-    { icon: Video, label: 'Interview Practice', path: '/jobdescription', paidOnly: true }, // ✅ Only paid users
+    { icon: Video, label: 'Interview Toolkit', path: '/jobdescription', paidOnly: true }, // ✅ Only paid users
     { icon: Trophy, label: 'Interview Practice', path: '/ai_jobdescription', freeOnly: true }, // ✅ Only free users
-    { icon: StickyNote, label: 'Cv Optimizer', path: '/cv-dashboard' }, 
-    { icon: Target, label: 'Assessment', path: '/assessment'}, // ✅ Only paid users
+    { icon: StickyNote, label: 'Cv Optimizer', path: '/cv-dashboard' },
+    { icon: MailMinus, label: 'Profiling', path: '/cv-dashboard/cover-letter' },
+    { icon: Target, label: 'Interview Mindset', path: '/assessment'}, // ✅ Only paid users
     { icon: Users, label: 'Buddy Connector', path: '/buddy-connector'},
     { icon: MapPin, label: 'Post Job RoadMap', path: '/postroadmap', requiresPro: true },
   ];
