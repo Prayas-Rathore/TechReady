@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { CheckCircle, TrendingUp, TrendingDown, Lightbulb, BookOpen, Target, Clock, MessageSquare, ArrowRight, Home, FileText, Award, AlertCircle } from 'lucide-react';
+import { CheckCircle, TrendingUp, TrendingDown, Lightbulb, BookOpen, Target, Clock, MessageSquare, ArrowRight, Home, FileText, Award, AlertCircle, Edit3, Save, X, Download } from 'lucide-react';
 import { supabase } from '../services/SupabaseClient';
 
 interface InterviewResponse {
@@ -25,6 +25,11 @@ export default function InterviewSuggestionsPage() {
   const [session, setSession] = useState<SessionData | null>(null);
   const [responses, setResponses] = useState<InterviewResponse[]>([]);
   const [overallScore, setOverallScore] = useState(0);
+  
+  // Edit states
+  const [editMode, setEditMode] = useState<{[key: string]: boolean}>({});
+  const [editedResponses, setEditedResponses] = useState<{[key: string]: string}>({});
+  const [saveStatus, setSaveStatus] = useState<{[key: string]: 'idle' | 'saving' | 'saved' | 'error'}>({});
 
   useEffect(() => {
     loadSessionData();
@@ -97,6 +102,84 @@ export default function InterviewSuggestionsPage() {
     setOverallScore(averageScore);
   };
 
+  const handleEditResponse = (responseId: string, currentText: string) => {
+    setEditMode({ ...editMode, [responseId]: true });
+    setEditedResponses({ ...editedResponses, [responseId]: currentText });
+  };
+
+  const handleCancelEdit = (responseId: string) => {
+    setEditMode({ ...editMode, [responseId]: false });
+    setEditedResponses({ ...editedResponses, [responseId]: '' });
+  };
+
+  const handleSaveEdit = async (responseId: string) => {
+    const newText = editedResponses[responseId];
+    
+    if (!newText || !newText.trim()) {
+      alert('Response cannot be empty');
+      return;
+    }
+
+    try {
+      setSaveStatus({ ...saveStatus, [responseId]: 'saving' });
+
+      const { error } = await supabase
+        .from('interview_responses')
+        .update({ transcription: newText })
+        .eq('id', responseId);
+
+      if (error) throw error;
+
+      // Update local state
+      const updatedResponses = responses.map(r => 
+        r.id === responseId ? { ...r, transcription: newText } : r
+      );
+      setResponses(updatedResponses);
+      
+      // Recalculate score
+      calculateOverallScore(updatedResponses);
+
+      // Update status
+      setSaveStatus({ ...saveStatus, [responseId]: 'saved' });
+      setEditMode({ ...editMode, [responseId]: false });
+
+      // Clear saved status after 2 seconds
+      setTimeout(() => {
+        setSaveStatus({ ...saveStatus, [responseId]: 'idle' });
+      }, 2000);
+    } catch (err) {
+      console.error('Error saving edit:', err);
+      setSaveStatus({ ...saveStatus, [responseId]: 'error' });
+    }
+  };
+
+  const exportResults = () => {
+    const exportData = {
+      session: {
+        id: session?.id,
+        completed_at: session?.completed_at,
+        job_description: session?.job_description_text
+      },
+      overall_score: overallScore,
+      responses: responses.map(r => ({
+        question_number: r.question_number,
+        question: r.question_text,
+        answer: r.transcription,
+        duration: r.audio_duration,
+        word_count: r.transcription.split(' ').length
+      }))
+    };
+
+    const dataStr = JSON.stringify(exportData, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `interview_${sessionId}_results.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
   const getScoreColor = (score: number) => {
     if (score >= 80) return 'text-green-600 bg-green-100 border-green-200';
     if (score >= 60) return 'text-blue-600 bg-blue-100 border-blue-200';
@@ -137,14 +220,24 @@ export default function InterviewSuggestionsPage() {
       <div className="max-w-6xl mx-auto">
         <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden mb-8">
           <div className="bg-gradient-to-r from-sky-600 to-blue-600 px-8 py-6">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-12 h-12 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center">
-                <CheckCircle className="w-7 h-7 text-white" />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center">
+                  <CheckCircle className="w-7 h-7 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-3xl font-bold text-white">Interview Complete!</h1>
+                  <p className="text-sky-100">Here's your performance analysis and suggestions</p>
+                </div>
               </div>
-              <div>
-                <h1 className="text-3xl font-bold text-white">Interview Complete!</h1>
-                <p className="text-sky-100">Here's your performance analysis and suggestions</p>
-              </div>
+              
+              <button
+                onClick={exportResults}
+                className="flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur hover:bg-white/30 text-white rounded-lg transition-colors"
+              >
+                <Download className="w-4 h-4" />
+                Export Results
+              </button>
             </div>
           </div>
 
@@ -202,9 +295,11 @@ export default function InterviewSuggestionsPage() {
               </div>
 
               <div className="space-y-4">
-                {responses.map((response, index) => {
+                {responses.map((response) => {
                   const quality = getResponseQuality(response);
                   const QualityIcon = quality.icon;
+                  const isEditing = editMode[response.id];
+                  const status = saveStatus[response.id] || 'idle';
 
                   return (
                     <div key={response.id} className="border border-slate-200 rounded-lg p-4 hover:border-sky-300 transition-colors">
@@ -216,25 +311,77 @@ export default function InterviewSuggestionsPage() {
                               <QualityIcon className="w-3 h-3" />
                               {quality.label}
                             </span>
+                            
+                            {status === 'saved' && (
+                              <span className="text-xs text-green-600 flex items-center gap-1">
+                                <CheckCircle className="w-3 h-3" />
+                                Saved
+                              </span>
+                            )}
                           </div>
                           <p className="text-sm font-semibold text-slate-800 mb-2">{response.question_text}</p>
                         </div>
+
+                        {!isEditing && (
+                          <button
+                            onClick={() => handleEditResponse(response.id, response.transcription)}
+                            className="flex items-center gap-1 px-3 py-1.5 text-xs bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
+                          >
+                            <Edit3 className="w-3 h-3" />
+                            Edit
+                          </button>
+                        )}
                       </div>
 
-                      <div className="bg-slate-50 rounded-lg p-3 mb-3">
-                        <p className="text-sm text-slate-700 line-clamp-3">{response.transcription || 'No response recorded'}</p>
-                      </div>
+                      {isEditing ? (
+                        <div className="space-y-3">
+                          <textarea
+                            value={editedResponses[response.id] || response.transcription}
+                            onChange={(e) => setEditedResponses({ ...editedResponses, [response.id]: e.target.value })}
+                            className="w-full h-32 p-3 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-sm"
+                            autoFocus
+                          />
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => handleSaveEdit(response.id)}
+                              disabled={status === 'saving'}
+                              className="flex items-center gap-1 px-4 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+                            >
+                              <Save className="w-4 h-4" />
+                              {status === 'saving' ? 'Saving...' : 'Save Changes'}
+                            </button>
+                            <button
+                              onClick={() => handleCancelEdit(response.id)}
+                              className="flex items-center gap-1 px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                            >
+                              <X className="w-4 h-4" />
+                              Cancel
+                            </button>
+                          </div>
+                          {status === 'error' && (
+                            <p className="text-sm text-red-600">Failed to save. Please try again.</p>
+                          )}
+                        </div>
+                      ) : (
+                        <>
+                          <div className="bg-slate-50 rounded-lg p-3 mb-3">
+                            <p className="text-sm text-slate-700 whitespace-pre-wrap">
+                              {response.transcription || 'No response recorded'}
+                            </p>
+                          </div>
 
-                      <div className="flex items-center gap-4 text-xs text-slate-600">
-                        <span className="flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          {response.audio_duration}s
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <FileText className="w-3 h-3" />
-                          {response.transcription.split(' ').length} words
-                        </span>
-                      </div>
+                          <div className="flex items-center gap-4 text-xs text-slate-600">
+                            <span className="flex items-center gap-1">
+                              <Clock className="w-3 h-3" />
+                              {response.audio_duration}s
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <FileText className="w-3 h-3" />
+                              {response.transcription.split(' ').length} words
+                            </span>
+                          </div>
+                        </>
+                      )}
                     </div>
                   );
                 })}
@@ -302,7 +449,7 @@ export default function InterviewSuggestionsPage() {
 
         <div className="flex items-center justify-center gap-4">
           <button
-            onClick={() => navigate('/dashboard')}
+            onClick={() => navigate('/user-dashboard')}
             className="flex items-center gap-2 px-6 py-3 bg-white border border-slate-300 text-slate-700 rounded-lg font-semibold hover:bg-slate-50 transition-colors shadow-sm"
           >
             <Home className="w-5 h-5" />

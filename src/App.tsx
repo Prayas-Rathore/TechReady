@@ -97,15 +97,6 @@ function App() {
               />
 
               <Route 
-                path="/jobdescription" 
-                element={
-                  <PremiumPage allowedPlans={["basic", "starter", "pro"]}>
-                    <JobDescriptionSelector />
-                  </PremiumPage>
-                } 
-              />
-              
-              <Route 
                 path="/roadmap" 
                 element={
                   <PremiumPage allowedPlans={["basic", "starter", "pro"]}>
@@ -114,6 +105,15 @@ function App() {
                 } 
               />
 
+              <Route 
+                path="/jobdescription" 
+                element={
+                  <PremiumPage allowedPlans={["basic", "starter", "pro"]}>
+                    <JobDescriptionSelector />
+                  </PremiumPage>
+                } 
+              />
+              
               <Route 
                 path="/interview/:sessionId" 
                 element={

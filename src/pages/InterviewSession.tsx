@@ -1,10 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../services/SupabaseClient';
 import { useSpeechRecognition } from '../components/hooks/useSpeechRecognition';
 import CameraView from '../components/interview/CameraView';
 import TranscriptionBox from '../components/interview/TranscriptionBox';
 import QuestionDisplay from '../components/interview/QuestionDisplay';
+
+// Debounce utility
+function debounce<T extends (...args: any[]) => any>(func: T, wait: number) {
+  let timeout: NodeJS.Timeout;
+  return (...args: Parameters<T>) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
+}
 
 export default function InterviewSession() {
   const { sessionId } = useParams<{ sessionId: string }>();
@@ -16,6 +25,11 @@ export default function InterviewSession() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [cameraEnabled, setCameraEnabled] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
+  
+  // Editable transcript state
+  const [editableTranscript, setEditableTranscript] = useState('');
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [existingResponseId, setExistingResponseId] = useState<string | null>(null);
 
   const maxRecordingTime = 120;
 
@@ -23,6 +37,14 @@ export default function InterviewSession() {
     loadSession();
   }, [sessionId]);
 
+  // Sync live transcript with editable version
+  useEffect(() => {
+    if (isListening) {
+      setEditableTranscript(transcript);
+    }
+  }, [transcript, isListening]);
+
+  // Recording timer
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isListening) {
@@ -39,13 +61,30 @@ export default function InterviewSession() {
     return () => clearInterval(interval);
   }, [isListening]);
 
-  // ✅ Cleanup camera on unmount
+  // Autosave draft every 10 seconds while recording
+  useEffect(() => {
+    if (isListening && editableTranscript.trim()) {
+      const autosaveTimer = setInterval(() => {
+        saveDraft(editableTranscript);
+      }, 10000);
+      return () => clearInterval(autosaveTimer);
+    }
+  }, [isListening, editableTranscript]);
+
+  // Cleanup camera on unmount
   useEffect(() => {
     return () => {
       console.log('🧹 Component unmounting - ensuring camera is off');
       setCameraEnabled(false);
     };
   }, []);
+
+  // Load existing response when question changes
+  useEffect(() => {
+    if (session) {
+      loadExistingResponse();
+    }
+  }, [currentQuestionIndex, session]);
 
   const loadSession = async () => {
     try {
@@ -65,9 +104,66 @@ export default function InterviewSession() {
           .eq('id', sessionId);
       }
     } catch (err) {
+      console.error('Error loading session:', err);
       navigate('/interview-prep');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadExistingResponse = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('interview_responses')
+        .select('*')
+        .eq('session_id', sessionId)
+        .eq('question_number', currentQuestionIndex + 1)
+        .maybeSingle();
+
+      if (error && error.code !== 'PGRST116') throw error;
+
+      if (data) {
+        setEditableTranscript(data.transcription || '');
+        setExistingResponseId(data.id);
+      } else {
+        setEditableTranscript('');
+        setExistingResponseId(null);
+      }
+    } catch (err) {
+      console.error('Error loading existing response:', err);
+    }
+  };
+
+  const saveDraft = async (text: string) => {
+    if (!text.trim()) return;
+
+    try {
+      const responseData = {
+        session_id: sessionId,
+        question_number: currentQuestionIndex + 1,
+        question_text: session.questions[currentQuestionIndex],
+        transcription: text,
+        audio_duration: recordingTime
+      };
+
+      if (existingResponseId) {
+        await supabase
+          .from('interview_responses')
+          .update(responseData)
+          .eq('id', existingResponseId);
+      } else {
+        const { data } = await supabase
+          .from('interview_responses')
+          .insert(responseData)
+          .select()
+          .single();
+        
+        if (data) {
+          setExistingResponseId(data.id);
+        }
+      }
+    } catch (err) {
+      console.error('Error autosaving:', err);
     }
   };
 
@@ -80,20 +176,60 @@ export default function InterviewSession() {
   const handleStopRecording = async () => {
     stopListening();
 
-    if (!transcript.trim()) return;
+    if (!editableTranscript.trim()) {
+      setSaveStatus('error');
+      return;
+    }
 
     try {
-      await supabase.from('interview_responses').insert({
+      setSaveStatus('saving');
+
+      const responseData = {
         session_id: sessionId,
         question_number: currentQuestionIndex + 1,
         question_text: session.questions[currentQuestionIndex],
-        transcription: transcript,
+        transcription: editableTranscript,
         audio_duration: recordingTime
-      });
+      };
+
+      if (existingResponseId) {
+        await supabase
+          .from('interview_responses')
+          .update(responseData)
+          .eq('id', existingResponseId);
+      } else {
+        const { data } = await supabase
+          .from('interview_responses')
+          .insert(responseData)
+          .select()
+          .single();
+        
+        if (data) {
+          setExistingResponseId(data.id);
+        }
+      }
+
+      setSaveStatus('saved');
+      setTimeout(() => setSaveStatus('idle'), 2000);
     } catch (err) {
       console.error('Error saving response:', err);
+      setSaveStatus('error');
     }
   };
+
+  const handleEditTranscript = (text: string) => {
+    setEditableTranscript(text);
+    // Debounced save when user manually edits
+    debouncedSave(text);
+  };
+
+  // Debounced save function
+  const debouncedSave = useCallback(
+    debounce((text: string) => {
+      saveDraft(text);
+    }, 2000),
+    [currentQuestionIndex, existingResponseId]
+  );
 
   const handleNextQuestion = () => {
     if (currentQuestionIndex < session.questions.length - 1) {
@@ -117,20 +253,16 @@ export default function InterviewSession() {
     try {
       console.log('🏁 Ending interview...');
       
-      // Stop recording if active
       if (isListening) {
         console.log('🎤 Stopping recording...');
         await handleStopRecording();
       }
 
-      // ✅ CRITICAL: Stop camera BEFORE navigation
       console.log('🎥 Disabling camera...');
       setCameraEnabled(false);
       
-      // Wait for camera to fully stop
       await new Promise(resolve => setTimeout(resolve, 300));
 
-      // Update database
       console.log('💾 Updating database...');
       await supabase
         .from('interview_sessions')
@@ -139,13 +271,10 @@ export default function InterviewSession() {
 
       console.log('✅ Interview ended successfully');
       
-      // Navigate to dashboard
-      navigate('/user-dashboard');
+      navigate(`/interview/${sessionId}/suggestions`);
     } catch (err) {
       console.error('❌ Error ending interview:', err);
-      // Even if error, ensure camera is off
       setCameraEnabled(false);
-      // Still navigate
       navigate('/user-dashboard');
     }
   };
@@ -153,7 +282,10 @@ export default function InterviewSession() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-sky-50">
-        <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-slate-600">Loading interview session...</p>
+        </div>
       </div>
     );
   }
@@ -161,9 +293,20 @@ export default function InterviewSession() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-sky-50 py-8 px-4">
       <div className="max-w-5xl mx-auto">
-        {/* Camera and Transcription - Centered Grid */}
+        {/* Save Status Indicator */}
+        {saveStatus !== 'idle' && (
+          <div className={`mb-4 p-3 rounded-lg text-center ${
+            saveStatus === 'saving' ? 'bg-blue-50 text-blue-700' :
+            saveStatus === 'saved' ? 'bg-green-50 text-green-700' :
+            'bg-red-50 text-red-700'
+          }`}>
+            {saveStatus === 'saving' && '💾 Saving...'}
+            {saveStatus === 'saved' && '✅ Saved successfully'}
+            {saveStatus === 'error' && '❌ Save failed - Please try again'}
+          </div>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-          {/* Camera View - Medium Size, Centered */}
           <div className="flex justify-center">
             <div className="w-full max-w-lg">
               <CameraView 
@@ -173,18 +316,18 @@ export default function InterviewSession() {
             </div>
           </div>
 
-          {/* Live Transcription */}
           <div className="flex justify-center">
             <div className="w-full max-w-lg">
               <TranscriptionBox 
-                transcription={transcript} 
-                isRecording={isListening} 
+                transcription={editableTranscript} 
+                isRecording={isListening}
+                onEdit={handleEditTranscript}
+                isEditable={!isListening}
               />
             </div>
           </div>
         </div>
 
-        {/* Question Display - Full Width */}
         <div className="mb-6">
           <QuestionDisplay
             question={session.questions[currentQuestionIndex]}
@@ -202,7 +345,6 @@ export default function InterviewSession() {
           />
         </div>
 
-        {/* Submit Button - Centered */}
         <div className="flex justify-center">
           <button 
             onClick={handleEndInterview}
