@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useMemo, ReactNode } from "react";
 import { 
   isUserPremium, 
   hasTierAccess, 
@@ -11,57 +11,61 @@ interface SubscriptionContextType {
   profile: any;
   isPremium: boolean;
   loading: boolean;
+  error: Error | null;
   tier: string;
   tierDisplayName: string;
   hasTierAccess: (requiredTier: string) => boolean;
-  hasExactPlan: (allowedPlans: string[]) => boolean; // ✅ NEW
+  hasExactPlan: (allowedPlans: string[]) => boolean;
   isFree: boolean;
+  isReady: boolean; // ✅ NEW: Combined ready state
+  refresh: () => Promise<void>;
 }
 
 const SubscriptionContext = createContext<SubscriptionContextType | null>(null);
 
-export const SubscriptionProvider = ({ children }: any) => {
-  const { profile, loading } = useProfile();
-  const [isPremium, setIsPremium] = useState(false);
-  const [tier, setTier] = useState("free");
-  const [isFree, setIsFree] = useState(true);
+interface SubscriptionProviderProps {
+  children: ReactNode;
+}
 
-  useEffect(() => {
-    if (!profile) return;
+export const SubscriptionProvider = ({ children }: SubscriptionProviderProps) => {
+  const { profile, loading, error, refresh } = useProfile();
+
+  // ✅ Derive all values atomically using useMemo
+  const value = useMemo(() => {
+    const currentTier = profile?.subscription_tier?.toLowerCase() || "free";
+    const isPremium = isUserPremium(profile);
+    const isFree = currentTier === "free";
     
-    const currentTier = profile.subscription_tier || "free";
-    setTier(currentTier);
-    setIsPremium(isUserPremium(profile));
-    setIsFree(currentTier === "free");
-    
-    console.log("=== SUBSCRIPTION CONTEXT ===");
-    console.log("Tier:", currentTier);
-    console.log("Status:", profile.status);
-    console.log("Is Premium:", isUserPremium(profile));
-    console.log("Expires:", profile.current_period_end);
-  }, [profile]);
+    // ✅ isReady = has loaded AND no error (or has fallback profile)
+    const isReady = !loading && (!!profile || !!error);
 
-  const checkTierAccess = (requiredTier: string) => {
-    return hasTierAccess(tier, requiredTier);
-  };
+    console.log("📊 Subscription State:", {
+      tier: currentTier,
+      status: profile?.status,
+      isPremium,
+      isFree,
+      isReady,
+      loading,
+      hasError: !!error
+    });
 
-  const checkExactPlan = (allowedPlans: string[]) => {
-    return hasExactPlan(tier, allowedPlans);
-  };
+    return {
+      profile,
+      isPremium,
+      loading,
+      error,
+      tier: currentTier,
+      tierDisplayName: getTierDisplayName(currentTier),
+      hasTierAccess: (requiredTier: string) => hasTierAccess(currentTier, requiredTier),
+      hasExactPlan: (allowedPlans: string[]) => hasExactPlan(currentTier, allowedPlans),
+      isFree,
+      isReady,
+      refresh
+    };
+  }, [profile, loading, error, refresh]);
 
   return (
-    <SubscriptionContext.Provider 
-      value={{ 
-        profile, 
-        isPremium, 
-        loading, 
-        tier,
-        tierDisplayName: getTierDisplayName(tier),
-        hasTierAccess: checkTierAccess,
-        hasExactPlan: checkExactPlan, // ✅ NEW
-        isFree
-      }}
-    >
+    <SubscriptionContext.Provider value={value}>
       {children}
     </SubscriptionContext.Provider>
   );
@@ -69,6 +73,8 @@ export const SubscriptionProvider = ({ children }: any) => {
 
 export const useSubscription = () => {
   const context = useContext(SubscriptionContext);
-  if (!context) throw new Error("useSubscription must be used within SubscriptionProvider");
+  if (!context) {
+    throw new Error("useSubscription must be used within SubscriptionProvider");
+  }
   return context;
 };
