@@ -40,6 +40,7 @@ import BuddyConnectorPage from './components/buddy-connector/index';
 import LandingPage3 from './pages/LandingPage3.tsx';
 import InterviewPro from './pages/InterviewProPage.tsx';
 import { Toaster } from 'react-hot-toast';
+import ContactPage from './pages/ContactPage.tsx';
 
 function App() {
   return (
@@ -64,6 +65,7 @@ function App() {
             <Route path="/consent-policy" element={<ConsentPolicyPage />} />
             <Route path="/terms-of-service" element={<TermsOfServicePage />} />
             <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+            <Route path="/contact" element={<ContactPage />} />
 
             {/* ========================================
                 PROTECTED ROUTES (Authentication required)
@@ -128,9 +130,7 @@ function App() {
               <Route 
                 path="/interview/:sessionId/suggestions" 
                 element={
-                  <PremiumPage allowedPlans={["basic", "starter", "pro"]}>
                     <InterviewSuggestionsPage />
-                  </PremiumPage>
                 } 
               />
 

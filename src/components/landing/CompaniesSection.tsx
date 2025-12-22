@@ -8,14 +8,14 @@ const companies = [
 ];
 
 const topics = [
-  { id: 'dsa', name: 'Data Structures & Algorithms', icon: Database },
-  { id: 'system', name: 'System Design', icon: Box },
-  { id: 'lowlevel', name: 'Low Level Design', icon: Layers },
-  { id: 'fullstack', name: 'Full Stack Coding', icon: Code },
-  { id: 'behavioral', name: 'Behavioral', icon: Users },
-  { id: 'company', name: 'Company Qs', icon: FileText },
-  { id: 'projects', name: 'Projects', icon: Briefcase },
-  { id: 'roadmaps', name: 'Roadmaps', icon: Map },
+  { id: 'backend', name: 'Backend Developer', icon: Code },
+  { id: 'system', name: 'DevOps Engineer', icon: Box },
+  { id: 'lowlevel', name: 'Cloud Engineer', icon: Layers },
+  { id: 'fullstack', name: 'Data Analyst', icon: Code },
+  { id: 'behavioral', name: 'Cybersecurity Analyst', icon: Users },
+  { id: 'company', name: 'Technical Support Engineer', icon: FileText },
+  { id: 'projects', name: 'UX/UI Designer', icon: Briefcase },
+  { id: 'roadmaps', name: 'AI Prompt Engineer', icon: Map },
 ];
 
 export default function CompaniesSection() {

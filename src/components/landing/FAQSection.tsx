@@ -100,7 +100,7 @@ export default function FAQSection() {
           <p className="text-slate-400 mb-4">
             Still have questions?
           </p>
-          <a href="#" className="text-cyan-400 hover:text-cyan-300 font-semibold text-lg transition-colors">
+          <a href="/contact" className="text-cyan-400 hover:text-cyan-300 font-semibold text-lg transition-colors">
             Contact our support team →
           </a>
         </div>

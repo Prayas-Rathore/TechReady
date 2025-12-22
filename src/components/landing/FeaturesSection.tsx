@@ -1,4 +1,4 @@
-import { Zap, Users, FileText, Sparkles, Clock, Award } from 'lucide-react';
+import { Zap, Users, FileText, Sparkles, Computer, Award } from 'lucide-react';
 
 const features = [
   {
@@ -10,7 +10,7 @@ const features = [
     gradient: 'from-amber-400 to-orange-500',
   },
   {
-    icon: Users,
+    icon: Computer,
     title: 'AI-Powered Interview Prep',
     tagline: 'Practice interviews—on your schedule, zero pressure.',
     description: 'MockITHub generates real questions from real job descriptions. Record yourself (text, audio, or video), get instant AI feedback, and sharpen until you’re confident',
@@ -37,7 +37,7 @@ const features = [
     gradient: 'from-violet-400 to-purple-500',
   },
   {
-    icon: Clock,
+    icon: Users,
     title: ' Buddy Model',
     tagline: 'You’re not alone',
 
