@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { BuddyConnection } from '../../types/buddy.types';
-import { fetchMyBuddies,removeConnection  } from '../../services/buddy/buddyService';
+import { fetchMyBuddies, removeConnection } from '../../services/buddy/buddyService';
 import toast from 'react-hot-toast';
 
 export const MyBuddies: React.FC = () => {
   const [buddies, setBuddies] = useState<BuddyConnection[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState<string>('All');
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
 
@@ -31,7 +31,7 @@ export const MyBuddies: React.FC = () => {
 
   const loadBuddies = async () => {
     if (!user) return;
-    
+
     setLoading(true);
     try {
       const data = await fetchMyBuddies(user.id);
@@ -44,47 +44,23 @@ export const MyBuddies: React.FC = () => {
     }
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    });
+  const handleRemoveConnection = async (requestId: string) => {
+    try {
+      await removeConnection(requestId);
+      setBuddies(prev => prev.filter(b => b.request_id !== requestId));
+      toast.success('Connection removed');
+      setDeleteConfirm(null);
+    } catch (error) {
+      console.error('Error removing connection:', error);
+      toast.error('Failed to remove connection');
+    }
   };
 
-  const handleRemoveConnection = async (requestId: string) => {
-  try {
-    await removeConnection(requestId);
-    setBuddies(prev => prev.filter(b => b.request_id !== requestId));
-    toast.success('Connection removed');
-  } catch (error) {
-    console.error('Error removing connection:', error);
-    toast.error('Failed to remove connection');
-  }
-};
-
-  // const allDomains = Array.from(
-  //   new Set(buddies.flatMap(b => b.matching_domains.map(d => d.name)))
-  // );
-  // const filters = ['All', ...allDomains.slice(0, 5)];
-
-  // const filteredBuddies = buddies.filter(connection => {
-  //   const matchesSearch = searchQuery === '' ||
-  //     connection.buddy.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //     connection.buddy.email?.toLowerCase().includes(searchQuery.toLowerCase());
-
-  //   const matchesFilter = selectedFilter === 'All' ||
-  //     connection.matching_domains.some(d => d.name === selectedFilter);
-
-  //   return matchesSearch && matchesFilter;
-  // });
-
   const filteredBuddies = buddies.filter(connection => {
-  const matchesSearch = searchQuery === '' ||
-    connection.buddy.sudo_name?.toLowerCase().includes(searchQuery.toLowerCase());
-
-  return matchesSearch;
-});
+    const matchesSearch = searchQuery === '' ||
+      connection.buddy.sudo_name?.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesSearch;
+  });
 
   if (loading) {
     return (
@@ -96,6 +72,37 @@ export const MyBuddies: React.FC = () => {
 
   return (
     <div className="space-y-4 sm:space-y-6">
+      {/* Delete Confirmation Modal */}
+      {deleteConfirm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl p-6 max-w-sm w-full shadow-2xl">
+            <div className="text-center">
+              <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-slate-900 mb-2">Remove Connection</h3>
+              <p className="text-slate-600 mb-6">Are you sure you want to remove this connection? This action cannot be undone.</p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setDeleteConfirm(null)}
+                  className="flex-1 py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-lg transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => handleRemoveConnection(deleteConfirm)}
+                  className="flex-1 py-2.5 px-4 bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg transition-colors"
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl sm:text-2xl font-bold text-slate-900">My Network</h2>
@@ -118,24 +125,6 @@ export const MyBuddies: React.FC = () => {
         </svg>
       </div>
 
-      {/* <div className="overflow-x-auto -mx-4 px-4 scrollbar-hide">
-        <div className="flex gap-2 pb-2">
-          {filters.map((filter) => (
-            <button
-              key={filter}
-              onClick={() => setSelectedFilter(filter)}
-              className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
-                selectedFilter === filter
-                  ? 'bg-blue-500 text-white shadow-md'
-                  : 'bg-white text-slate-600 border border-slate-200 hover:border-blue-300'
-              }`}
-            >
-              {filter}
-            </button>
-          ))}
-        </div>
-      </div> */}
-
       {buddies.length === 0 ? (
         <div className="bg-slate-50 rounded-2xl p-8 sm:p-16 text-center">
           <div className="text-5xl sm:text-6xl mb-4">👥</div>
@@ -156,49 +145,35 @@ export const MyBuddies: React.FC = () => {
         <div className="space-y-3 md:space-y-0 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:gap-4">
           {filteredBuddies.map((connection) => (
             <div key={connection.request_id}>
+              {/* Mobile View */}
               <div className="md:hidden bg-white rounded-lg border border-slate-200 p-3 hover:shadow-md transition-all">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-md flex-shrink-0">
-  {(connection.buddy.sudo_name?.[0] || 'U').toUpperCase()}
-</div>
+                    {(connection.buddy.sudo_name?.[0] || 'U').toUpperCase()}
+                  </div>
 
                   <div className="flex-1 min-w-0">
-  <h3 className="font-semibold text-sm text-slate-900 truncate">
-    @{connection.buddy.sudo_name}
-  </h3>
-  <p className="text-xs text-slate-500">Connected</p>
-</div>
-<div className="flex-1"></div>
-                 
-                  <div className="relative" ref={openMenuId === connection.request_id ? menuRef : null}>
-                    <button
-                      onClick={() => setOpenMenuId(openMenuId === connection.request_id ? null : connection.request_id)}
-                      className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors flex-shrink-0"
-                    >
-                      <svg className="w-5 h-5 text-slate-600" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-                      </svg>
-                    </button>
-
-                    {openMenuId === connection.request_id && (
-                      <div className="absolute right-0 mt-1 w-40 bg-white rounded-lg shadow-xl border border-slate-200 py-1 z-50">
-                        <button
-                          onClick={() => {
-                            if (confirm('Remove this connection?')) {
-                              handleRemoveConnection(connection.request_id);
-                            }
-                            setOpenMenuId(null);
-                          }}
-                          className="w-full px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 transition-colors font-medium"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    )}
+                    <h3 className="font-semibold text-sm text-slate-900 truncate">
+                      @{connection.buddy.sudo_name}
+                    </h3>
+                    <p className="text-xs text-slate-500">Connected</p>
                   </div>
+
+                  <button
+                    onClick={() => {
+                      setDeleteConfirm(connection.request_id);
+                      setOpenMenuId(null);
+                    }}
+                    className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
                 </div>
               </div>
 
+              {/* Desktop View */}
               <div className="hidden md:block bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-lg transition-all">
                 <div className="h-20 bg-gradient-to-br from-blue-400 via-purple-400 to-pink-400" />
 
@@ -211,46 +186,16 @@ export const MyBuddies: React.FC = () => {
 
                   <div className="pt-12 text-center">
                     <h3 className="font-semibold text-base text-slate-900 truncate mb-1 px-2">
-                       {connection.buddy.sudo_name}
+                      {connection.buddy.sudo_name}
                     </h3>
-                      <p className="text-xs text-slate-500 mb-3">Connected</p>
+                    <p className="text-xs text-slate-500 mb-3">Connected</p>
 
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => window.location.href = `mailto:${connection.buddy.email}`}
-                        disabled={!connection.buddy.email}
-                        className="flex-1 py-2 px-3 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-colors disabled:bg-slate-300 disabled:cursor-not-allowed"
-                      >
-                        Remove
-                      </button>
-
-                      <div className="relative" ref={openMenuId === connection.request_id ? menuRef : null}>
-                        <button
-                          onClick={() => setOpenMenuId(openMenuId === connection.request_id ? null : connection.request_id)}
-                          className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
-                        >
-                          <svg className="w-5 h-5 text-slate-600" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-                          </svg>
-                        </button>
-
-                        {openMenuId === connection.request_id && (
-                          <div className="absolute right-0 mt-1 w-40 bg-white rounded-lg shadow-xl border border-slate-200 py-1 z-50">
-                            <button
-                              onClick={() => {
-                                if (confirm('Remove this connection?')) {
-                                  handleRemoveConnection(connection.request_id);
-                                }
-                                setOpenMenuId(null);
-                              }}
-                              className="w-full px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 transition-colors font-medium"
-                            >
-                              Remove Connection
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    </div>
+                    <button
+                      onClick={() => setDeleteConfirm(connection.request_id)}
+                      className="w-full py-2 px-3 bg-red-500 hover:bg-red-600 text-white text-sm font-medium rounded-lg transition-colors"
+                    >
+                      Remove
+                    </button>
                   </div>
                 </div>
               </div>

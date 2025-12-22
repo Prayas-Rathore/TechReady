@@ -39,12 +39,14 @@ import SubscriptionSuccess from './pages/SubscriptionSuccess';
 import BuddyConnectorPage from './components/buddy-connector/index';
 import LandingPage3 from './pages/LandingPage3.tsx';
 import InterviewPro from './pages/InterviewProPage.tsx';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   return (
     <Router>
       <AuthProvider>
         <SubscriptionProvider>
+          <Toaster position="top-center" />
           <Routes>
             {/* ========================================
                 PUBLIC ROUTES (No authentication needed)

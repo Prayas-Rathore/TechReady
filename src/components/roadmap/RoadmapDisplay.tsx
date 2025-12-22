@@ -116,6 +116,9 @@ export default function RoadmapDisplay({ roadmap, onRegenerate }: RoadmapDisplay
   const handleShare = () => {
     navigate('/pricing');
   };
+  const redirecttodashboard = () => {
+    navigate('/user-dashboard');
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-sky-50 py-12 px-4">
@@ -147,19 +150,19 @@ export default function RoadmapDisplay({ roadmap, onRegenerate }: RoadmapDisplay
             <span>{isGeneratingPDF ? 'Generating PDF...' : 'Download PDF'}</span>
           </button>
 
-          <button
+          {/* <button
             onClick={onRegenerate}
             className="flex items-center gap-2 px-6 py-3 bg-white text-slate-700 rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-200 border border-slate-200 hover:border-blue-300"
           >
             <RefreshCw className="w-5 h-5" />
             <span>Regenerate</span>
-          </button>
+          </button> */}
 
           <button
-            onClick={handleShare}
+            onClick={redirecttodashboard}
             className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-200"
           >
-            <span>Get Detailed RoadMap</span>
+            <span>Dashboard</span>
           </button>
         </div>
 
@@ -186,14 +189,7 @@ export default function RoadmapDisplay({ roadmap, onRegenerate }: RoadmapDisplay
         </div>
 
         {/* Footer */}
-        <div className="text-center mt-12 p-6 bg-white rounded-xl shadow-lg">
-          <p className="text-slate-600">
-            Need help staying on track?{' '}
-            <button className="text-blue-600 font-semibold hover:underline">
-              Schedule a mentor session
-            </button>
-          </p>
-        </div>
+        
       </div>
     </div>
   );
