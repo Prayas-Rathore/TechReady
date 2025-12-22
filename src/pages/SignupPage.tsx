@@ -11,6 +11,7 @@ export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [consentGiven, setConsentGiven] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const guestId = typeof window !== 'undefined' ? localStorage.getItem('guest_user_id') : null;
@@ -32,11 +33,18 @@ export default function SignupPage() {
     setLoading(true);
     setError('');
 
-  const passwordsOk = passwordRequirements.every(req => req.met);
-  const confirmOk = confirmRequirement ? confirmRequirement.met : false;
-  const allRequirementsMet = passwordsOk && confirmOk;
+    const passwordsOk = passwordRequirements.every(req => req.met);
+    const confirmOk = confirmRequirement ? confirmRequirement.met : false;
+    const allRequirementsMet = passwordsOk && confirmOk;
+
     if (!allRequirementsMet) {
       setError('Please meet all password requirements');
+      setLoading(false);
+      return;
+    }
+
+    if (!consentGiven) {
+      setError('Please accept the consent to continue');
       setLoading(false);
       return;
     }
@@ -167,6 +175,7 @@ export default function SignupPage() {
                     </div>
                   )}
                 </div>
+
                 <div>
                   <label className="block text-sm font-medium text-slate-200 mb-2">
                     Confirm Password
@@ -206,6 +215,30 @@ export default function SignupPage() {
                   )}
                 </div>
 
+                <div className="flex items-start gap-3 p-4 bg-white/5 border border-white/10 rounded-xl">
+                  <input
+                    type="checkbox"
+                    id="consent"
+                    checked={consentGiven}
+                    onChange={(e) => setConsentGiven(e.target.checked)}
+                    required
+                    className="mt-1 w-4 h-4 rounded border-white/30 bg-white/10 text-emerald-500 focus:ring-2 focus:ring-emerald-400 focus:ring-offset-0 focus:ring-offset-transparent cursor-pointer"
+                  />
+                  <label htmlFor="consent" className="text-xs text-slate-300 leading-relaxed cursor-pointer">
+                    I agree to the collection, use, and processing of my personal information as described in the{' '}
+                    <a
+                      href="/consent-policy"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="text-emerald-400 hover:text-emerald-300 underline font-medium transition-colors"
+                    >
+                      Consent Policy
+                    </a>
+                    . I understand that I can withdraw my consent at any time.
+                  </label>
+                </div>
+
                 <button
                   type="submit"
                   disabled={loading}
@@ -236,7 +269,14 @@ export default function SignupPage() {
             </div>
 
             <p className="text-center text-slate-400 text-sm mt-6">
-              By creating an account, you agree to our Terms of Service and Privacy Policy
+              By creating an account, you agree to our{' '}
+              <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-emerald-300 underline">
+                Terms of Service
+              </a>
+              {' '}and{' '}
+              <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-emerald-300 underline">
+                Privacy Policy
+              </a>
             </p>
           </div>
         </div>
@@ -250,7 +290,7 @@ export default function SignupPage() {
               </Link>
 
               <h1 className="text-5xl font-bold text-white mb-6 leading-tight">
-                Your Smart Path to 
+                Your Smart Path to
                 <span className="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-rose-400 to-emerald-400">
                Cracking Interviews
                 </span>
