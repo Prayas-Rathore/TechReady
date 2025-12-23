@@ -9,102 +9,135 @@ import { AssessmentData } from '../types/assessment';
 import { questions } from '../data/questions';
 import { supabase } from '../services/SupabaseClient';
 import { User } from '@supabase/supabase-js';
+import { toast } from 'react-hot-toast';
+import { CheckCircle } from 'lucide-react';
 
 export default function AssessmentPage() {
   const navigate = useNavigate();
-  const [guestUserId, setGuestUserId] = useState<string | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<AssessmentData>({});
   const [isComplete, setIsComplete] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasAlreadyTaken, setHasAlreadyTaken] = useState(false);
+  const [existingAssessment, setExistingAssessment] = useState<any>(null);
 
-  // Build the visible question list based on professional status selection.
-  // Build the visible question list based on professional status selection.
-const visibleQuestions = useMemo(() => {
-  // Always start with the professional_status question (index 0)
-  const first = questions[0];
+  // Check authentication and existing assessment on mount
+  useEffect(() => {
+    const checkAuthAndAssessment = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        toast.error('Please log in to take the assessment');
+        navigate('/login', { state: { from: '/assessment' } });
+        return;
+      }
+      
+      setUser(user);
 
-  const selected = answers['professional_status'];
+      // Check if user has already taken the assessment
+      const { data: existingAssessments, error } = await supabase
+        .from('assessments')
+        .select('id, submitted_at, is_completed')
+        .eq('user_id', user.id)
+        .eq('is_completed', true)
+        .single();
 
-  // Define index ranges for the two flows (based on current questions.ts layout)
-  // junior flow: indices 1..18
-  const juniorIndices = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18];
-  // mid-level flow: index 19 (mid_level_extra_1)
-  const midLevelIndices = [19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36];
+      if (error && error.code !== 'PGRST116') {
+        // PGRST116 = no rows returned (user hasn't taken it)
+        console.error('Error checking assessment:', error);
+      }
 
-  let flowQuestions: typeof questions = [] as any;
+      if (existingAssessments) {
+        setHasAlreadyTaken(true);
+        setExistingAssessment(existingAssessments);
+      }
 
-  if (selected && typeof selected === 'string') {
-    if (selected.includes('Junior Developer')) {
-      flowQuestions = juniorIndices.map(i => questions[i]).filter(Boolean);
-    } else if (selected.includes('Mid-Level Developer')) {
-      flowQuestions = midLevelIndices.map(i => questions[i]).filter(Boolean);
+      setIsLoading(false);
+    };
+
+    checkAuthAndAssessment();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!session?.user) {
+        toast.error('Session expired. Please log in again.');
+        navigate('/login', { state: { from: '/assessment' } });
+      } else {
+        setUser(session.user);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
+
+  // Build visible questions based on professional status
+  const visibleQuestions = useMemo(() => {
+    const first = questions[0];
+    const selected = answers['professional_status'];
+
+    const juniorIndices = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18];
+    const midLevelIndices = [19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36];
+
+    let flowQuestions: typeof questions = [];
+
+    if (selected && typeof selected === 'string') {
+      if (selected.includes('Junior Developer')) {
+        flowQuestions = juniorIndices.map(i => questions[i]).filter(Boolean);
+      } else if (selected.includes('Mid-Level Developer')) {
+        flowQuestions = midLevelIndices.map(i => questions[i]).filter(Boolean);
+      }
     }
-  }
 
-  // IMPORTANT: Do NOT append the "rest" — otherwise mid-level sees junior questions next.
-  // If you later add truly post-flow common questions, append them explicitly via indices.
-  return [first, ...flowQuestions];
-}, [answers]);
+    return [first, ...flowQuestions];
+  }, [answers]);
 
-
-  // Keep currentQuestion within bounds if visibleQuestions changes
+  // Keep currentQuestion within bounds
   useEffect(() => {
     if (currentQuestion >= visibleQuestions.length) {
       setCurrentQuestion(Math.max(0, visibleQuestions.length - 1));
     }
-  }, [visibleQuestions.length]);
+  }, [visibleQuestions.length, currentQuestion]);
 
-  // If professional_status was just selected and we're still on the intro (index 0),
-  // advance to the next visible question so the flow proceeds immediately.
+  // Auto-advance after professional_status selection
   useEffect(() => {
     const prof = answers['professional_status'];
     if (prof && currentQuestion === 0) {
-      // move to the second item in visibleQuestions (index 1) which will be
-      // the mid-level extra question for Mid-Level users or the first junior question.
       setCurrentQuestion(1);
     }
-  }, [answers['professional_status']]);
+  }, [answers, currentQuestion]);
 
-  // Load saved answers from localStorage
+  // Load saved draft answers (optional feature)
   useEffect(() => {
-    const savedAnswers = localStorage.getItem('assessment_answers');
-    if (savedAnswers) {
-      try {
-        const parsed = JSON.parse(savedAnswers);
-        if (parsed && typeof parsed === 'object') {
-          setAnswers(parsed);
+    if (!user?.id || hasAlreadyTaken) return;
+
+    const loadDraft = async () => {
+      const draftKey = `assessment_draft_${user.id}`;
+      const saved = localStorage.getItem(draftKey);
+      
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (parsed && typeof parsed === 'object') {
+            setAnswers(parsed);
+          }
+        } catch (err) {
+          console.warn('Could not parse saved draft', err);
         }
-      } catch (err) {
-        console.warn('Could not parse saved answers', err);
       }
-    }
-  }, []);
+    };
 
-  // Generate guest user ID
-  useEffect(() => {
-    const key = 'guest_user_id';
-    let id = localStorage.getItem(key);
-    
-    if (!id) {
-      const rand = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-      id = `guest-${rand()}${rand()}-${Date.now().toString(36)}`;
-      localStorage.setItem(key, id);
-      console.log('🆔 Generated guest ID:', id);
-    } else {
-      console.log('🆔 Retrieved guest ID:', id);
-    }
-    
-    setGuestUserId(id);
-  }, []);
+    loadDraft();
+  }, [user?.id, hasAlreadyTaken]);
 
-  // Auto-save answers
+  // Auto-save draft answers to localStorage
   useEffect(() => {
-    if (answers && Object.keys(answers).length > 0) {
-      localStorage.setItem('assessment_answers', JSON.stringify(answers));
-    }
-  }, [answers]);
+    if (!user?.id || Object.keys(answers).length === 0 || hasAlreadyTaken) return;
+
+    const draftKey = `assessment_draft_${user.id}`;
+    localStorage.setItem(draftKey, JSON.stringify(answers));
+  }, [answers, user?.id, hasAlreadyTaken]);
 
   const handleAnswer = (questionId: string, answer: any) => {
     setAnswers(prev => ({ ...prev, [questionId]: answer }));
@@ -125,131 +158,73 @@ const visibleQuestions = useMemo(() => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
+
   const handleSubmit = async () => {
-  setIsSaving(true);
-
-  let savedRecord: any = null;
-
-  try {
-    const id =
-      guestUserId ||
-      localStorage.getItem("guest_user_id") ||
-      `guest-${Date.now()}`;
-
-    const payload = {
-      anon_user_id: id,
-      answers: answers,
-      submitted_at: new Date().toISOString(),
-    };
-
-    const { data, error } = await supabase
-      .from("guest_assessments")
-      .insert([payload])
-      .select();
-
-    if (error) {
-      console.error("❌ Supabase Error:", {
-        message: error.message,
-        details: error.details,
-        hint: error.hint,
-        code: error.code,
-      });
-      throw error;
+    if (!user?.id) {
+      toast.error('Authentication required');
+      navigate('/login');
+      return;
     }
 
-    savedRecord = data?.[0] ?? { ...payload };
+    setIsSaving(true);
 
-    // 🔵 UPDATE USER PROFILE FLAG IN SUPABASE (ONLY IF LOGGED IN USER)
     try {
-      if (user?.id) {
-        await supabase
-          .from("profiles")
-          .update({ has_taken_assessment_quiz: true })
-          .eq("id", user.id);
+      // Save assessment to database
+      const { data, error } = await supabase
+        .from('assessments')
+        .insert({
+          user_id: user.id,
+          answers: answers,
+          submitted_at: new Date().toISOString(),
+          is_completed: true,
+        })
+        .select()
+        .single();
 
-        console.log(
-          "✔ Profile updated: has_taken_assessment_quiz = true"
-        );
+      if (error) {
+        // Check if it's a unique constraint violation
+        if (error.code === '23505') {
+          toast.error('You have already taken this assessment');
+          setHasAlreadyTaken(true);
+          return;
+        }
+        throw error;
       }
-    } catch (profileErr) {
-      console.error("❌ Failed updating profile flag:", profileErr);
+
+      // Update profile flag
+      await supabase
+        .from('profiles')
+        .update({ has_taken_assessment_quiz: true })
+        .eq('id', user.id);
+
+      // Clear draft from localStorage
+      const draftKey = `assessment_draft_${user.id}`;
+      localStorage.removeItem(draftKey);
+
+      toast.success('Assessment submitted successfully!');
+      
+      // Show success screen briefly
+      setIsComplete(true);
+
+      // Navigate to roadmap
+      setTimeout(() => {
+        navigate('/roadmap', { state: { assessmentData: data } });
+      }, 2000);
+
+    } catch (err: any) {
+      console.error('Failed to save assessment:', err);
+      toast.error(err.message || 'Failed to submit assessment. Please try again.');
+    } finally {
+      setIsSaving(false);
     }
-
-    // Backup to localStorage
-    try {
-      const resultsKey = "assessment_results";
-      const stored = localStorage.getItem(resultsKey);
-      let parsed: any = stored ? JSON.parse(stored) : {};
-      if (!parsed || typeof parsed !== "object") parsed = {};
-
-      parsed[id] = parsed[id] || [];
-      parsed[id].push({
-        answers,
-        timestamp: new Date().toISOString(),
-        supabaseId: savedRecord?.id,
-      });
-      localStorage.setItem(resultsKey, JSON.stringify(parsed));
-      console.log("✅ Assessment also backed up to localStorage");
-    } catch (localErr) {
-      console.warn(
-        "⚠️ LocalStorage backup failed (non-critical):",
-        localErr
-      );
-    }
-  } catch (err) {
-    console.error("❌ Failed to save assessment:", err);
-
-    // Fallback: Save only to localStorage if Supabase fails
-    try {
-      const id =
-        guestUserId ||
-        localStorage.getItem("guest_user_id") ||
-        `guest-${Date.now()}`;
-      const resultsKey = "assessment_results";
-      const stored = localStorage.getItem(resultsKey);
-      let parsed: any = stored ? JSON.parse(stored) : {};
-      if (!parsed || typeof parsed !== "object") parsed = {};
-      parsed[id] = parsed[id] || [];
-      parsed[id].push({
-        answers,
-        timestamp: new Date().toISOString(),
-        supabaseFailed: true,
-      });
-      localStorage.setItem(resultsKey, JSON.stringify(parsed));
-      console.log("⚠️ Saved to localStorage as fallback");
-
-      // create a local savedRecord so we can forward something to the roadmap page
-      savedRecord = {
-        anon_user_id: id,
-        answers,
-        submitted_at: new Date().toISOString(),
-        supabaseFailed: true,
-      };
-    } catch (fallbackErr) {
-      console.error("❌ Even fallback failed:", fallbackErr);
-    }
-  } finally {
-    setIsSaving(false);
-  }
-
-  // Simulate processing time
-  await new Promise((resolve) => setTimeout(resolve, 1500));
-
-  setIsComplete(true);
-
-  // Clear the in-progress answers (assessment is submitted)
-  localStorage.removeItem("assessment_answers");
-
-  // Redirect to roadmap page, passing the savedRecord in navigation state
-  setTimeout(() => {
-    navigate("/roadmap", { state: { assessmentData: savedRecord } });
-  }, 3000);
-};
-
+  };
 
   const handleSaveAndExit = () => {
-    localStorage.setItem('assessment_answers', JSON.stringify(answers));
-    navigate('/login');
+    if (!user?.id) return;
+    
+    // Draft is already auto-saved
+    toast.success('Progress saved');
+    navigate('/user-dashboard');
   };
 
   const isCurrentQuestionAnswered = () => {
@@ -273,6 +248,87 @@ const visibleQuestions = useMemo(() => {
     return true;
   };
 
+  // Show loading state while checking authentication
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-sky-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-sky-600 mx-auto mb-4"></div>
+          <p className="text-slate-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show "Already Taken" screen
+  if (hasAlreadyTaken) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-sky-50">
+        <AssessmentHeader onSaveAndExit={() => navigate('/user-dashboard')} />
+        
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="max-w-2xl mx-auto">
+            <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12 text-center">
+              <div className="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-6">
+                <CheckCircle className="w-12 h-12 text-green-600" />
+              </div>
+              
+              <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+                Assessment Already Completed
+              </h1>
+              
+              <p className="text-lg text-slate-600 mb-3">
+                You have already taken this assessment.
+              </p>
+              
+              {existingAssessment?.submitted_at && (
+                <p className="text-sm text-slate-500 mb-8">
+                  Completed on {new Date(existingAssessment.submitted_at).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
+                </p>
+              )}
+
+              <div className="space-y-4">
+                <button
+                  onClick={() => navigate('/user-dashboard')}
+                  className="w-full md:w-auto px-8 py-3 bg-sky-600 text-white font-semibold rounded-lg hover:bg-sky-700 transition-colors duration-200 shadow-md hover:shadow-lg"
+                >
+                  Go to Dashboard
+                </button>
+                
+                {/* <button
+                  onClick={() => navigate('/roadmap')}
+                  className="w-full md:w-auto px-8 py-3 bg-white text-sky-600 font-semibold rounded-lg border-2 border-sky-600 hover:bg-sky-50 transition-colors duration-200 ml-0 md:ml-4"
+                >
+                  View Your Roadmap
+                </button> */}
+              </div>
+
+              <div className="mt-8 pt-8 border-t border-slate-200">
+                {/* <p className="text-sm text-slate-500">
+                  Need to retake the assessment?{' '}
+                  <button 
+                    onClick={() => {
+                      toast.info('Please contact support to reset your assessment');
+                    }}
+                    className="text-sky-600 hover:text-sky-700 underline"
+                  >
+                    Contact Support
+                  </button>
+                </p> */}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (isComplete) {
     return <SuccessScreen />;
   }
@@ -288,7 +344,7 @@ const visibleQuestions = useMemo(() => {
               Let's Personalize Your Interview Prep Journey
             </h1>
             <p className="text-lg text-slate-600">
-              Answer a few questions to help us create your custom learning path (8-10 minutes)
+              Answer a few questions to help us create your custom learning path
             </p>
           </div>
 
