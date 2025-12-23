@@ -4,6 +4,7 @@ import {
   Video, Mail, Lock, ArrowRight, Loader2, Eye, EyeOff, Sparkles, Zap, Shield
 } from 'lucide-react';
 import { supabase } from '../services/SupabaseClient';
+import LogoImage from '../assets/images/LOGO_new.png';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -80,8 +81,13 @@ export default function LoginPage() {
           <div className="max-w-lg">
             <div className="mb-8 animate-fadeIn">
               <Link to="/" className="flex items-center gap-3 mb-12">
-                <Video className="w-10 h-10 text-cyan-400" />
-                <span className="text-3xl font-bold text-white">MockitHub</span>
+                {/* <Video className="w-10 h-10 text-cyan-400" /> */}
+                {/* <span className="text-3xl font-bold text-white">MockitHub</span> */}
+                <img 
+                src={LogoImage} 
+                alt="MockITHub Logo" 
+                className="h-20 w-auto hover:opacity-90 transition-opacity" 
+              />
               </Link>
 
               <h1 className="text-5xl font-bold text-white mb-6 leading-tight">
@@ -111,8 +117,11 @@ export default function LoginPage() {
               <div className="text-center mb-8">
                 <div className="lg:hidden mb-6">
                   <Link to="/" className="inline-flex items-center gap-2">
-                    <Video className="w-8 h-8 text-cyan-400" />
-                    <span className="text-2xl font-bold text-white">MockITHub</span>
+                     <img 
+                src={LogoImage} 
+                alt="MockITHub Logo" 
+                className="h-20 w-auto hover:opacity-90 transition-opacity" 
+              />
                   </Link>
                 </div>
                 <h2 className="text-3xl font-bold text-white mb-2">Welcome Back</h2>

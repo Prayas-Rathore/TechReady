@@ -94,10 +94,10 @@ export default function UserDashboard() {
               >
                 <Menu className="w-6 h-6 text-slate-600" />
               </button>
-              <Link to="/user-dashboard" className="flex items-center gap-2">
+              {/* <Link to="/user-dashboard" className="flex items-center gap-2">
                 <Video className="w-6 h-6 sm:w-8 sm:h-8 text-sky-600" />
                 <span className="text-xl sm:text-2xl font-bold text-slate-900">MockIthub</span>
-              </Link>
+              </Link> */}
             </div>
 
             <div className="flex items-center gap-3 sm:gap-6">

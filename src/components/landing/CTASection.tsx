@@ -56,7 +56,7 @@ export default function CTASection() {
            <p className="text-white text-2xl font-bold mb-3">
            See How It Works (Demo) &nbsp; &nbsp;
           <Link
-            to="/assessment"
+            to="/signup"
             className="inline-flex items-center gap-2 px-10 py-5 bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 text-white rounded-xl font-semibold text-lg hover:shadow-2xl hover:shadow-purple-500/50 hover:scale-105 transition-all"
           >
             <span>Try Free for 3 Days</span>

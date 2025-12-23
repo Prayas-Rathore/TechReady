@@ -1,4 +1,4 @@
-import { Zap, Users, FileText, Sparkles, Computer, Award } from 'lucide-react';
+import { Zap, Users, FileText, Sparkles, Computer, Award,Brain  } from 'lucide-react';
 
 const features = [
   {
@@ -28,7 +28,7 @@ const features = [
     gradient: 'from-green-400 to-emerald-500',
   },
   {
-    icon: Sparkles,
+    icon: Brain,
     
     title: 'Mindset & Confidence Training',
     tagline: 'Success starts in your head',

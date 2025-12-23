@@ -27,24 +27,43 @@ export default function ContactPage() {
     setLoading(true)
 
     try {
-      const { error } = await supabase.from('contact_queries').insert({
-        user_id: null, // anonymous submission
-        name: formData.name.trim(),
-        email: formData.email.trim(),
-        subject: formData.subject.trim(),
-        message: formData.message.trim(),
-        status: 'pending',
-      })
+      // 1. Store in database
+      const { data, error } = await supabase
+        .from('contact_queries')
+        .insert({
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          subject: formData.subject.trim(),
+          message: formData.message.trim(),
+          status: 'pending',
+        })
+        .select()
+        .single()
 
       if (error) throw error
+
+      // 2. Send email notification (non-blocking)
+          supabase.functions.invoke('send-email-from-contact-us', {
+            body: {
+              name: formData.name.trim(),
+              email: formData.email.trim(),
+              subject: formData.subject.trim(),
+              message: formData.message.trim(),
+              queryId: data.id,
+            },
+          })
+        .then(({ error: emailError }) => {
+          if (emailError) {
+            console.error('Email notification failed:', emailError)
+            // Don't fail the whole submission if email fails
+          }
+        })
 
       toast.success('Your message has been sent successfully!')
       setSubmitted(true)
       setFormData({ name: '', email: '', subject: '', message: '' })
 
-      setTimeout(() => {
-        setSubmitted(false)
-      }, 5000)
+      setTimeout(() => setSubmitted(false), 5000)
     } catch (error) {
       console.error('Error submitting contact form:', error)
       toast.error('Failed to send message. Please try again.')
@@ -53,7 +72,7 @@ export default function ContactPage() {
     }
   }
 
-  /* ---------------- Success Screen ---------------- */
+ /* ---------------- Success Screen ---------------- */
   if (submitted) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50 flex items-center justify-center px-4">
@@ -110,7 +129,7 @@ export default function ContactPage() {
                 <Mail className="w-4 h-4" />
                 <span>
                 Prefer email? Reach us at{' '}
-                <strong>support@mockithub.com</strong>
+                <strong>support@mockithub.ai.</strong>
                 </span>
             </div>
             </div>

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Video, Mail, Lock, User, ArrowRight, Loader2, Eye, EyeOff, CheckCircle2, X } from 'lucide-react';
 import { supabase } from '../services/SupabaseClient';
+import LogoImage from '../assets/images/LOGO_new.png';
 
 export default function SignupPage() {
   const navigate = useNavigate();
@@ -14,8 +15,6 @@ export default function SignupPage() {
   const [consentGiven, setConsentGiven] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const guestId = typeof window !== 'undefined' ? localStorage.getItem('guest_user_id') : null;
-
 
   const passwordRequirements = [
     { label: 'At least 8 characters', met: password.length >= 8 },
@@ -43,12 +42,6 @@ export default function SignupPage() {
       return;
     }
 
-    if (!consentGiven) {
-      setError('Please accept the consent to continue');
-      setLoading(false);
-      return;
-    }
-
     try {
       const { error } = await supabase.auth.signUp({
         email,
@@ -56,8 +49,9 @@ export default function SignupPage() {
         options: {
           data: {
             full_name: fullName,
-            guest_id: guestId,
             user_role: 0,
+            consent_given: consentGiven,
+            consent_timestamp: new Date().toISOString(),
           },
         },
       });
@@ -86,8 +80,11 @@ export default function SignupPage() {
               <div className="text-center mb-8">
                 <div className="lg:hidden mb-6">
                   <Link to="/" className="inline-flex items-center gap-2">
-                    <Video className="w-8 h-8 text-emerald-400" />
-                    <span className="text-2xl font-bold text-white">MockITHub</span>
+                     <img 
+                src={LogoImage} 
+                alt="MockITHub Logo" 
+                className="h-20 w-auto hover:opacity-90 transition-opacity" 
+              />
                   </Link>
                 </div>
                 <h2 className="text-3xl font-bold text-white mb-2">Create Account</h2>
@@ -165,9 +162,9 @@ export default function SignupPage() {
                           {req.met ? (
                             <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                           ) : (
-                            <X className="w-4 h-4 text-slate-500" />
+                            <X className="w-4 h-4 text-red-500" />
                           )}
-                          <span className={req.met ? 'text-emerald-400' : 'text-slate-400'}>
+                          <span className={req.met ? 'text-emerald-400' : 'text-red-400'}>
                             {req.label}
                           </span>
                         </div>
@@ -241,7 +238,7 @@ export default function SignupPage() {
 
                 <button
                   type="submit"
-                  disabled={loading}
+                  disabled={loading || !consentGiven}
                   className="w-full py-3 px-6 bg-gradient-to-r from-orange-500 via-rose-500 to-emerald-500 text-white rounded-xl font-semibold hover:shadow-2xl hover:shadow-orange-500/50 hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
                 >
                   {loading ? (
@@ -285,8 +282,11 @@ export default function SignupPage() {
           <div className="max-w-lg">
             <div className="mb-8 animate-fadeIn">
               <Link to="/" className="flex items-center gap-3 mb-12">
-                <Video className="w-10 h-10 text-emerald-400" />
-                <span className="text-3xl font-bold text-white">MockITHub</span>
+ <img 
+                src={LogoImage} 
+                alt="MockITHub Logo" 
+                className="h-20 w-auto hover:opacity-90 transition-opacity" 
+              />
               </Link>
 
               <h1 className="text-5xl font-bold text-white mb-6 leading-tight">
