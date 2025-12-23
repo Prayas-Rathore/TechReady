@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, Loader2, FileText, Upload } from 'lucide-react';
+import { Sparkles, Loader2, FileText, ArrowLeft } from 'lucide-react';
 import { predefinedJobDescriptions } from '../data/JobDescription';
 import { supabase } from '../services/SupabaseClient';
 
@@ -78,6 +78,13 @@ export default function JobDescriptionSelector() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-sky-50 py-12 px-4">
       <div className="max-w-4xl mx-auto">
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          <span>Back</span>
+        </button>
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-4">
             <Sparkles className="w-4 h-4" />

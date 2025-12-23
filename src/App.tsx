@@ -100,6 +100,20 @@ function App() {
                 } 
               />
 
+               <Route 
+                path="/interview/:sessionId" 
+                element={
+                    <InterviewSession />
+                } 
+              />
+
+              <Route 
+                path="/interview/:sessionId/suggestions" 
+                element={
+                    <InterviewSuggestionsPage />
+                } 
+              />
+
               <Route 
                 path="/roadmap" 
                 element={
@@ -118,21 +132,7 @@ function App() {
                 } 
               />
               
-              <Route 
-                path="/interview/:sessionId" 
-                element={
-                  <PremiumPage allowedPlans={["basic", "starter", "pro"]}>
-                    <InterviewSession />
-                  </PremiumPage>
-                } 
-              />
-
-              <Route 
-                path="/interview/:sessionId/suggestions" 
-                element={
-                    <InterviewSuggestionsPage />
-                } 
-              />
+             
 
               <Route 
                 path="/cv-analyzer" 
