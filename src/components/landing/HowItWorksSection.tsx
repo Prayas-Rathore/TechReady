@@ -1,25 +1,37 @@
-import { Search, Calendar, MessageSquare, Trophy } from 'lucide-react';
+import { Search, Calendar, MessageSquare, Trophy ,Contact ,UserRoundCheck ,ArrowUpNarrowWide } from 'lucide-react';
 
 const steps = [
   {
     icon: Search,
-    title: 'Choose Your Domain',
-    description: 'Select from technical interviews, HR rounds, behavioral questions, or specific tech stacks.',
+    title: 'Sign UP & Set Your Goal'
   },
   {
     icon: Calendar,
-    title: 'Schedule Interview',
-    description: 'Pick a convenient time slot with an industry expert matched to your needs.',
+    title: 'Follow a clear Preparation Roadmap',
+
   },
   {
     icon: MessageSquare,
-    title: 'Get Real-Time Feedback',
-    description: 'Receive detailed insights on your performance, communication, and technical skills.',
+    title: 'Practice with Mock Interviews',
   },
   {
     icon: Trophy,
-    title: 'Land Your Dream Job',
-    description: 'Apply your learnings and ace your actual interviews with confidence.',
+    title: 'Built Confidence(Not Just Answers)',
+  
+  },
+  {
+    icon: Contact,
+    title: 'Get Support from the Community',
+  
+  },
+  {
+    icon: UserRoundCheck,
+    title: 'ShowUp Interview-Ready'
+  },
+  {
+    icon: ArrowUpNarrowWide,
+    title: 'Keep Growing(Even After you are Hired)',
+  
   },
 ];
 
@@ -52,9 +64,9 @@ export default function HowItWorksSection() {
                 <h3 className="text-xl font-bold text-white mb-3">
                   {step.title}
                 </h3>
-                <p className="text-slate-400 leading-relaxed">
+                {/* <p className="text-slate-400 leading-relaxed">
                   {step.description}
-                </p>
+                </p> */}
               </div>
             </div>
           ))}

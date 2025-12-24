@@ -3,27 +3,28 @@ import { Check } from 'lucide-react';
 
 const plans = [
   {
-    name: 'Basic Pack',
-    price: '$14.99',
-    period: '/month',
+    name: 'Free',
+    price: '$0',
+    period: '',
     description: 'Perfect for getting started',
     features: [
       'JD Scanner & CV Optimiser',
-      'AI Interview Prep',
+      'Interview ToolKit',
+      'Cover Letter Generator',
       'Portfolio Branding & Identity',
-      'Buddy Model',
     ],
     popular: false
   },
   {
-    name: 'Starter Pack',
+    name: 'Basic Pack',
     price: '$19.99',
     period: '/month',
     description: 'Most popular choice',
     features: [
       '	Mindset & Confidence Training',
        'JD Scanner & CV Optimiser',
-      'AI Interview Prep',
+      'Interview ToolKit',
+      'Cover Letter Generator',
       'Portfolio Branding & Identity',
       'Buddy Model',
     ],
@@ -37,7 +38,8 @@ const plans = [
     features: [
      '	Mindset & Confidence Training',
        'JD Scanner & CV Optimiser',
-      'AI Interview Prep',
+      'Interview ToolKit',
+      'Cover Letter Generator',
       'Portfolio Branding & Identity',
       'Buddy Model',
       'Post-Job Growth Roadmap'

@@ -24,7 +24,9 @@ import CVAnalysisPage from './pages/CVAnalysisPage';
 import JDGeneratorPage from './pages/JDGeneratorPage';
 import CVDashboardLayout from './components/CVDashboardLayout';
 import { CoverLetterGenerator } from './pages/CoverLetterGenerator';
-import PostRoadMap from './pages/PostRoadMap';
+// import PostRoadMap from './pages/PostRoadMap_old.tsx';
+import PostJobRoad from './pages/PostJobRoad.tsx';
+import RoadmapResultsPage from './pages/RoadmapResultsPage.tsx';
 import JobDetailsFormPage from './pages/JobDetailsFormPage';
 import UserFormPage from './pages/UserFormPage';
 import UserListPage from './pages/UserListPage';
@@ -181,7 +183,15 @@ function App() {
                 path="/postroadmap" 
                 element={
                   <PremiumPage allowedPlans={["pro"]}>
-                    <PostRoadMap />
+                    <PostJobRoad />
+                  </PremiumPage>
+                } 
+              />
+              <Route 
+                path="/roadmap-results" 
+                element={
+                  <PremiumPage allowedPlans={["pro"]}>
+                    <RoadmapResultsPage />
                   </PremiumPage>
                 } 
               />
