@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
-import LogoImage from '../../assets/images/LOGO_new.png';
+import LogoImage from '../../assets/images/MockITLogo-2.png';
 
 interface NavigationProps {
   scrollY: number;

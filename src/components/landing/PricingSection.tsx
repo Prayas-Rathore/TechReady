@@ -4,27 +4,24 @@ import { Check } from 'lucide-react';
 const plans = [
   {
     name: 'Free',
-    price: '$0',
+    price: '£0',
     period: '',
     description: 'Perfect for getting started',
     features: [
       'JD Scanner & CV Optimiser',
       'Interview ToolKit',
-      'Cover Letter Generator',
       'Portfolio Branding & Identity',
     ],
     popular: false
   },
   {
     name: 'Basic Pack',
-    price: '$19.99',
+    price: '£19.99',
     period: '/month',
     description: 'Most popular choice',
     features: [
-      '	Mindset & Confidence Training',
        'JD Scanner & CV Optimiser',
       'Interview ToolKit',
-      'Cover Letter Generator',
       'Portfolio Branding & Identity',
       'Buddy Model',
     ],
@@ -32,14 +29,13 @@ const plans = [
   },
   {
     name: 'Pro Pack',
-    price: '$29.99',
+    price: '£29.99',
     period: '/month',
     description: 'For serious candidates',
     features: [
-     '	Mindset & Confidence Training',
+     'Interview Mindset Roadmap',
        'JD Scanner & CV Optimiser',
       'Interview ToolKit',
-      'Cover Letter Generator',
       'Portfolio Branding & Identity',
       'Buddy Model',
       'Post-Job Growth Roadmap'
@@ -65,13 +61,14 @@ export default function PricingSection() {
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {plans.map((plan, index) => (
             <div
-              key={index}
-              className={`relative p-8 rounded-3xl border transition-all hover:scale-105 ${
-                plan.popular
-                  ? 'bg-gradient-to-br from-purple-500/20 to-cyan-500/20 border-purple-500/50 shadow-2xl shadow-purple-500/30'
-                  : 'bg-white/5 backdrop-blur-xl border-white/10 hover:bg-white/10'
-              }`}
-            >
+            key={index}
+            className={`relative p-8 rounded-3xl border flex flex-col transition-all hover:scale-105 ${
+              plan.popular
+                ? 'bg-gradient-to-br from-purple-500/20 to-cyan-500/20 border-purple-500/50 shadow-2xl shadow-purple-500/30'
+                : 'bg-white/5 backdrop-blur-xl border-white/10 hover:bg-white/10'
+            }`}
+          >
+
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-purple-500 to-cyan-500 text-white text-sm font-semibold rounded-full">
                   Most Popular
@@ -96,14 +93,15 @@ export default function PricingSection() {
                 ))}
               </ul>
 
-              <Link
+             <Link
                 to="/signup"
-                className={`block w-full py-3 rounded-xl font-semibold text-center transition-all ${
+                className={`mt-auto block w-full py-3 rounded-xl font-semibold text-center transition-all ${
                   plan.popular
                     ? 'bg-gradient-to-r from-purple-500 to-cyan-500 text-white hover:shadow-2xl hover:shadow-purple-500/50'
                     : 'bg-white/10 text-white hover:bg-white/20'
                 }`}
               >
+
                 Get Started
               </Link>
             </div>

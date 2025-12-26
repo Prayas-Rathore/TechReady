@@ -8,14 +8,28 @@ import { supabase } from '../services/SupabaseClient';
 // ✅ Fixed tier mapping - must match Stripe metadata
 const plans = [
   {
+    name: 'Free',
+    tier: 'basic',
+    priceId: 'price_1SZV1iRoRT3gf2HBjXbwcGXf',
+    price: '0',
+    description: 'Perfect for getting started',
+    features: [
+      'JD Scanner & CV Optimiser',
+      'Interview ToolKit',
+      'Portfolio Branding & Identity',
+    ],
+    cta: 'Subscribe Now',
+    highlighted: false,
+  },
+  {
     name: 'Basic',
     tier: 'basic',
     priceId: 'price_1SZV1iRoRT3gf2HBjXbwcGXf',
     price: '14.99',
-    description: 'Perfect for getting started with mock interviews',
+    description: 'Most popular choice',
     features: [
-      'JD Scanner & CV Optimiser',
-      'AI Interview Prep',
+       'JD Scanner & CV Optimiser',
+      'Interview ToolKit',
       'Portfolio Branding & Identity',
       'Buddy Model',
     ],
@@ -23,31 +37,15 @@ const plans = [
     highlighted: false,
   },
   {
-    name: 'Starter',
-    tier: 'starter', 
-    priceId: 'price_1SZUz0RoRT3gf2HBR9xgbG4A',
-    price: '19.99',
-    description: 'Most popular choice for serious job seekers',
-    features: [
-      'Mindset & Confidence Training',
-      'JD Scanner & CV Optimiser',
-      'AI Interview Prep',
-      'Portfolio Branding & Identity',
-      'Buddy Model'
-    ],
-    cta: 'Subscribe Now',
-    highlighted: true,
-  },
-  {
     name: 'Pro',
     tier: 'pro',
     priceId: 'price_1SZUzjRoRT3gf2HBFWeafWaP',
     price: '29.99',
-    description: 'Built for candidates who refuse average and aim for offers.',
+    description: 'For serious candidates',
     features: [
-      'Mindset & Confidence Training',
-      'JD Scanner & CV Optimiser',
-      'AI Interview Prep',
+      'Interview Mindset Roadmap',
+       'JD Scanner & CV Optimiser',
+      'Interview ToolKit',
       'Portfolio Branding & Identity',
       'Buddy Model',
       'Post-Job Growth Roadmap'
@@ -191,12 +189,13 @@ export default function Pricing() {
             return (
               <div
                 key={plan.tier}
-                className={`relative rounded-3xl p-8 ${
+                className={`relative rounded-3xl p-8 flex flex-col ${
                   plan.highlighted
                     ? 'bg-gradient-to-br from-sky-600 to-blue-600 text-white shadow-2xl scale-105 border-4 border-sky-400'
                     : 'bg-white border-2 border-slate-200 hover:border-sky-300 hover:shadow-xl'
                 } transition-all`}
               >
+
                 {plan.highlighted && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-amber-400 text-slate-900 px-6 py-2 rounded-full font-semibold text-sm flex items-center gap-2 shadow-lg">
                     <Sparkles className="w-4 h-4" />
@@ -219,7 +218,7 @@ export default function Pricing() {
                   </p>
                   <div className="flex items-baseline justify-center gap-2">
                     <span className={`text-5xl font-bold ${plan.highlighted ? 'text-white' : 'text-slate-900'}`}>
-                      ${plan.price}
+                      £{plan.price}
                     </span>
                     <span className={plan.highlighted ? 'text-sky-100' : 'text-slate-600'}>
                       /month
@@ -245,12 +244,13 @@ export default function Pricing() {
                 <button
                   onClick={() => handlePlanSelect(plan)}
                   disabled={isProcessing || subscriptionLoading || hasActiveSubscription}
-                  className={`w-full py-4 rounded-lg font-semibold transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed ${
+                  className={`mt-auto w-full py-4 rounded-lg font-semibold transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed ${
                     plan.highlighted
                       ? 'bg-white text-sky-600 hover:bg-slate-50 shadow-xl'
                       : 'bg-slate-900 text-white hover:bg-slate-800'
                   }`}
                 >
+
                   {isProcessing ? 'Processing...' : hasActiveSubscription ? 'Current Plan' : plan.cta}
                 </button>
               </div>

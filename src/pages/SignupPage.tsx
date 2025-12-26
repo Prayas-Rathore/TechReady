@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Video, Mail, Lock, User, ArrowRight, Loader2, Eye, EyeOff, CheckCircle2, X } from 'lucide-react';
 import { supabase } from '../services/SupabaseClient';
-import LogoImage from '../assets/images/LOGO_new.png';
+import LogoImage from '../assets/images/MockITLogo-2.png';
 
 export default function SignupPage() {
   const navigate = useNavigate();

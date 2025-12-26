@@ -4,7 +4,7 @@ import {
   Video, Mail, Lock, ArrowRight, Loader2, Eye, EyeOff, Sparkles, Zap, Shield
 } from 'lucide-react';
 import { supabase } from '../services/SupabaseClient';
-import LogoImage from '../assets/images/LOGO_new.png';
+import LogoImage from '../assets/images/MockITLogo-2.png';
 
 export default function LoginPage() {
   const navigate = useNavigate();
