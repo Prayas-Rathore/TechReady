@@ -83,7 +83,7 @@ export default function SignupPage() {
                      <img 
                 src={LogoImage} 
                 alt="MockITHub Logo" 
-                className="h-20 w-auto hover:opacity-90 transition-opacity" 
+                className="h-14 w-auto ml-8 hover:opacity-90 transition-opacity" 
               />
                   </Link>
                 </div>
@@ -285,7 +285,7 @@ export default function SignupPage() {
  <img 
                 src={LogoImage} 
                 alt="MockITHub Logo" 
-                className="h-20 w-auto hover:opacity-90 transition-opacity" 
+                className="h-16 w-auto ml-8 hover:opacity-90 transition-opacity" 
               />
               </Link>
 

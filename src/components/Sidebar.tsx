@@ -63,13 +63,13 @@ export default function Sidebar({ isMobileOpen, onClose }: SidebarProps) {
         ${isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
         <div className="p-6">
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center justify-between mb-8">
             <Link to="/user-dashboard" className="flex items-center mb-24">
               <img 
-                src={LogoImage} 
-                alt="MockITHub Logo" 
-                className="h-21 w-auto hover:opacity-90 transition-opacity" 
-              />
+                  src={LogoImage} 
+                  alt="MockITHub Logo" 
+                  className="h-14 w-auto ml-8 hover:opacity-90 transition-opacity" 
+                />
             </Link>
             <button
               onClick={onClose}
