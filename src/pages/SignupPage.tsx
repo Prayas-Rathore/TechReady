@@ -282,7 +282,7 @@ export default function SignupPage() {
           <div className="max-w-lg">
             <div className="mb-8 animate-fadeIn">
               <Link to="/" className="flex items-center gap-3 mb-12">
- <img 
+              <img 
                 src={LogoImage} 
                 alt="MockITHub Logo" 
                 className="h-16 w-auto ml-8 hover:opacity-90 transition-opacity" 
