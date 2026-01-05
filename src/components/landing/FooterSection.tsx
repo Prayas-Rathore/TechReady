@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Video } from 'lucide-react';
+import LogoImage from '../../assets/images/MockITLogo-2.png';
 
 export default function FooterSection() {
   return (
@@ -8,8 +8,14 @@ export default function FooterSection() {
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <Video className="w-6 h-6 text-cyan-400" />
-              <span className="text-xl font-bold text-white">MockITHub</span>
+              <Link to="/" className="flex items-center gap-3 group">
+            <img 
+              src={LogoImage} 
+              alt="MockITHub Logo" 
+              className="h-10 -auto transition-transform group-hover:scale-105" 
+            />
+          </Link>
+              {/* <span className="text-xl font-bold text-white">MockITHub</span> */}
             </div>
             <p className="text-slate-400">
               AI-powered interview preparation platform helping you land your dream job.

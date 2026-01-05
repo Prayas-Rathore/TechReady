@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Video } from 'lucide-react';
+import LogoImage from '../assets/images/MockITLogo-2.png';
 
 interface PolicyLayoutProps {
   title: string;
@@ -13,10 +14,13 @@ export default function PolicyLayout({ title, lastUpdated, children }: PolicyLay
       <nav className="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-              <Video className="w-7 h-7 text-sky-600" />
-              <span className="text-xl font-bold text-slate-900">MockITHub</span>
-            </Link>
+            <Link to="/" className="flex items-center gap-3 group">
+            <img 
+              src={LogoImage} 
+              alt="MockITHub Logo" 
+              className="h-14 w-auto transition-transform group-hover:scale-105" 
+            />
+          </Link>
             <Link
               to="/"
               className="flex items-center gap-2 px-4 py-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-all"
