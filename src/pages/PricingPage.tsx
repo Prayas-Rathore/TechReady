@@ -9,7 +9,7 @@ import { supabase } from '../services/SupabaseClient';
 const plans = [
   {
     name: 'Free',
-    tier: 'basic',
+    tier: 'free',
     priceId: 'price_1SZV1iRoRT3gf2HBjXbwcGXf',
     price: '0',
     description: 'Perfect for getting started',
@@ -24,7 +24,7 @@ const plans = [
   {
     name: 'Basic',
     tier: 'basic',
-    priceId: 'price_1SZV1iRoRT3gf2HBjXbwcGXf',
+    priceId: 'price_1SibneRoRT3gf2HBCoG3WaGQ',
     price: '14.99',
     description: 'Most popular choice',
     features: [
@@ -39,7 +39,7 @@ const plans = [
   {
     name: 'Pro',
     tier: 'pro',
-    priceId: 'price_1SZUzjRoRT3gf2HBFWeafWaP',
+    priceId: 'price_1SibumRoRT3gf2HBMtmfw31f',
     price: '29.99',
     description: 'For serious candidates',
     features: [
@@ -243,15 +243,25 @@ export default function Pricing() {
 
                 <button
                   onClick={() => handlePlanSelect(plan)}
-                  disabled={isProcessing || subscriptionLoading || hasActiveSubscription}
+                  disabled={
+                    plan.tier === 'free' || // ✅ Always disable Free plan
+                    isProcessing || 
+                    subscriptionLoading || 
+                    hasActiveSubscription
+                  }
                   className={`mt-auto w-full py-4 rounded-lg font-semibold transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed ${
                     plan.highlighted
                       ? 'bg-white text-sky-600 hover:bg-slate-50 shadow-xl'
                       : 'bg-slate-900 text-white hover:bg-slate-800'
                   }`}
                 >
-
-                  {isProcessing ? 'Processing...' : hasActiveSubscription ? 'Current Plan' : plan.cta}
+                  {isProcessing 
+                    ? 'Processing...' 
+                    : plan.tier === 'free' 
+                      ? 'Subscribe Now' 
+                      : hasActiveSubscription 
+                        ? 'Current Plan' 
+                        : plan.cta}
                 </button>
               </div>
             );
