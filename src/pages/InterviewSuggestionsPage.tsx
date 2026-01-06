@@ -153,32 +153,32 @@ export default function InterviewSuggestionsPage() {
     }
   };
 
-  const exportResults = () => {
-    const exportData = {
-      session: {
-        id: session?.id,
-        completed_at: session?.completed_at,
-        job_description: session?.job_description_text
-      },
-      overall_score: overallScore,
-      responses: responses.map(r => ({
-        question_number: r.question_number,
-        question: r.question_text,
-        answer: r.transcription,
-        duration: r.audio_duration,
-        word_count: r.transcription.split(' ').length
-      }))
-    };
+  // const exportResults = () => {
+  //   const exportData = {
+  //     session: {
+  //       id: session?.id,
+  //       completed_at: session?.completed_at,
+  //       job_description: session?.job_description_text
+  //     },
+  //     overall_score: overallScore,
+  //     responses: responses.map(r => ({
+  //       question_number: r.question_number,
+  //       question: r.question_text,
+  //       answer: r.transcription,
+  //       duration: r.audio_duration,
+  //       word_count: r.transcription.split(' ').length
+  //     }))
+  //   };
 
-    const dataStr = JSON.stringify(exportData, null, 2);
-    const blob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `interview_${sessionId}_results.json`;
-    link.click();
-    URL.revokeObjectURL(url);
-  };
+  //   const dataStr = JSON.stringify(exportData, null, 2);
+  //   const blob = new Blob([dataStr], { type: 'application/json' });
+  //   const url = URL.createObjectURL(blob);
+  //   const link = document.createElement('a');
+  //   link.href = url;
+  //   link.download = `interview_${sessionId}_results.json`;
+  //   link.click();
+  //   URL.revokeObjectURL(url);
+  // };
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return 'text-green-600 bg-green-100 border-green-200';
@@ -231,13 +231,13 @@ export default function InterviewSuggestionsPage() {
                 </div>
               </div>
               
-              <button
+              {/* <button
                 onClick={exportResults}
                 className="flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur hover:bg-white/30 text-white rounded-lg transition-colors"
               >
                 <Download className="w-4 h-4" />
                 Export Results
-              </button>
+              </button> */}
             </div>
           </div>
 
