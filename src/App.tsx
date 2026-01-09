@@ -24,6 +24,7 @@ import CVAnalysisPage from './pages/CVAnalysisPage';
 import JDGeneratorPage from './pages/JDGeneratorPage';
 import CVDashboardLayout from './components/CVDashboardLayout';
 import { CoverLetterGenerator } from './pages/CoverLetterGenerator';
+import { CVEmailGenerator } from './components/CVEmailGenerator';
 // import PostRoadMap from './pages/PostRoadMap_old.tsx';
 import PostJobRoad from './pages/PostJobRoad.tsx';
 import RoadmapResultsPage from './pages/RoadmapResultsPage.tsx';
@@ -159,12 +160,21 @@ function App() {
                 {/* <Route path="cover-letter" element={<CoverLetterGenerator />} /> */}
               </Route>
 
-                            {/* ✅ Cover Letter - Standalone (No Sidebar) */}
+              {/* ✅ Cover Letter - Standalone (No Sidebar) */}
               <Route 
                 path="/cv-dashboard/cover-letter" 
                 element={
                   <PremiumPage allowedPlans={["basic", "starter", "pro"]}>
                     <CoverLetterGenerator />
+                  </PremiumPage>
+                } 
+              />
+              {/* ✅ Email Generator - Standalone (No Sidebar) */}
+              <Route 
+                path="/email-generator" 
+                element={
+                  <PremiumPage allowedPlans={["basic", "starter", "pro"]}>
+                    <CVEmailGenerator />
                   </PremiumPage>
                 } 
               />

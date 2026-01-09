@@ -26,7 +26,7 @@ export default function Sidebar({ isMobileOpen, onClose }: SidebarProps) {
     { icon: Video, label: 'Interview Toolkit', path: '/jobdescription', paidOnly: true }, // ✅ Only paid users
     { icon: Trophy, label: 'Interview Practice', path: '/ai_jobdescription', freeOnly: true }, // ✅ Only free users
     { icon: StickyNote, label: 'Cv Optimizer', path: '/cv-dashboard' },
-    { icon: MailMinus, label: 'Profiling', path: '/cv-dashboard/cover-letter' },
+    { icon: MailMinus, label: 'Profiling', path: '/email-generator' },
     { icon: Target, label: 'Interview Mindset', path: '/assessment'}, // ✅ Only paid users
     { icon: Users, label: 'Buddy Connector', path: '/buddy-connector'},
     { icon: MapPin, label: 'Post Job RoadMap', path: '/postroadmap', requiresPro: true },
