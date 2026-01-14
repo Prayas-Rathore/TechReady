@@ -134,9 +134,7 @@ function App() {
                   </PremiumPage>
                 } 
               />
-              
              
-
               <Route 
                 path="/cv-analyzer" 
                 element={

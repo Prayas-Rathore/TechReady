@@ -33,7 +33,7 @@ export default function TestimonialsSection() {
             Success Stories
           </h2>
           <p className="text-xl text-slate-400 max-w-2xl mx-auto">
-            Hear from candidates who transformed their careers with InterviewPro
+            Hear from candidates who transformed their careers with MockitHub
           </p>
         </div>
 

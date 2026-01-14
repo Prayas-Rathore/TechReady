@@ -55,7 +55,7 @@ export default function FAQSection() {
             Frequently Asked Questions
           </h2>
           <p className="text-xl text-slate-400 max-w-2xl mx-auto">
-            Everything you need to know about InterviewPro
+            Everything you need to know about MockitHub
           </p>
         </div>
 
