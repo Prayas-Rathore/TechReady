@@ -44,6 +44,15 @@ import LandingPage3 from './pages/LandingPage3.tsx';
 import InterviewPro from './pages/InterviewProPage.tsx';
 import { Toaster } from 'react-hot-toast';
 import ContactPage from './pages/ContactPage.tsx';
+import InterviewToolkitPage from './pages/InterviewTool/InterviewToolkitPage.tsx';
+import MockitHubHomePage from './pages/InterviewTool/MockitHubHomePage.tsx';
+import MockitHubTipsPage from './pages/InterviewTool/MockitHubTipsPage.tsx';
+import MockitHubStarPage from './pages/InterviewTool/MockitHubStarPage.tsx';
+import MockitHubScenariosPage from './pages/InterviewTool/MockitHubScenariosPage.tsx';
+import MockitHubEntryLevelPage from './pages/InterviewTool/MockitHubEntryLevelPage.tsx';
+import MockitHubMidLevelPage from './pages/InterviewTool/MockitHubMidLevelPage.tsx';
+import MockitHubSeniorLevelPage from './pages/InterviewTool/MockitHubSeniorLevelPage.tsx';
+import AIPreparationPage from './pages/InterviewTool/AIPreparationPage.tsx';
 
 function App() {
   return (
@@ -125,7 +134,15 @@ function App() {
                   </PremiumPage>
                 } 
               />
-
+              <Route path="/interview-toolkit" element={<InterviewToolkitPage />} />
+              <Route path="/interview-toolkit/home" element={<MockitHubHomePage />} />
+              <Route path="/interview-toolkit/tips" element={<MockitHubTipsPage />} />
+              <Route path="/interview-toolkit/star-framework" element={<MockitHubStarPage />} />
+              <Route path="/interview-toolkit/scenarios" element={<MockitHubScenariosPage />} />
+              <Route path="/interview-toolkit/entry-level" element={<MockitHubEntryLevelPage />} />
+              <Route path="/interview-toolkit/mid-level" element={<MockitHubMidLevelPage />} />
+              <Route path="/interview-toolkit/senior-level" element={<MockitHubSeniorLevelPage />} />
+              <Route path="/interview-toolkit/ai-preparation" element={<AIPreparationPage />} />
               <Route 
                 path="/jobdescription" 
                 element={

@@ -23,7 +23,7 @@ export default function Sidebar({ isMobileOpen, onClose }: SidebarProps) {
 
   const menuItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/user-dashboard' },
-    { icon: Video, label: 'Interview Toolkit', path: '/jobdescription', paidOnly: true }, // ✅ Only paid users
+    { icon: Video, label: 'Interview Toolkit', path: '/interview-toolkit', paidOnly: true }, // ✅ Only paid users
     { icon: Trophy, label: 'Interview Practice', path: '/ai_jobdescription', freeOnly: true }, // ✅ Only free users
     { icon: StickyNote, label: 'Cv Optimizer', path: '/cv-dashboard' },
     { icon: MailMinus, label: 'Profiling', path: '/email-generator' },
