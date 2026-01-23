@@ -25,10 +25,10 @@ interface GenerateEmailResponse {
 const OUTPUT_TYPE_OPTIONS = [
   {
     value: 'role_fit_summary',
-    label: 'Role-Fit Summary',
+    label: 'Cover Letter',
     icon: FileText,
-    description: 'A recruiter-facing summary of your profile alignment',
-    requiresInput: false
+    description: 'Professional cover letter showcasing your fit, story, and enthusiasm',
+    requiresInput: true
   },
   {
     value: 'application_email',

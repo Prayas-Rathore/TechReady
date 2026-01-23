@@ -83,16 +83,52 @@ function buildPrompt(request: GenerateEmailRequest, cvHighlights: string): strin
   const baseContext = `CV Highlights:\n${cvHighlights}\n\n`;
   
   const prompts = {
-    role_fit_summary: `${baseContext}Generate a 1-paragraph recruiter-facing role-fit summary (80-100 words).
+    role_fit_summary: `${baseContext}Generate a professional Cover Letter for the ${roleTitle || '[Role]'} position at ${companyName || '[Company]'}.
 
-Format: "Based on your background in X and hands-on experience with Y, your profile aligns well with roles requiring Z. Your strengths include A and B${roleTitle ? ', while developing C could further strengthen your candidacy for ' + roleTitle : ''}."
+CORE PURPOSES TO ADDRESS:
+1. Personalization: Show research about ${companyName || 'the company'} and ${roleTitle || 'the role'}
+2. Storytelling: Explain WHY applying and HOW experiences from CV align
+3. Context: Address any career transitions or unique aspects with positive spin
+4. Soft Skills Showcase: Demonstrate communication, enthusiasm, and professionalism
+5. Call to Action: End with confident request for interview
 
-Rules:
-- Only use information from CV highlights above
-- Be specific about skills and experience
-- Professional but conversational tone
-- NO generic statements or assumptions
-- Mention ${roleTitle || 'relevant roles'} naturally`,
+FORMAT (3-4 paragraphs, 250-350 words):
+
+Dear Hiring Manager,
+
+[Opening Paragraph - Personalization & Hook]
+- State the position and company with enthusiasm
+- Show you've researched ${companyName || 'the company'} (mention something specific if possible from general knowledge)
+- 2-3 sentences max
+
+[Body Paragraph 1 - Storytelling & Experience Alignment]
+- Draw from CV highlights to tell WHY this role excites you
+- Connect 2-3 specific experiences/skills from CV to role requirements
+- Show how your background uniquely positions you for THIS role
+- 3-4 sentences
+
+[Body Paragraph 2 - Soft Skills & Value Proposition]
+- Highlight soft skills demonstrated in CV (leadership, problem-solving, collaboration)
+- Explain what unique value you bring beyond technical skills
+- Address any transitions or context positively
+- 3-4 sentences
+
+[Closing Paragraph - Call to Action]
+- Express strong interest and confidence
+- Request an interview/conversation
+- Professional sign-off with candidate name
+- 2-3 sentences
+
+${candidateName ? `Sign as: ${candidateName}` : 'Sign as: [Your Name]'}
+
+RULES:
+- Use ONLY information from CV highlights above
+- Be authentic, not generic or overly formal
+- Show genuine enthusiasm
+- Be specific about experiences, not vague claims
+- Professional but personable tone
+- NO fabricated skills or experiences
+- Keep it concise but impactful`,
 
     application_email: `${baseContext}Generate a professional application email.
 
@@ -230,14 +266,14 @@ serve(async (req) => {
         messages: [
           {
             role: 'system',
-            content: 'You are a professional career advisor. Generate content ONLY from the provided CV information. Never fabricate or assume information not in the CV. Be concise and professional.'
+            content: 'You are a professional career advisor and cover letter expert. Generate content ONLY from the provided CV information. Never fabricate or assume information not in the CV. Be authentic, specific, and professional. Show genuine enthusiasm while maintaining professionalism.'
           },
           {
             role: 'user',
             content: prompt
           }
         ],
-        max_tokens: 300,
+        max_tokens: 500, // Increased for cover letter
         temperature: 0.7,
       }),
     });
