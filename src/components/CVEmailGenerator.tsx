@@ -162,7 +162,7 @@ export const CVEmailGenerator: React.FC = () => {
     }
   };
 
-  // Generate content
+  // Generate Content
   const handleGenerate = async () => {
     if (!cvText) {
       toast.error('Please upload your CV first');
