@@ -92,7 +92,7 @@ export default function InterviewToolkitPage() {
             </div>
 
             <button
-              onClick={() => navigate('/interview-toolkit/ai-preparation')}
+              onClick={() => navigate('/jobdescription')}
               className="w-full bg-white rounded-2xl shadow-sm border border-slate-200 px-6 py-5 hover:shadow-md hover:border-sky-300 transition-all group"
             >
               <div className="flex items-center justify-between">
