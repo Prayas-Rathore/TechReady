@@ -79,7 +79,7 @@ function App() {
             <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
             <Route path="/contact" element={<ContactPage />} />
 
-            {/* ========================================
+            {/* =======================================
                 PROTECTED ROUTES (Authentication required)
             ======================================== */}
             <Route element={<ProtectedRoute />}>
