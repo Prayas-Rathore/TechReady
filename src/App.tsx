@@ -102,7 +102,7 @@ function App() {
                 }
               />
 
-              {/* ✅ ANY PAID PLAN (Basic, Starter, Pro) */}
+              {/* ✅ ANY PAID PLAN (Basic, Pro) */}
               <Route 
                 path="/assessment" 
                 element={
