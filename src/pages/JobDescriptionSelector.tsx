@@ -1,19 +1,37 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, Loader2, FileText, ArrowLeft } from 'lucide-react';
+import { Sparkles, Loader2, FileText, ArrowLeft, Target, BarChart3 } from 'lucide-react';
 import { predefinedJobDescriptions } from '../data/JobDescription';
 import { supabase } from '../services/SupabaseClient';
+
+type QuestionType = 'behavioral' | 'analytical' | 'technical' | 'mixed';
+type DifficultyLevel = 'basic' | 'intermediate' | 'advanced';
 
 export default function JobDescriptionSelector() {
   const navigate = useNavigate();
   const [selectedJob, setSelectedJob] = useState<string>('');
   const [customDescription, setCustomDescription] = useState<string>('');
+  const [questionType, setQuestionType] = useState<QuestionType>('mixed');
+  const [difficultyLevel, setDifficultyLevel] = useState<DifficultyLevel>('intermediate');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const isCustom = selectedJob === 'custom';
   const maxChars = 5000;
   const remainingChars = maxChars - customDescription.length;
+
+  const questionTypes = [
+    { value: 'behavioral', label: 'Behavioral', description: 'Situational & soft skills' },
+    { value: 'analytical', label: 'Analytical', description: 'Problem-solving & logic' },
+    { value: 'technical', label: 'Technical', description: 'Role-specific skills' },
+    { value: 'mixed', label: 'Mix of All', description: 'Balanced variety' }
+  ];
+
+  const difficultyLevels = [
+    { value: 'basic', label: 'Basic', description: 'Entry-level questions' },
+    { value: 'intermediate', label: 'Intermediate', description: 'Mid-level complexity' },
+    { value: 'advanced', label: 'Advanced', description: 'Expert-level challenges' }
+  ];
 
   const handleJobSelect = (jobId: string) => {
     setSelectedJob(jobId);
@@ -29,51 +47,59 @@ export default function JobDescriptionSelector() {
   };
 
   const generateQuestions = async () => {
-  if (!customDescription.trim()) {
-    setError('Please enter or select a job description');
-    return;
-  }
-
-  setLoading(true);
-  setError('');
-
-  try {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      setError('You must be logged in');
-      setLoading(false);
+    if (!customDescription.trim()) {
+      setError('Please enter or select a job description');
       return;
     }
 
-    // Call Edge Function
-    const { data: questionsData, error: questionsError } = await supabase.functions.invoke(
-      'generate-interview-questions',
-      { body: { jobDescription: customDescription } }
-    );
+    setLoading(true);
+    setError('');
 
-    if (questionsError) throw questionsError;
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        setError('You must be logged in');
+        setLoading(false);
+        return;
+      }
 
-    // Save to database
-    const { data: session, error: sessionError } = await supabase
-      .from('interview_sessions')
-      .insert({
-        user_id: user.id,
-        job_description_text: customDescription,
-        questions: questionsData.questions,
-        status: 'pending'
-      })
-      .select()
-      .single();
+      // Call Edge Function with additional parameters
+      const { data: questionsData, error: questionsError } = await supabase.functions.invoke(
+        'generate-interview-questions',
+        { 
+          body: { 
+            jobDescription: customDescription,
+            questionType,
+            difficultyLevel
+          } 
+        }
+      );
 
-    if (sessionError) throw sessionError;
+      if (questionsError) throw questionsError;
 
-    navigate(`/interview/${session.id}`);
-  } catch (err: any) {
-    setError(err.message || 'Failed to generate questions');
-  } finally {
-    setLoading(false);
-  }
-};
+      // Save to database
+      const { data: session, error: sessionError } = await supabase
+        .from('interview_sessions')
+        .insert({
+          user_id: user.id,
+          job_description_text: customDescription,
+          questions: questionsData.questions,
+          question_type: questionType,
+          difficulty_level: difficultyLevel,
+          status: 'pending'
+        })
+        .select()
+        .single();
+
+      if (sessionError) throw sessionError;
+
+      navigate(`/interview/${session.id}`);
+    } catch (err: any) {
+      setError(err.message || 'Failed to generate questions');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-sky-50 py-12 px-4">
@@ -85,6 +111,7 @@ export default function JobDescriptionSelector() {
           <ArrowLeft className="w-5 h-5" />
           <span>Back</span>
         </button>
+
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-4">
             <Sparkles className="w-4 h-4" />
@@ -99,6 +126,7 @@ export default function JobDescriptionSelector() {
         </div>
 
         <div className="bg-white rounded-2xl shadow-lg p-8 mb-6">
+          {/* Job Role Selection */}
           <div className="flex items-center gap-2 mb-6">
             <FileText className="w-6 h-6 text-blue-600" />
             <h2 className="text-xl font-bold text-slate-900">Choose Your Role</h2>
@@ -130,6 +158,7 @@ export default function JobDescriptionSelector() {
             ))}
           </div>
 
+          {/* Job Description Textarea */}
           <div className="mb-6">
             <label className="block text-sm font-semibold text-slate-700 mb-2">
               {isCustom ? 'Paste your job description here' : 'Job Description'}
@@ -150,6 +179,71 @@ export default function JobDescriptionSelector() {
                   ✓ Pre-defined description loaded
                 </span>
               )}
+            </div>
+          </div>
+
+          {/* Question Type and Difficulty Selection */}
+          <div className="grid md:grid-cols-2 gap-6 mb-6">
+            {/* Question Type Dropdown */}
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <Target className="w-5 h-5 text-purple-600" />
+                <label className="block text-sm font-semibold text-slate-700">
+                  Question Type
+                </label>
+              </div>
+              <div className="relative">
+                <select
+                  value={questionType}
+                  onChange={(e) => setQuestionType(e.target.value as QuestionType)}
+                  className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-purple-500 focus:outline-none text-slate-700 bg-white appearance-none cursor-pointer"
+                >
+                  {questionTypes.map(type => (
+                    <option key={type.value} value={type.value}>
+                      {type.label} - {type.description}
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                  <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+              <p className="text-xs text-slate-500 mt-2">
+                {questionTypes.find(t => t.value === questionType)?.description}
+              </p>
+            </div>
+
+            {/* Difficulty Level Dropdown */}
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <BarChart3 className="w-5 h-5 text-orange-600" />
+                <label className="block text-sm font-semibold text-slate-700">
+                  Difficulty Level
+                </label>
+              </div>
+              <div className="relative">
+                <select
+                  value={difficultyLevel}
+                  onChange={(e) => setDifficultyLevel(e.target.value as DifficultyLevel)}
+                  className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-orange-500 focus:outline-none text-slate-700 bg-white appearance-none cursor-pointer"
+                >
+                  {difficultyLevels.map(level => (
+                    <option key={level.value} value={level.value}>
+                      {level.label} - {level.description}
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                  <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+              <p className="text-xs text-slate-500 mt-2">
+                {difficultyLevels.find(l => l.value === difficultyLevel)?.description}
+              </p>
             </div>
           </div>
 
@@ -178,7 +272,7 @@ export default function JobDescriptionSelector() {
           </button>
 
           <p className="text-center text-xs text-slate-500 mt-4">
-            AI will generate 7 personalized interview questions based on your job description
+            AI will generate 7 personalized {questionType} questions at {difficultyLevel} level
           </p>
         </div>
       </div>

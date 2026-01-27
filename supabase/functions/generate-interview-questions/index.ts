@@ -14,7 +14,68 @@ serve(async (req: Request) => {
   }
 
   try {
-    const { jobDescription } = await req.json()
+    const { jobDescription, questionType = 'mixed', difficultyLevel = 'intermediate' } = await req.json()
+
+    // Build question type instructions
+    const typeInstructions = {
+      behavioral: `Focus on behavioral and situational questions that assess soft skills, past experiences, teamwork, conflict resolution, and how candidates handle various workplace scenarios.
+      
+      IMPORTANT: The FIRST question MUST be a self-introduction question such as:
+      - "Tell me about yourself"
+      - "Can you introduce yourself and walk me through your background?"
+      - "Tell me about your professional journey"
+      - "Walk me through your resume"
+      
+      The remaining 6 questions should cover behavioral topics like teamwork, conflict resolution, leadership, problem-solving situations, and past experiences.`,
+      
+      analytical: 'Focus on analytical and problem-solving questions that test logical thinking, data interpretation, decision-making processes, and analytical reasoning skills.',
+      
+      technical: 'Focus on technical questions specific to the role that test hard skills, tools, technologies, methodologies, coding abilities, and domain expertise.',
+      
+      mixed: `Create a balanced mix that comprehensively assesses the candidate:
+      
+      IMPORTANT: The FIRST question MUST be a self-introduction question such as:
+      - "Tell me about yourself"
+      - "Can you introduce yourself and walk me through your background?"
+      
+      Then include:
+      - 2-3 behavioral questions (teamwork, conflict, past experiences)
+      - 2 analytical questions (problem-solving, logical thinking)
+      - 2-3 technical questions (role-specific skills and knowledge)`
+    };
+
+    // Build difficulty instructions
+    const difficultyInstructions = {
+      basic: 'Keep questions at an entry-level difficulty suitable for candidates with 0-2 years of experience. Focus on fundamental concepts, basic scenarios, and foundational knowledge.',
+      intermediate: 'Create questions at a mid-level difficulty suitable for candidates with 2-5 years of experience. Include moderately complex scenarios and require practical application of knowledge.',
+      advanced: 'Design challenging questions suitable for senior candidates with 5+ years of experience. Include complex scenarios, strategic thinking, leadership situations, and deep technical knowledge.'
+    };
+
+    const systemPrompt = `You are an expert interview question generator. Generate exactly 7 interview questions based on the following criteria:
+
+Job Description: ${jobDescription}
+
+Question Type: ${questionType.toUpperCase()}
+${typeInstructions[questionType as keyof typeof typeInstructions]}
+
+Difficulty Level: ${difficultyLevel.toUpperCase()}
+${difficultyInstructions[difficultyLevel as keyof typeof difficultyInstructions]}
+
+Requirements:
+- Generate EXACTLY 7 questions
+${questionType === 'behavioral' || questionType === 'mixed' 
+  ? '- Question #1 MUST be a self-introduction question (e.g., "Tell me about yourself", "Walk me through your background", "Introduce yourself")'
+  : ''}
+- Each question should be clear, specific, and relevant to the job description
+- Match the specified question type and difficulty level
+- Questions should be open-ended and encourage detailed responses
+- Avoid yes/no questions
+- Make questions realistic and commonly asked in real interviews
+- Maintain proper ordering (introduction first for behavioral/mixed types)
+
+Return ONLY valid JSON — no markdown, no code fences, no explanations.
+
+Format: ["question 1", "question 2", "question 3", "question 4", "question 5", "question 6", "question 7"]`;
 
     const openaiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -27,16 +88,14 @@ serve(async (req: Request) => {
         messages: [
           {
             role: 'system',
-            content: `Generate exactly 7 interview questions based on this job description. 
-                      Return ONLY valid JSON — no markdown, no code fences, no explanations.
-
-                      Job Description: ${jobDescription}
-
-                      Format: ["question 1", "question 2", "question 3", "question 4", "question 5","question 6","question 7"]`
+            content: systemPrompt
           },
           {
             role: 'user',
-            content: `Create personalized interview questions for: ${JSON.stringify(jobDescription)}`
+            content: `Create ${questionType} interview questions at ${difficultyLevel} difficulty level for: ${JSON.stringify(jobDescription)}.
+            ${questionType === 'behavioral' || questionType === 'mixed' 
+              ? 'Remember: Start with a self-introduction question as the first question.' 
+              : ''}`
           }
         ],
         temperature: 0.7,
@@ -62,10 +121,47 @@ serve(async (req: Request) => {
         content = content.replace(/^```(json)?\n?/, "").replace(/```$/, "").trim()
       }
 
-      const questions = JSON.parse(content)
+      let questions = JSON.parse(content)
+      
+      // Validate we got exactly 7 questions
+      if (!Array.isArray(questions) || questions.length !== 7) {
+        console.error("Invalid number of questions generated:", questions.length)
+        return new Response(
+          JSON.stringify({
+            success: false,
+            error: "Failed to generate exactly 7 questions",
+          }),
+          { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 500 }
+        )
+      }
+
+      // Fallback: Ensure first question is introduction for behavioral/mixed types
+      if (questionType === 'behavioral' || questionType === 'mixed') {
+        const introKeywords = ['tell me about yourself', 'introduce yourself', 'walk me through', 'your background', 'your resume', 'professional journey'];
+        const firstQuestionLower = questions[0].toLowerCase();
+        const hasIntroQuestion = introKeywords.some(keyword => firstQuestionLower.includes(keyword));
+        
+        if (!hasIntroQuestion) {
+          // Insert a default introduction question at the start
+          const introQuestion = difficultyLevel === 'basic' 
+            ? "Tell me about yourself and your background."
+            : difficultyLevel === 'intermediate'
+            ? "Can you walk me through your professional background and what brings you to this role?"
+            : "Tell me about yourself, your professional journey, and what has shaped your career path so far.";
+          
+          questions = [introQuestion, ...questions.slice(0, 6)]; // Keep it to 7 questions
+        }
+      }
       
       return new Response(
-        JSON.stringify({ success: true, questions }), // Changed from 'roadmap' to 'questions'
+        JSON.stringify({ 
+          success: true, 
+          questions,
+          metadata: {
+            questionType,
+            difficultyLevel
+          }
+        }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       )
 

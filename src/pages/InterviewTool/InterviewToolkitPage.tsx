@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ChevronDown, ChevronRight, BookOpen, Sparkles, Target, MessageSquare, Users, Briefcase, Award } from 'lucide-react';
+import { ChevronDown, ChevronRight, BookOpen, Sparkles, Target, MessageSquare, Users, Briefcase, Award ,ArrowLeft } from 'lucide-react';
 
 const MOCKITHUB_OPTIONS = [
   { path: '/interview-toolkit/home', label: 'Home', icon: BookOpen },
@@ -30,6 +30,13 @@ export default function InterviewToolkitPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-sky-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="max-w-4xl mx-auto">
+          <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          <span>Back</span>
+        </button>
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-sky-500 to-blue-600 rounded-2xl mb-4">
               <Briefcase className="w-8 h-8 text-white" />
