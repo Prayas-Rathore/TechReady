@@ -10,7 +10,7 @@ export default function HeroSection() {
           <div className="space-y-8 relative z-10">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500/20 to-cyan-500/20 backdrop-blur-xl border border-purple-500/30 rounded-full animate-fadeIn">
               <Sparkles className="w-8 h-8 text-cyan-400" />
-              <span className="text-sm font-medium bg-gradient-to-r from-purple-500 to-cyan-500 bg-clip-text text-transparent">
+              <span className="text-sm font-medium bg-gradient-to-r from-purple-300 to-cyan-300 bg-clip-text text-transparent">
                 AI-Powered Interview Intelligence
               </span>
             </div>
