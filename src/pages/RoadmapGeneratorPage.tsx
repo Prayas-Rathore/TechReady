@@ -15,17 +15,22 @@ export default function RoadmapGeneratorPage() {
   const navigate = useNavigate();
   const { generateRoadmap, isGenerating, error } = useRoadmapGenerator();
   
-  // Get assessment data from navigation state
+  // ✅ Get EITHER roadmapData OR assessmentData
+  const passedRoadmap = location.state?.roadmapData;
   const assessmentData = location.state?.answers || location.state?.assessmentData;
 
-  // Check if assessment data exists on mount
+  // ✅ Check on mount - prioritize existing roadmap
   useEffect(() => {
-    if (!assessmentData) {
-      console.error('❌ No assessment data found');
+    if (passedRoadmap) {
+      console.log('✅ Existing roadmap found:', passedRoadmap);
+      setRoadmapData(passedRoadmap);
+      setPageState('success');
+    } else if (!assessmentData) {
+      console.error('❌ No roadmap or assessment data found');
       setPageState('error');
       setErrorMessage('No assessment data found. Please complete the assessment first.');
     }
-  }, [assessmentData]);
+  }, [passedRoadmap, assessmentData]);
 
   const handleGenerate = async () => {
     if (!assessmentData) {
@@ -37,15 +42,10 @@ export default function RoadmapGeneratorPage() {
     setPageState('loading');
 
     try {
-      console.log('🤖 Sending to GPT...');
-      console.log('Assessment Data:', assessmentData);
-      
-      // Send to Edge Function (index.ts) → GPT
+      console.log('🤖 Generating roadmap...');
       const roadmap = await generateRoadmap(assessmentData);
+      console.log('✅ Roadmap generated:', roadmap);
       
-      console.log('✅ Received from GPT:', roadmap);
-      
-      // Update with real GPT data
       setRoadmapData(roadmap);
       setPageState('success');
       
@@ -59,7 +59,7 @@ export default function RoadmapGeneratorPage() {
   const handleRegenerate = async () => {
     if (!assessmentData) {
       setPageState('error');
-      setErrorMessage('No assessment data available. Please complete the assessment first.');
+      setErrorMessage('No assessment data available. Cannot regenerate.');
       return;
     }
 
@@ -67,33 +67,25 @@ export default function RoadmapGeneratorPage() {
 
     try {
       console.log('🤖 Regenerating...');
-      console.log('Assessment Data:', assessmentData);
-
       const roadmap = await generateRoadmap(assessmentData);
-      
-      console.log('✅ Received from GPT:', roadmap);
+      console.log('✅ Regenerated:', roadmap);
       
       setRoadmapData(roadmap);
       setPageState('success');
       
     } catch (err: any) {
-      console.error('❌ Failed to generate roadmap:', err);
+      console.error('❌ Failed to regenerate:', err);
       setPageState('error');
-      setErrorMessage(err.message || 'Failed to generate roadmap. Please try again.');
+      setErrorMessage(err.message || 'Failed to regenerate roadmap. Please try again.');
     }
   };
 
-  // ✅ SUCCESS STATE
-if (pageState === 'success' && roadmapData) {
-  // ADD THIS DEBUG CODE:
-  console.log('🔍 roadmapData being passed to RoadmapDisplay:', roadmapData);
-  console.log('🔍 roadmapData keys:', Object.keys(roadmapData));
-  console.log('🔍 roadmapData.summary:', roadmapData.summary);
-  
-  return <RoadmapDisplay roadmap={roadmapData} onRegenerate={handleRegenerate} />;
-}
+  // ✅ SUCCESS STATE - Show roadmap
+  if (pageState === 'success' && roadmapData) {
+    return <RoadmapDisplay roadmap={roadmapData} onRegenerate={handleRegenerate} />;
+  }
 
-  // ✅ ERROR STATE - No Mock Data!
+  // ✅ ERROR STATE
   if (pageState === 'error') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-sky-50 flex items-center justify-center px-4">
@@ -156,43 +148,12 @@ if (pageState === 'success' && roadmapData) {
             <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
             <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
           </div>
-
-          <div className="mt-12 max-w-md mx-auto">
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <div className="space-y-4">
-                <div className="flex items-center gap-3 text-left">
-                  <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <div className="w-2 h-2 bg-green-600 rounded-full"></div>
-                  </div>
-                  <span className="text-sm text-slate-600">Analyzing your strengths...</span>
-                </div>
-                <div className="flex items-center gap-3 text-left">
-                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 animate-pulse">
-                    <Loader2 className="w-4 h-4 text-blue-600 animate-spin" />
-                  </div>
-                  <span className="text-sm text-slate-600">Identifying improvement areas...</span>
-                </div>
-                <div className="flex items-center gap-3 text-left opacity-50">
-                  <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <div className="w-2 h-2 bg-slate-400 rounded-full"></div>
-                  </div>
-                  <span className="text-sm text-slate-600">Building learning timeline...</span>
-                </div>
-                <div className="flex items-center gap-3 text-left opacity-50">
-                  <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <div className="w-2 h-2 bg-slate-400 rounded-full"></div>
-                  </div>
-                  <span className="text-sm text-slate-600">Curating resources...</span>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     );
   }
 
-  // ✅ INITIAL STATE
+  // ✅ INITIAL STATE - Generate button
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-sky-50 flex items-center justify-center px-4">
       <div className="max-w-4xl mx-auto text-center">
