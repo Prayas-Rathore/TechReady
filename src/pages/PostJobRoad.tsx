@@ -162,7 +162,7 @@ export default function PostJobRoadmap() {
       
       if (!user) {
         toast.error('Please log in to continue');
-        navigate('/login', { state: { from: '/post-job-roadmap' } });
+        navigate('/login', { state: { from: '/postroadmap' } });
         return;
       }
       
