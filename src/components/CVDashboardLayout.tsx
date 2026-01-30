@@ -9,8 +9,9 @@ export default function CVDashboardLayout() {
   const menuItems = [
     { icon: ArrowBigLeftIcon, label: 'Back', path: '/user-dashboard' },
     { icon: Home, label: 'Home', path: '/cv-dashboard' },
-    { icon: FileText, label: 'CV Analysis', path: '/cv-dashboard/analysis' },
+    { icon: FileText, label: 'CV Generator', path: '/cv-dashboard/ats-optimized' },
     { icon: Briefcase, label: 'JD to CV Generator', path: '/cv-dashboard/jd-generator' },
+    { icon: FileText, label: 'CV Analysis', path: '/cv-dashboard/analysis' },
     // { icon: MailMinus, label: 'Cover Letter', path: '/cv-dashboard/cover-letter' }
   ];
 
