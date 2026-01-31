@@ -29,6 +29,7 @@ export default function Sidebar({ isMobileOpen, onClose }: SidebarProps) {
     { icon: MailMinus, label: 'Profiling', path: '/email-generator' },
     { icon: Target, label: 'Interview Mindset', path: '/assessment'}, // ✅ Only paid users
     { icon: Users, label: 'Buddy Connector', path: '/buddy-connector'},
+    { icon: BookOpen, label: 'Job Search', path: '/jobs' },
     { icon: MapPin, label: 'Post Job RoadMap', path: '/postroadmap', requiresPro: true },
   ];
 

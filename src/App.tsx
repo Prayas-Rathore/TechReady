@@ -54,6 +54,7 @@ import MockitHubEntryLevelPage from './pages/InterviewTool/MockitHubEntryLevelPa
 import MockitHubMidLevelPage from './pages/InterviewTool/MockitHubMidLevelPage.tsx';
 import MockitHubSeniorLevelPage from './pages/InterviewTool/MockitHubSeniorLevelPage.tsx';
 import AIPreparationPage from './pages/InterviewTool/AIPreparationPage.tsx';
+import { JobSearchPage } from './pages/JobSearchPage.tsx';
 
 function App() {
   return (
@@ -204,6 +205,16 @@ function App() {
                   </PremiumPage>
                 } 
               />
+              <Route 
+                path="/jobs" 
+                element={
+                  <PremiumPage allowedPlans={["basic", "starter", "pro"]}>
+                    <JobSearchPage />
+                  </PremiumPage>
+                } 
+              />
+
+            
 
               {/* ✅ PRO PLAN ONLY */}
               <Route 
