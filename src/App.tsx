@@ -21,6 +21,7 @@ import InterviewSuggestionsPage from './pages/InterviewSuggestionsPage';
 import CVAnalyzerPage from './pages/CVAnalyzerPage';
 import CVDashboardHome from './pages/CVDashboardHome';
 import CVAnalysisPage from './pages/CVAnalysisPage';
+import CVATSOptimized from './pages/CVATSOptimized';
 import JDGeneratorPage from './pages/JDGeneratorPage';
 import CVDashboardLayout from './components/CVDashboardLayout';
 import { CoverLetterGenerator } from './pages/CoverLetterGenerator';
@@ -171,6 +172,7 @@ function App() {
               >
                 <Route index element={<CVDashboardHome />} />
                 <Route path="analysis" element={<CVAnalysisPage />} />
+                <Route path="ats-optimized" element={<CVATSOptimized />} />
                 <Route path="jd-generator" element={<JDGeneratorPage />} />
                 {/* <Route path="cover-letter" element={<CoverLetterGenerator />} /> */}
               </Route>
