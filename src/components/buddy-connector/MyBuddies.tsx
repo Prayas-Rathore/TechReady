@@ -1,208 +1,210 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { BuddyConnection } from '../../types/buddy.types';
 import { fetchMyBuddies, removeConnection } from '../../services/buddy/buddyService';
-import toast from 'react-hot-toast';
+import { BuddyConnection } from '../../types/buddy.types';
+import { Trash2, MessageCircle } from 'lucide-react';
+import { toast } from 'react-hot-toast';
+import { OnlineStatusDot } from '../buddy-connector/OnlineStatusDot';
+import { CallButton } from '../buddy-connector/CallButton';
+import { supabase } from '../../services/SupabaseClient';
 
-export const MyBuddies: React.FC = () => {
-  const [buddies, setBuddies] = useState<BuddyConnection[]>([]);
+interface BuddyWithPresence extends BuddyConnection {
+  isOnline: boolean;
+}
+
+interface MyBuddiesProps {
+  onCallInitiated: (buddyId: string, buddyName: string) => void;
+}
+
+export const MyBuddies: React.FC<MyBuddiesProps> = ({ onCallInitiated }) => {
+  const [buddies, setBuddies] = useState<BuddyWithPresence[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
-  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setOpenMenuId(null);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   useEffect(() => {
     if (user) {
       loadBuddies();
+      subscribeToPresenceChanges();
     }
   }, [user]);
 
   const loadBuddies = async () => {
     if (!user) return;
-
-    setLoading(true);
+    
     try {
-      const data = await fetchMyBuddies(user.id);
-      setBuddies(data);
+      setLoading(true);
+      const buddyConnections = await fetchMyBuddies(user.id);
+      
+      // Get online status for all buddies
+      const buddyIds = buddyConnections.map(b => b.buddy.id);
+      const { data: presenceData } = await supabase
+        .from('user_presence')
+        .select('user_id, is_online, last_seen')
+        .in('user_id', buddyIds);
+
+      const presenceMap = new Map(
+        presenceData?.map(p => [p.user_id, p.is_online]) || []
+      );
+
+      const buddiesWithPresence = buddyConnections.map(buddy => ({
+        ...buddy,
+        isOnline: presenceMap.get(buddy.buddy.id) || false
+      }));
+
+      setBuddies(buddiesWithPresence);
     } catch (error) {
-      console.error('Error fetching buddies:', error);
+      console.error('Error loading buddies:', error);
       toast.error('Failed to load buddies');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleRemoveConnection = async (requestId: string) => {
+  const subscribeToPresenceChanges = () => {
+    const channel = supabase
+      .channel('presence-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'user_presence'
+        },
+        (payload) => {
+          setBuddies(prev => prev.map(buddy => 
+            buddy.buddy.id === payload.new.user_id
+              ? { ...buddy, isOnline: payload.new.is_online }
+              : buddy
+          ));
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  };
+
+  const handleRemove = async (requestId: string) => {
+    if (!confirm('Are you sure you want to remove this buddy?')) return;
+    
     try {
       await removeConnection(requestId);
-      setBuddies(prev => prev.filter(b => b.request_id !== requestId));
-      toast.success('Connection removed');
-      setDeleteConfirm(null);
+      toast.success('Buddy removed');
+      loadBuddies();
     } catch (error) {
-      console.error('Error removing connection:', error);
-      toast.error('Failed to remove connection');
+      console.error('Error removing buddy:', error);
+      toast.error('Failed to remove buddy');
     }
   };
 
-  const filteredBuddies = buddies.filter(connection => {
-    const matchesSearch = searchQuery === '' ||
-      connection.buddy.sudo_name?.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesSearch;
-  });
-
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-[300px]">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500" />
+      <div className="flex justify-center items-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" />
       </div>
     );
   }
 
+  if (buddies.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <MessageCircle size={64} className="mx-auto text-gray-400 mb-4" />
+        <p className="text-gray-600 text-lg">No buddies yet</p>
+        <p className="text-gray-500 text-sm mt-2">
+          Connect with people from suggestions to start chatting
+        </p>
+      </div>
+    );
+  }
+
+  // Sort: online first, then by name
+  const sortedBuddies = [...buddies].sort((a, b) => {
+    if (a.isOnline && !b.isOnline) return -1;
+    if (!a.isOnline && b.isOnline) return 1;
+    return (a.buddy.sudo_name || '').localeCompare(b.buddy.sudo_name || '');
+  });
+
   return (
-    <div className="space-y-4 sm:space-y-6">
-      {/* Delete Confirmation Modal */}
-      {deleteConfirm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl p-6 max-w-sm w-full shadow-2xl">
-            <div className="text-center">
-              <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-2xl font-bold text-gray-800">
+          My Buddies ({buddies.length})
+        </h2>
+        <div className="flex items-center gap-2 text-sm text-gray-600">
+          <OnlineStatusDot isOnline={true} size="sm" />
+          <span>{buddies.filter(b => b.isOnline).length} online</span>
+        </div>
+      </div>
+
+      <div className="grid gap-4">
+        {sortedBuddies.map((buddy) => (
+          <div
+            key={buddy.request_id}
+            className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4 flex-1">
+                <div className="relative">
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                    {buddy.buddy.sudo_name?.[0]?.toUpperCase() || '?'}
+                  </div>
+                  <div className="absolute bottom-0 right-0">
+                    <OnlineStatusDot isOnline={buddy.isOnline} size="md" />
+                  </div>
+                </div>
+
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-gray-800">
+                    {buddy.buddy.sudo_name || 'Unknown'}
+                  </h3>
+                  <p className="text-sm text-gray-500">
+                    {buddy.isOnline ? (
+                      <span className="text-green-600 font-medium">● Online</span>
+                    ) : (
+                      <span className="text-gray-400">○ Offline</span>
+                    )}
+                  </p>
+                  {buddy.matching_domains && buddy.matching_domains.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {buddy.matching_domains.slice(0, 3).map((domain) => (
+                        <span
+                          key={domain.id}
+                          className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full"
+                        >
+                          {domain.icon} {domain.name}
+                        </span>
+                      ))}
+                      {buddy.matching_domains.length > 3 && (
+                        <span className="text-xs text-gray-500">
+                          +{buddy.matching_domains.length - 3} more
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
-              <h3 className="text-lg font-semibold text-slate-900 mb-2">Remove Connection</h3>
-              <p className="text-slate-600 mb-6">Are you sure you want to remove this connection? This action cannot be undone.</p>
-              <div className="flex gap-3">
+
+              <div className="flex items-center gap-2">
+                <CallButton
+                  buddyId={buddy.buddy.id}
+                  buddyName={buddy.buddy.sudo_name || 'Unknown'}
+                  isOnline={buddy.isOnline}
+                  onCallInitiated={onCallInitiated}
+                />
+                
                 <button
-                  onClick={() => setDeleteConfirm(null)}
-                  className="flex-1 py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-lg transition-colors"
+                  onClick={() => handleRemove(buddy.request_id)}
+                  className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
+                  title="Remove buddy"
                 >
-                  Cancel
-                </button>
-                <button
-                  onClick={() => handleRemoveConnection(deleteConfirm)}
-                  className="flex-1 py-2.5 px-4 bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg transition-colors"
-                >
-                  Remove
+                  <Trash2 size={18} />
                 </button>
               </div>
             </div>
           </div>
-        </div>
-      )}
-
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-xl sm:text-2xl font-bold text-slate-900">My Network</h2>
-          <p className="text-sm sm:text-base text-slate-600 mt-1">
-            {buddies.length} connection{buddies.length !== 1 ? 's' : ''}
-          </p>
-        </div>
+        ))}
       </div>
-
-      <div className="relative">
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search connections..."
-          className="w-full px-5 py-3 pl-12 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-        />
-        <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-      </div>
-
-      {buddies.length === 0 ? (
-        <div className="bg-slate-50 rounded-2xl p-8 sm:p-16 text-center">
-          <div className="text-5xl sm:text-6xl mb-4">👥</div>
-          <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-2">Build Your Network</h3>
-          <p className="text-sm sm:text-base text-slate-600">
-            Start connecting with people to build your study network!
-          </p>
-        </div>
-      ) : filteredBuddies.length === 0 ? (
-        <div className="bg-slate-50 rounded-2xl p-8 sm:p-12 text-center">
-          <div className="text-4xl sm:text-5xl mb-4">🔍</div>
-          <h3 className="text-base sm:text-lg font-bold text-slate-900 mb-2">No matches found</h3>
-          <p className="text-sm sm:text-base text-slate-600">
-            Try adjusting your search or filters
-          </p>
-        </div>
-      ) : (
-        <div className="space-y-3 md:space-y-0 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:gap-4">
-          {filteredBuddies.map((connection) => (
-            <div key={connection.request_id}>
-              {/* Mobile View */}
-              <div className="md:hidden bg-white rounded-lg border border-slate-200 p-3 hover:shadow-md transition-all">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-md flex-shrink-0">
-                    {(connection.buddy.sudo_name?.[0] || 'U').toUpperCase()}
-                  </div>
-
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-sm text-slate-900 truncate">
-                      @{connection.buddy.sudo_name}
-                    </h3>
-                    <p className="text-xs text-slate-500">Connected</p>
-                  </div>
-
-                  <button
-                    onClick={() => {
-                      setDeleteConfirm(connection.request_id);
-                      setOpenMenuId(null);
-                    }}
-                    className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-
-              {/* Desktop View */}
-              <div className="hidden md:block bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-lg transition-all">
-                <div className="h-20 bg-gradient-to-br from-blue-400 via-purple-400 to-pink-400" />
-
-                <div className="relative px-3 pb-3">
-                  <div className="absolute -top-10 left-1/2 -translate-x-1/2">
-                    <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-2xl shadow-xl border-4 border-white">
-                      {(connection.buddy.sudo_name?.[0] || 'U').toUpperCase()}
-                    </div>
-                  </div>
-
-                  <div className="pt-12 text-center">
-                    <h3 className="font-semibold text-base text-slate-900 truncate mb-1 px-2">
-                      {connection.buddy.sudo_name}
-                    </h3>
-                    <p className="text-xs text-slate-500 mb-3">Connected</p>
-
-                    <button
-                      onClick={() => setDeleteConfirm(connection.request_id)}
-                      className="w-full py-2 px-3 bg-red-500 hover:bg-red-600 text-white text-sm font-medium rounded-lg transition-colors"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 };

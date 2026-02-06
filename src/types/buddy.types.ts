@@ -67,3 +67,44 @@ export interface Post {
     email: string | null;
   };
 }
+// Add these to your existing buddy.types.ts file
+
+export interface UserPresence {
+  user_id: string;
+  is_online: boolean;
+  last_seen: string;
+  updated_at: string;
+}
+
+export interface CallMinutes {
+  id: string;
+  user_id: string;
+  minutes_used: number;
+  minutes_granted: number;
+  reset_date: string;
+  subscription_tier: string;
+}
+
+export interface CallLog {
+  id: string;
+  caller_id: string;
+  receiver_id: string;
+  room_name: string;
+  duration_seconds: number;
+  status: 'initiated' | 'ringing' | 'connected' | 'completed' | 'missed' | 'declined' | 'failed';
+  started_at: string;
+  ended_at: string | null;
+  created_at: string;
+}
+
+export interface CallSignal {
+  id: string;
+  from_user_id: string;
+  to_user_id: string;
+  from_user_name: string;
+  room_name: string;
+  call_token: string;
+  status: 'ringing' | 'accepted' | 'rejected' | 'missed' | 'cancelled';
+  created_at: string;
+  expires_at: string;
+}

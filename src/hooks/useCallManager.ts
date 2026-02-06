@@ -1,0 +1,204 @@
+import { useState, useEffect, useCallback } from 'react';
+import { Room, RoomEvent, Track } from 'livekit-client';
+import { supabase } from '../services/SupabaseClient';
+import { livekitService } from '../services/livekit/livekitService';
+import { toast } from 'react-hot-toast';
+import { useAuth } from '../context/AuthContext';
+
+interface IncomingCall {
+  id: string;
+  from_user_id: string;
+  from_user_name: string;
+  room_name: string;
+  call_token: string;
+  status: 'ringing' | 'accepted' | 'rejected' | 'missed' | 'cancelled';
+}
+
+interface ActiveCall {
+  room: Room;
+  buddyName: string;
+  callLogId: string;
+  startTime: Date;
+}
+
+export const useCallManager = () => {
+  const { user } = useAuth();
+  const [incomingCall, setIncomingCall] = useState<IncomingCall | null>(null);
+  const [activeCall, setActiveCall] = useState<ActiveCall | null>(null);
+  const [isInitiatingCall, setIsInitiatingCall] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+
+    // Subscribe to incoming calls
+    const channel = supabase
+      .channel('call-signals')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'call_signals',
+          filter: `to_user_id=eq.${user.id}`
+        },
+        (payload) => {
+          const call = payload.new as IncomingCall;
+          if (call.status === 'ringing') {
+            setIncomingCall(call);
+            // Play ringtone sound here
+            playRingtone();
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user]);
+
+  const playRingtone = () => {
+    // You can add actual ringtone audio here
+    // const audio = new Audio('/ringtone.mp3');
+    // audio.loop = true;
+    // audio.play();
+  };
+
+  const stopRingtone = () => {
+    // Stop ringtone audio
+  };
+
+  // Initiate outgoing call
+  const initiateCall = useCallback(async (buddyId: string, buddyName: string) => {
+    if (activeCall || isInitiatingCall) {
+      toast.error('Already in a call');
+      return;
+    }
+
+    setIsInitiatingCall(true);
+    try {
+      toast.loading('Calling...', { id: 'calling' });
+
+      // Initiate call and get token
+      const { roomName, token, callLogId } = await livekitService.initiateCall(buddyId, buddyName);
+
+      // Join room
+      const room = await livekitService.joinCall(token);
+
+      // Set up room event listeners
+      setupRoomListeners(room);
+
+      setActiveCall({
+        room,
+        buddyName,
+        callLogId,
+        startTime: new Date()
+      });
+
+      toast.success('Connected!', { id: 'calling' });
+    } catch (error: any) {
+      console.error('Failed to initiate call:', error);
+      toast.error(error.message || 'Failed to start call', { id: 'calling' });
+    } finally {
+      setIsInitiatingCall(false);
+    }
+  }, [activeCall, isInitiatingCall]);
+
+  // Answer incoming call
+  const answerCall = useCallback(async () => {
+    if (!incomingCall || activeCall) return;
+
+    try {
+      stopRingtone();
+      toast.loading('Connecting...', { id: 'answering' });
+
+      const { room } = await livekitService.answerCall(
+        incomingCall.id,
+        incomingCall.room_name
+      );
+
+      setupRoomListeners(room);
+
+      setActiveCall({
+        room,
+        buddyName: incomingCall.from_user_name,
+        callLogId: '', // Will be created by caller
+        startTime: new Date()
+      });
+
+      setIncomingCall(null);
+      toast.success('Call connected!', { id: 'answering' });
+    } catch (error: any) {
+      console.error('Failed to answer call:', error);
+      toast.error(error.message || 'Failed to answer call', { id: 'answering' });
+    }
+  }, [incomingCall, activeCall]);
+
+  // Decline incoming call
+  const declineCall = useCallback(async () => {
+    if (!incomingCall) return;
+
+    try {
+      stopRingtone();
+      await livekitService.declineCall(incomingCall.id);
+      setIncomingCall(null);
+      toast('Call declined');
+    } catch (error) {
+      console.error('Failed to decline call:', error);
+    }
+  }, [incomingCall]);
+
+  // End active call
+  const endCall = useCallback(async () => {
+    if (!activeCall) return;
+
+    try {
+      await livekitService.endCall(
+        activeCall.room,
+        activeCall.callLogId,
+        activeCall.startTime
+      );
+      
+      setActiveCall(null);
+      toast.success('Call ended');
+    } catch (error) {
+      console.error('Failed to end call:', error);
+      toast.error('Failed to end call properly');
+      setActiveCall(null);
+    }
+  }, [activeCall]);
+
+  // Setup room event listeners
+  const setupRoomListeners = (room: Room) => {
+    room.on(RoomEvent.Disconnected, () => {
+      setActiveCall(null);
+      toast('Call disconnected');
+    });
+
+    room.on(RoomEvent.ParticipantConnected, (participant) => {
+      console.log('Participant connected:', participant.identity);
+    });
+
+    room.on(RoomEvent.TrackSubscribed, (track, publication, participant) => {
+      if (track.kind === Track.Kind.Audio) {
+        const audioElement = track.attach();
+        audioElement.volume = 1.0;
+        document.body.appendChild(audioElement);
+      }
+    });
+
+    room.on(RoomEvent.TrackUnsubscribed, (track) => {
+      track.detach();
+    });
+  };
+
+  return {
+    incomingCall,
+    activeCall,
+    isInitiatingCall,
+    initiateCall,
+    answerCall,
+    declineCall,
+    endCall
+  };
+};

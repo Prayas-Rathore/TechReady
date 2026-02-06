@@ -9,14 +9,32 @@ import { SocialLayout } from './SocialLayout';
 import { SetupProfile } from './SetupProfile';
 import { fetchIncomingRequests } from '../../services/buddy/buddyService';
 import { supabase } from '../../services/SupabaseClient';
+import { usePresence } from '../../hooks/usePresence';
+import { useCallManager } from '../../hooks/useCallManager';
+import { IncomingCallModal } from '../buddy-connector/IncomingCallModal';
+import { ActiveCallUI } from '../buddy-connector/ActiveCallUI';
+import { CallMinutesWidget } from '../buddy-connector/CallMinutesWidget';
 
 type PageType = 'suggestions' | 'requests' | 'buddies' | 'post';
 
 export const BuddyConnectorPage: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState<PageType>('suggestions');
+  const [currentPage, setCurrentPage] = useState<PageType>('buddies'); // Default to buddies to see calls
   const [pendingRequestsCount, setPendingRequestsCount] = useState(0);
   const [hasSudoName, setHasSudoName] = useState<boolean | null>(null);
   const { user, loading, isAuthenticated } = useAuth();
+
+  // Initialize presence tracking
+  usePresence();
+
+  // Initialize call manager
+  const {
+    incomingCall,
+    activeCall,
+    initiateCall,
+    answerCall,
+    declineCall,
+    endCall
+  } = useCallManager();
 
   useEffect(() => {
     if (user) {
@@ -59,7 +77,6 @@ export const BuddyConnectorPage: React.FC = () => {
     return <Navigate to="/login" replace />;
   }
 
-  // Show setup if no sudo_name
   if (!hasSudoName) {
     return <SetupProfile />;
   }
@@ -71,7 +88,7 @@ export const BuddyConnectorPage: React.FC = () => {
       case 'requests':
         return <IncomingRequests onRequestUpdate={loadPendingRequestsCount} />;
       case 'buddies':
-        return <MyBuddies />;
+        return <MyBuddies onCallInitiated={initiateCall} />;
       case 'post':
         return <PostsPage />;
       default:
@@ -80,13 +97,38 @@ export const BuddyConnectorPage: React.FC = () => {
   };
 
   return (
-    <SocialLayout
-      currentPage={currentPage}
-      onNavigate={(page) => setCurrentPage(page as PageType)}
-      pendingRequestsCount={pendingRequestsCount}
-    >
-      {renderContent()}
-    </SocialLayout>
+    <>
+      <SocialLayout
+        currentPage={currentPage}
+        onNavigate={(page) => setCurrentPage(page as PageType)}
+        pendingRequestsCount={pendingRequestsCount}
+      >
+        {/* Call Minutes Widget - Show at top */}
+        <div className="mb-6">
+          <CallMinutesWidget />
+        </div>
+
+        {renderContent()}
+      </SocialLayout>
+
+      {/* Incoming Call Modal */}
+      {incomingCall && !activeCall && (
+        <IncomingCallModal
+          callerName={incomingCall.from_user_name}
+          onAccept={answerCall}
+          onDecline={declineCall}
+        />
+      )}
+
+      {/* Active Call UI */}
+      {activeCall && (
+        <ActiveCallUI
+          buddyName={activeCall.buddyName}
+          room={activeCall.room}
+          onEndCall={endCall}
+        />
+      )}
+    </>
   );
 };
 
