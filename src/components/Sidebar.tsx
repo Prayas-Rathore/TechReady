@@ -23,14 +23,14 @@ export default function Sidebar({ isMobileOpen, onClose }: SidebarProps) {
 
   const menuItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/user-dashboard' },
-    { icon: Video, label: 'Interview Toolkit', path: '/interview-toolkit', paidOnly: true }, // ✅ Only paid users
-    { icon: Trophy, label: 'Interview Practice', path: '/ai_jobdescription', freeOnly: true }, // ✅ Only free users
-    { icon: StickyNote, label: 'Cv Optimizer', path: '/cv-dashboard' },
-    { icon: MailMinus, label: 'Profiling', path: '/email-generator' },
-    { icon: Target, label: 'Interview Mindset', path: '/assessment'}, // ✅ Only paid users
-    { icon: Users, label: 'Buddy Connector', path: '/buddy-connector'},
+    { icon: Target, label: 'Interview Mindset Roadmap', path: '/assessment'}, // ✅ Only paid users
     { icon: BookOpen, label: 'Job Search', path: '/jobs' },
+    { icon: StickyNote, label: 'Cv Optimizer', path: '/cv-dashboard' },
+    { icon: MailMinus, label: 'AI Drafter', path: '/email-generator' },
+    { icon: Video, label: 'Interview Toolkit', path: '/interview-toolkit', paidOnly: true }, // ✅ Only paid users
+    { icon: Users, label: 'Buddy Connector', path: '/buddy-connector'},
     { icon: MapPin, label: 'Post Job RoadMap', path: '/postroadmap', requiresPro: true },
+    { icon: Trophy, label: 'Interview Practice', path: '/ai_jobdescription', freeOnly: true }, // ✅ Only free users
   ];
 
   const isActive = (path: string) => {

@@ -20,9 +20,9 @@ import InterviewSession from './pages/InterviewSession'
 import InterviewSuggestionsPage from './pages/InterviewSuggestionsPage';
 import CVAnalyzerPage from './pages/CVAnalyzerPage';
 import CVDashboardHome from './pages/CVDashboardHome';
-import CVAnalysisPage from './pages/CVAnalysisPage';
+// import CVAnalysisPage from './pages/CVAnalysisPage';
 import CVATSOptimized from './pages/CVATSOptimized';
-import JDGeneratorPage from './pages/JDGeneratorPage';
+// import JDGeneratorPage from './pages/JDGeneratorPage';
 import CVDashboardLayout from './components/CVDashboardLayout';
 import { CoverLetterGenerator } from './pages/CoverLetterGenerator';
 import { CVEmailGenerator } from './components/CVEmailGenerator';
@@ -55,6 +55,7 @@ import MockitHubMidLevelPage from './pages/InterviewTool/MockitHubMidLevelPage.t
 import MockitHubSeniorLevelPage from './pages/InterviewTool/MockitHubSeniorLevelPage.tsx';
 import AIPreparationPage from './pages/InterviewTool/AIPreparationPage.tsx';
 import { JobSearchPage } from './pages/JobSearchPage.tsx';
+import TestCallRunner from './TestCallRunner';
 
 function App() {
   return (
@@ -80,6 +81,7 @@ function App() {
             <Route path="/terms-of-service" element={<TermsOfServicePage />} />
             <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="/test-call" element={<TestCallRunner />} />
 
             {/* ======================================
                 PROTECTED ROUTES (Authentication required)
@@ -172,9 +174,9 @@ function App() {
                 }
               >
                 <Route index element={<CVDashboardHome />} />
-                <Route path="analysis" element={<CVAnalysisPage />} />
+                {/* <Route path="analysis" element={<CVAnalysisPage />} /> */}
                 <Route path="ats-optimized" element={<CVATSOptimized />} />
-                <Route path="jd-generator" element={<JDGeneratorPage />} />
+                {/* <Route path="jd-generator" element={<JDGeneratorPage />} /> */}
                 {/* <Route path="cover-letter" element={<CoverLetterGenerator />} /> */}
               </Route>
 
