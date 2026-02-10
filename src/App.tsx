@@ -27,7 +27,7 @@ import CVATSOptimized from './pages/CVATSOptimized';
 import CVDashboardLayout from './components/CVDashboardLayout';
 import { CoverLetterGenerator } from './pages/CoverLetterGenerator';
 import { CVEmailGenerator } from './components/CVEmailGenerator';
-import CVOptimizerPage from './pages/CVOptimizerPage.tsx';
+// import CVOptimizerPage from './pages/CVOptimizerPage.tsx';
 // import PostRoadMap from './pages/PostRoadMap_old.tsx';
 import PostJobRoad from './pages/PostJobRoad.tsx';
 import RoadmapResultsPage from './pages/RoadmapResultsPage.tsx';

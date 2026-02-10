@@ -7,10 +7,11 @@ const LIVEKIT_SECRET = import.meta.env.VITE_LIVEKIT_SECRET;
 
 // Generate JWT token client-side (for testing - move to backend for production)
 async function generateToken(roomName: string, identity: string, name: string): Promise<string> {
-  const { KJUR } = await import('jsrsasign');
+  const jsrsasign = await import('jsrsasign');
+  const KJUR = jsrsasign.KJUR;
   
   const now = Math.floor(Date.now() / 1000);
-  const exp = now + 3600; // 1 hour
+  const exp = now + 3600;
 
   const payload = {
     exp: exp,
@@ -28,7 +29,10 @@ async function generateToken(roomName: string, identity: string, name: string): 
   };
 
   const header = { alg: 'HS256', typ: 'JWT' };
-  return KJUR.jws.JWS.sign('HS256', JSON.stringify(header), JSON.stringify(payload), LIVEKIT_SECRET);
+  const sHeader = JSON.stringify(header);
+  const sPayload = JSON.stringify(payload);
+  
+  return KJUR.jws.JWS.sign('HS256', sHeader, sPayload, { utf8: String(LIVEKIT_SECRET) });
 }
 
 export interface CallInfo {
