@@ -104,7 +104,7 @@ export default function InterviewMindsetRoadmapPage() {
             <div className="flex items-start gap-3">
               <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
               <div>
-                <h4 className="font-semibold text-blue-900 mb-1">Important Note</h4>
+                <h4 className="font-semibold text-blue-900 mb-1">Important Note </h4>
                 <p className="text-sm text-blue-800">
                   This assessment can only be taken once to ensure your roadmap remains focused and personalized.
                   Take your time to answer thoughtfully.
