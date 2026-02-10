@@ -1,9 +1,9 @@
 import { Room, RoomEvent, Track, RemoteParticipant } from 'livekit-client';
 import { supabase } from '../SupabaseClient';
 
-const LIVEKIT_URL = import.meta.env.VITE_LIVEKIT_URL;
-const LIVEKIT_API_KEY = import.meta.env.VITE_LIVEKIT_API_KEY;
-const LIVEKIT_SECRET = import.meta.env.VITE_LIVEKIT_SECRET;
+const LIVEKIT_URL = import.meta.env.VITE_LIVEKIT_URL || 'ws://168.231.116.253:7880';
+const LIVEKIT_API_KEY = import.meta.env.VITE_LIVEKIT_API_KEY || 'devkey';
+const LIVEKIT_SECRET = import.meta.env.VITE_LIVEKIT_SECRET || 'devsecret123';
 
 // Generate JWT token client-side (for testing - move to backend for production)
 async function generateToken(roomName: string, identity: string, name: string): Promise<string> {
