@@ -1,7 +1,7 @@
 import { Room, RoomEvent, Track, RemoteParticipant } from 'livekit-client';
 import { supabase } from '../SupabaseClient';
 
-const LIVEKIT_URL = import.meta.env.VITE_LIVEKIT_URL || 'ws://168.231.116.253:7880';
+const LIVEKIT_URL = import.meta.env.VITE_LIVEKIT_URL || 'wss://calls.mockithub.ai';
 const LIVEKIT_API_KEY = import.meta.env.VITE_LIVEKIT_API_KEY || 'devkey';
 const LIVEKIT_SECRET = import.meta.env.VITE_LIVEKIT_SECRET || 'devsecret123';
 
