@@ -333,7 +333,7 @@ export default function PostJobRoadmap() {
               Your Post-Job Roadmap
             </h1>
             <p className="text-lg text-slate-600">
-              Help us create your personalized 90-day success plan
+              Follow your personalised daily roadmap, stay consistent, and track your progress.
             </p>
           </div>
 

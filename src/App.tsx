@@ -27,6 +27,7 @@ import CVATSOptimized from './pages/CVATSOptimized';
 import CVDashboardLayout from './components/CVDashboardLayout';
 import { CoverLetterGenerator } from './pages/CoverLetterGenerator';
 import { CVEmailGenerator } from './components/CVEmailGenerator';
+import CVOptimizerPage from './pages/CVOptimizerPage.tsx';
 // import PostRoadMap from './pages/PostRoadMap_old.tsx';
 import PostJobRoad from './pages/PostJobRoad.tsx';
 import RoadmapResultsPage from './pages/RoadmapResultsPage.tsx';
@@ -55,6 +56,7 @@ import MockitHubEntryLevelPage from './pages/InterviewTool/MockitHubEntryLevelPa
 import MockitHubMidLevelPage from './pages/InterviewTool/MockitHubMidLevelPage.tsx';
 import MockitHubSeniorLevelPage from './pages/InterviewTool/MockitHubSeniorLevelPage.tsx';
 import AIPreparationPage from './pages/InterviewTool/AIPreparationPage.tsx';
+import AIDrafterPage from './pages/AIDrafterPage.tsx';
 import { JobSearchPage } from './pages/JobSearchPage.tsx';
 // import TestCallRunner from './TestCallRunner';
 
@@ -206,6 +208,14 @@ function App() {
                 element={
                   <PremiumPage allowedPlans={["basic", "starter", "pro"]}>
                     <CVEmailGenerator />
+                  </PremiumPage>
+                } 
+              />
+              <Route 
+                path="/ai-drafter" 
+                element={
+                  <PremiumPage allowedPlans={["basic", "starter", "pro"]}>
+                    <AIDrafterPage />
                   </PremiumPage>
                 } 
               />
