@@ -56,7 +56,7 @@ import MockitHubMidLevelPage from './pages/InterviewTool/MockitHubMidLevelPage.t
 import MockitHubSeniorLevelPage from './pages/InterviewTool/MockitHubSeniorLevelPage.tsx';
 import AIPreparationPage from './pages/InterviewTool/AIPreparationPage.tsx';
 import { JobSearchPage } from './pages/JobSearchPage.tsx';
-import TestCallRunner from './TestCallRunner';
+// import TestCallRunner from './TestCallRunner';
 
 function App() {
   return (
@@ -82,7 +82,7 @@ function App() {
             <Route path="/terms-of-service" element={<TermsOfServicePage />} />
             <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
             <Route path="/contact" element={<ContactPage />} />
-            <Route path="/test-call" element={<TestCallRunner />} />
+            {/* <Route path="/test-call" element={<TestCallRunner />} /> */}
 
             {/* ======================================
                 PROTECTED ROUTES (Authentication required)
