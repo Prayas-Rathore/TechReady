@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 // import InterviewProPage from './pages/InterviewProPage';
 // import HireVuePage from './pages/HireVuePage';
 import AssessmentPage from './pages/AssessmentPage';
+import InterviewMindsetRoadmapPage from './pages/InterviewMindsetRoadmapPage.tsx';
 import TestConnectionPage from './pages/TestConnectionPage';
 import Login from './pages/LoginPage';
 import Signup from './pages/SignupPage';
@@ -115,6 +116,16 @@ function App() {
                   </PremiumPage>
                 } 
               />
+              {/* ✅ ANY PAID PLAN (Basic, Starter, Pro) */}
+              <Route 
+                path="/mindset-roadmap" 
+                element={
+                  <PremiumPage allowedPlans={["basic", "starter", "pro"]}>
+                    <InterviewMindsetRoadmapPage />
+                  </PremiumPage>
+                } 
+              />
+              
 
                <Route 
                 path="/interview/:sessionId" 

@@ -23,7 +23,7 @@ export default function Sidebar({ isMobileOpen, onClose }: SidebarProps) {
 
   const menuItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/user-dashboard' },
-    { icon: Target, label: 'Interview Mindset Roadmap', path: '/assessment'}, // ✅ Only paid users
+    { icon: Target, label: 'Interview Mindset Roadmap', path: '/mindset-roadmap'}, // ✅ Only paid users
     { icon: BookOpen, label: 'Job Search', path: '/jobs' },
     { icon: StickyNote, label: 'Cv Optimizer', path: '/cv-dashboard' },
     { icon: MailMinus, label: 'AI Drafter', path: '/email-generator' },
