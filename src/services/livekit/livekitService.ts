@@ -4,9 +4,8 @@ import { supabase } from '../SupabaseClient';
 
 const LIVEKIT_URL = import.meta.env.VITE_LIVEKIT_URL || 'wss://calls.mockithub.ai';
 const LIVEKIT_API_KEY = import.meta.env.VITE_LIVEKIT_API_KEY || 'devkey';
-const LIVEKIT_SECRET = import.meta.env.VITE_LIVEKIT_SECRET || 'devsecret123';
+const LIVEKIT_SECRET = import.meta.env.VITE_LIVEKIT_SECRET || 'SKj8Hf29KdL3mP4nQ5rT6vW7xY8zA9bC';
 
-// Generate JWT token
 async function generateToken(roomName: string, identity: string, name: string): Promise<string> {
   const jsrsasign = await import('jsrsasign');
   const KJUR = jsrsasign.KJUR;
@@ -43,12 +42,10 @@ export interface CallInfo {
 }
 
 export const livekitService = {
-  // Initiate a call
   async initiateCall(buddyId: string, _buddyName: string): Promise<CallInfo> {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('Not authenticated');
 
-    // Check if user has minutes available
     const { data: minutesInfo } = await supabase.rpc('check_call_minutes_available', {
       p_user_id: user.id
     });
@@ -58,11 +55,8 @@ export const livekitService = {
     }
 
     const roomName = `call-${Date.now()}`;
-    
-    // Generate token
     const token = await generateToken(roomName, user.id, user.email?.split('@')[0] || 'User');
 
-    // Create call log
     const { data: callLog, error: logError } = await supabase
       .from('call_logs')
       .insert({
@@ -77,14 +71,12 @@ export const livekitService = {
 
     if (logError) throw logError;
 
-    // Get user's profile for name
     const { data: profile } = await supabase
       .from('profiles')
       .select('sudo_name')
       .eq('id', user.id)
       .single();
 
-    // Send call signal to buddy
     await supabase.from('call_signals').insert({
       from_user_id: user.id,
       to_user_id: buddyId,
@@ -101,7 +93,6 @@ export const livekitService = {
     };
   },
 
-  // Join a call
   async joinCall(token: string): Promise<Room> {
     console.log('🔵 Joining call...');
     
@@ -128,8 +119,32 @@ export const livekitService = {
       console.log('✓ Connected to room');
 
       // Enable microphone
+      console.log('📢 Enabling microphone...');
       await room.localParticipant.setMicrophoneEnabled(true);
       console.log('✓ Microphone enabled');
+
+      // Wait for track to publish
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Verify microphone is publishing
+      const tracks = room.localParticipant.audioTrackPublications;
+      console.log('🎤 Audio tracks publishing:', tracks.size);
+      
+      tracks.forEach((pub) => {
+        console.log('Track:', {
+          kind: pub.kind,
+          muted: pub.isMuted,
+          source: pub.source
+        });
+      });
+
+      if (tracks.size === 0) {
+        console.error('❌ WARNING: No audio tracks publishing!');
+        await room.localParticipant.setMicrophoneEnabled(false);
+        await new Promise(resolve => setTimeout(resolve, 200));
+        await room.localParticipant.setMicrophoneEnabled(true);
+        console.log('🔄 Retried microphone enable');
+      }
 
       return room;
     } catch (error: any) {
@@ -138,27 +153,21 @@ export const livekitService = {
     }
   },
 
-  // Answer incoming call
   async answerCall(callSignalId: string, roomName: string): Promise<{ token: string; room: Room }> {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('Not authenticated');
 
-    // Update call signal status
     await supabase
       .from('call_signals')
       .update({ status: 'accepted' })
       .eq('id', callSignalId);
 
-    // Generate token for receiver
     const token = await generateToken(roomName, user.id, user.email?.split('@')[0] || 'User');
-
-    // Join room
     const room = await this.joinCall(token);
 
     return { token, room };
   },
 
-  // Decline call
   async declineCall(callSignalId: string): Promise<void> {
     await supabase
       .from('call_signals')
@@ -166,12 +175,10 @@ export const livekitService = {
       .eq('id', callSignalId);
   },
 
-  // End call
   async endCall(room: Room, callLogId: string, startTime: Date): Promise<void> {
     const endTime = new Date();
     const durationSeconds = Math.floor((endTime.getTime() - startTime.getTime()) / 1000);
     
-    // Update call log
     if (callLogId) {
       await supabase.from('call_logs').update({
         status: 'completed',
@@ -180,7 +187,6 @@ export const livekitService = {
       }).eq('id', callLogId);
     }
 
-    // Deduct minutes
     const { data: { user } } = await supabase.auth.getUser();
     if (user && durationSeconds > 0) {
       await supabase.rpc('deduct_call_minutes', {
@@ -189,11 +195,9 @@ export const livekitService = {
       });
     }
 
-    // Disconnect
     room.disconnect();
   },
 
-  // Get call minutes info
   async getCallMinutesInfo(): Promise<{ used: number; granted: number; remaining: number }> {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('Not authenticated');

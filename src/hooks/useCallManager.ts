@@ -104,35 +104,55 @@ export const useCallManager = () => {
     }
   }, [activeCall, isInitiatingCall]);
 
-  // Answer incoming call
-  const answerCall = useCallback(async () => {
-    if (!incomingCall || activeCall) return;
+// Answer incoming call
+const answerCall = useCallback(async () => {
+  if (!incomingCall || activeCall) return;
 
-    try {
-      stopRingtone();
-      toast.loading('Connecting...', { id: 'answering' });
+  try {
+    stopRingtone();
+    toast.loading('Connecting...', { id: 'answering' });
 
-      const { room } = await livekitService.answerCall(
-        incomingCall.id,
-        incomingCall.room_name
-      );
+    console.log('📞 Answering call...');
+    
+    const { room } = await livekitService.answerCall(
+      incomingCall.id,
+      incomingCall.room_name
+    );
 
-      setupRoomListeners(room);
+    console.log('✅ Room joined, setting up listeners...');
+    setupRoomListeners(room);
 
-      setActiveCall({
-        room,
-        buddyName: incomingCall.from_user_name,
-        callLogId: '', // Will be created by caller
-        startTime: new Date()
+    setActiveCall({
+      room,
+      buddyName: incomingCall.from_user_name,
+      callLogId: '',
+      startTime: new Date()
+    });
+
+    setIncomingCall(null);
+    
+    // Force play all audio elements after a delay
+    setTimeout(() => {
+      console.log('🔊 Forcing audio playback...');
+      document.querySelectorAll('audio').forEach(async (audio) => {
+        audio.muted = false;
+        audio.volume = 1.0;
+        try {
+          await audio.play();
+          console.log('✅ Audio playing');
+        } catch (e) {
+          console.warn('⚠️ Autoplay blocked, tap screen');
+        }
       });
+    }, 1000);
 
-      setIncomingCall(null);
-      toast.success('Call connected!', { id: 'answering' });
-    } catch (error: any) {
-      console.error('Failed to answer call:', error);
-      toast.error(error.message || 'Failed to answer call', { id: 'answering' });
-    }
-  }, [incomingCall, activeCall]);
+    toast.success('Call connected!', { id: 'answering' });
+    
+  } catch (error: any) {
+    console.error('Failed to answer call:', error);
+    toast.error(error.message || 'Failed to answer call', { id: 'answering' });
+  }
+}, [incomingCall, activeCall]);
 
   // Decline incoming call
   const declineCall = useCallback(async () => {
