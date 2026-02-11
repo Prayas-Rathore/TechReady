@@ -1,11 +1,12 @@
-import { Room, RoomEvent, Track, RemoteParticipant } from 'livekit-client';
+// src/services/livekit/livekitService.ts
+import { Room } from 'livekit-client';
 import { supabase } from '../SupabaseClient';
 
 const LIVEKIT_URL = import.meta.env.VITE_LIVEKIT_URL || 'wss://calls.mockithub.ai';
 const LIVEKIT_API_KEY = import.meta.env.VITE_LIVEKIT_API_KEY || 'devkey';
 const LIVEKIT_SECRET = import.meta.env.VITE_LIVEKIT_SECRET || 'devsecret123';
 
-// Generate JWT token client-side (for testing - move to backend for production)
+// Generate JWT token
 async function generateToken(roomName: string, identity: string, name: string): Promise<string> {
   const jsrsasign = await import('jsrsasign');
   const KJUR = jsrsasign.KJUR;
@@ -43,7 +44,7 @@ export interface CallInfo {
 
 export const livekitService = {
   // Initiate a call
-  async initiateCall(buddyId: string, buddyName: string): Promise<CallInfo> {
+  async initiateCall(buddyId: string, _buddyName: string): Promise<CallInfo> {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('Not authenticated');
 
@@ -102,19 +103,39 @@ export const livekitService = {
 
   // Join a call
   async joinCall(token: string): Promise<Room> {
-    const room = new Room({
-      adaptiveStream: true,
-      dynacast: true,
-    });
+    console.log('🔵 Joining call...');
+    
+    if (!LIVEKIT_URL) {
+      throw new Error('LiveKit URL not configured');
+    }
 
-    await room.connect(LIVEKIT_URL, token, {
-      autoSubscribe: true,
-    });
+    try {
+      const room = new Room({
+        adaptiveStream: true,
+        dynacast: true,
+        audioCaptureDefaults: {
+          autoGainControl: true,
+          echoCancellation: true,
+          noiseSuppression: true,
+        },
+      });
 
-    // Enable microphone only (audio call)
-    await room.localParticipant.setMicrophoneEnabled(true);
+      console.log('Connecting to:', LIVEKIT_URL);
+      await room.connect(LIVEKIT_URL, token, {
+        autoSubscribe: true,
+      });
 
-    return room;
+      console.log('✓ Connected to room');
+
+      // Enable microphone
+      await room.localParticipant.setMicrophoneEnabled(true);
+      console.log('✓ Microphone enabled');
+
+      return room;
+    } catch (error: any) {
+      console.error('❌ Join call failed:', error);
+      throw new Error('Failed to connect to call: ' + error.message);
+    }
   },
 
   // Answer incoming call
@@ -151,13 +172,15 @@ export const livekitService = {
     const durationSeconds = Math.floor((endTime.getTime() - startTime.getTime()) / 1000);
     
     // Update call log
-    await supabase.from('call_logs').update({
-      status: 'completed',
-      duration_seconds: durationSeconds,
-      ended_at: endTime.toISOString()
-    }).eq('id', callLogId);
+    if (callLogId) {
+      await supabase.from('call_logs').update({
+        status: 'completed',
+        duration_seconds: durationSeconds,
+        ended_at: endTime.toISOString()
+      }).eq('id', callLogId);
+    }
 
-    // Deduct minutes from both users
+    // Deduct minutes
     const { data: { user } } = await supabase.auth.getUser();
     if (user && durationSeconds > 0) {
       await supabase.rpc('deduct_call_minutes', {

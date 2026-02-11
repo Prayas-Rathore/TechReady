@@ -168,29 +168,45 @@ export const useCallManager = () => {
     }
   }, [activeCall]);
 
-  // Setup room event listeners
-  const setupRoomListeners = (room: Room) => {
-    room.on(RoomEvent.Disconnected, () => {
-      setActiveCall(null);
-      toast('Call disconnected');
-    });
+// Setup room event listeners
+const setupRoomListeners = (room: Room) => {
+  console.log('🎧 Setting up room listeners');
 
-    room.on(RoomEvent.ParticipantConnected, (participant) => {
-      console.log('Participant connected:', participant.identity);
-    });
+  room.on(RoomEvent.Disconnected, () => {
+    console.log('📴 Room disconnected');
+    setActiveCall(null);
+    toast('Call disconnected');
+  });
 
-    room.on(RoomEvent.TrackSubscribed, (track, publication, participant) => {
-      if (track.kind === Track.Kind.Audio) {
-        const audioElement = track.attach();
-        audioElement.volume = 1.0;
-        document.body.appendChild(audioElement);
-      }
-    });
+  room.on(RoomEvent.ParticipantConnected, (participant) => {
+    console.log('✅ Participant connected:', participant.identity);
+    toast.success('Connected!');
+  });
 
-    room.on(RoomEvent.TrackUnsubscribed, (track) => {
-      track.detach();
-    });
-  };
+  room.on(RoomEvent.TrackSubscribed, (track, _publication, participant) => {
+    console.log('🎵 Track subscribed:', track.kind, 'from', participant.identity);
+    
+    if (track.kind === Track.Kind.Audio) {
+      const audioElement = track.attach();
+      audioElement.autoplay = true;
+      audioElement.volume = 1.0;
+      audioElement.setAttribute('playsinline', 'true');
+      document.body.appendChild(audioElement);
+      
+      console.log('🔊 Audio element attached');
+      
+      // Force play
+      audioElement.play().catch(err => {
+        console.warn('Autoplay prevented:', err);
+      });
+    }
+  });
+
+  room.on(RoomEvent.TrackUnsubscribed, (track) => {
+    console.log('🔇 Track unsubscribed:', track.kind);
+    track.detach().forEach(element => element.remove());
+  });
+};
 
   return {
     incomingCall,
