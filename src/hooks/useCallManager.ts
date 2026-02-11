@@ -112,14 +112,11 @@ const answerCall = useCallback(async () => {
     stopRingtone();
     toast.loading('Connecting...', { id: 'answering' });
 
-    console.log('📞 Answering call...');
-    
     const { room } = await livekitService.answerCall(
       incomingCall.id,
       incomingCall.room_name
     );
 
-    console.log('✅ Room joined, setting up listeners...');
     setupRoomListeners(room);
 
     setActiveCall({
@@ -130,23 +127,24 @@ const answerCall = useCallback(async () => {
     });
 
     setIncomingCall(null);
+    toast.success('Call connected!', { id: 'answering' });
     
-    // Force play all audio elements after a delay
+    // Force play ALL audio elements after connection
     setTimeout(() => {
-      console.log('🔊 Forcing audio playback...');
-      document.querySelectorAll('audio').forEach(async (audio) => {
+      const audioElements = document.querySelectorAll('audio');
+      console.log(`🔊 Force-playing ${audioElements.length} audio elements...`);
+      
+      audioElements.forEach(async (audio, index) => {
         audio.muted = false;
         audio.volume = 1.0;
         try {
           await audio.play();
-          console.log('✅ Audio playing');
+          console.log(`✅ Audio ${index} playing`);
         } catch (e) {
-          console.warn('⚠️ Autoplay blocked, tap screen');
+          console.warn(`⚠️ Audio ${index} blocked:`, e);
         }
       });
     }, 1000);
-
-    toast.success('Call connected!', { id: 'answering' });
     
   } catch (error: any) {
     console.error('Failed to answer call:', error);
@@ -204,62 +202,85 @@ const setupRoomListeners = (room: Room) => {
   });
 
   room.on(RoomEvent.TrackSubscribed, async (track, _publication, participant) => {
-    console.log('🎵 Track subscribed:', track.kind, 'from', participant.identity);
+    console.log('🎵 Track subscribed:', {
+      kind: track.kind,
+      source: track.source,
+      participant: participant.identity
+    });
     
     if (track.kind === Track.Kind.Audio) {
+      // Detach existing elements
+      const existingElements = track.detach();
+      existingElements.forEach(el => el.remove());
+      
+      // Create fresh audio element
       const audioElement = track.attach();
       
       // Set audio properties
       audioElement.autoplay = true;
       audioElement.volume = 1.0;
       audioElement.muted = false;
+      audioElement.controls = false;
       audioElement.setAttribute('playsinline', '');
+      audioElement.id = `audio-${participant.identity}`;
       
       // Add to DOM
       document.body.appendChild(audioElement);
       
-      console.log('🔊 Audio element attached, attempting to play...');
+      console.log('🔊 Audio element created:', audioElement.id);
       
-      // Force play with error handling
-      try {
-        await audioElement.play();
-        console.log('✅ Audio playing successfully!');
-      } catch (err: any) {
-        console.warn('⚠️ Autoplay blocked, waiting for user interaction:', err.message);
-        
-        // If blocked, play on next user interaction
-        const playOnInteraction = async () => {
-          try {
-            await audioElement.play();
-            console.log('✅ Audio started after user interaction');
-            document.removeEventListener('click', playOnInteraction);
-            document.removeEventListener('touchstart', playOnInteraction);
-          } catch (e) {
-            console.error('Failed to play audio:', e);
+      // Force play with retry
+      let attempts = 0;
+      const tryPlay = async (): Promise<void> => {
+        attempts++;
+        try {
+          await audioElement.play();
+          console.log(`✅ Audio playing (attempt ${attempts})`);
+        } catch (err: any) {
+          console.warn(`⚠️ Attempt ${attempts} failed:`, err.message);
+          
+          if (attempts < 5) {
+            await new Promise(resolve => setTimeout(resolve, 500));
+            return tryPlay();
+          } else {
+            console.error('❌ All attempts failed - need user interaction');
+            toast('Tap screen to hear audio', { icon: '🔊', duration: 5000 });
+            
+            const playOnClick = async () => {
+              try {
+                await audioElement.play();
+                console.log('✅ Playing after user interaction');
+                document.removeEventListener('click', playOnClick);
+                document.removeEventListener('touchstart', playOnClick);
+                toast.dismiss();
+              } catch (e) {
+                console.error('Failed:', e);
+              }
+            };
+            
+            document.addEventListener('click', playOnClick, { once: true });
+            document.addEventListener('touchstart', playOnClick, { once: true });
           }
-        };
-        
-        document.addEventListener('click', playOnInteraction, { once: true });
-        document.addEventListener('touchstart', playOnInteraction, { once: true });
-        
-        toast('Tap screen to enable audio', { duration: 3000 });
-      }
+        }
+      };
       
-      // Debug: Log audio element state
-      setTimeout(() => {
-        console.log('Audio element state:', {
-          paused: audioElement.paused,
-          muted: audioElement.muted,
-          volume: audioElement.volume,
-          readyState: audioElement.readyState
-        });
-      }, 1000);
+      tryPlay();
+      
+      // Monitor audio state
+      const monitor = setInterval(() => {
+        if (audioElement.paused && !audioElement.muted) {
+          console.warn('⚠️ Audio paused, attempting resume...');
+          audioElement.play().catch(() => {});
+        }
+      }, 2000);
+      
+      setTimeout(() => clearInterval(monitor), 30000);
     }
   });
 
-  room.on(RoomEvent.TrackUnsubscribed, (track) => {
-    console.log('🔇 Track unsubscribed:', track.kind);
-    track.detach().forEach(element => element.remove());
+  room.on(RoomEvent.TrackUnsubscribed, (track, _publication, participant) => {
+    console.log('🔇 Track unsubscribed from', participant.identity);
+    track.detach().forEach(el => el.remove());
   });
 };
 
