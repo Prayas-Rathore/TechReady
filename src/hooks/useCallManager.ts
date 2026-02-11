@@ -5,6 +5,8 @@ import { livekitService } from '../services/livekit/livekitService';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 
+/* ---------------- TYPES ---------------- */
+
 interface IncomingCall {
   id: string;
   from_user_id: string;
@@ -21,16 +23,46 @@ interface ActiveCall {
   startTime: Date;
 }
 
+/* ---------------- AUDIO HELPER ---------------- */
+
+function attachAudioTrack(track: Track, identity: string) {
+  const el = track.attach() as HTMLAudioElement;
+
+  el.autoplay = true;
+  el.muted = false;
+  el.volume = 1;
+  el.setAttribute('playsinline', '');
+  el.id = `audio-${identity}`;
+
+  document.body.appendChild(el);
+
+  el.play().catch(() => {
+    const resume = () => {
+      el.play().catch(() => {});
+      document.removeEventListener('click', resume);
+      document.removeEventListener('touchstart', resume);
+    };
+    document.addEventListener('click', resume, { once: true });
+    document.addEventListener('touchstart', resume, { once: true });
+  });
+
+  console.log('🔊 Audio attached for', identity);
+}
+
+/* ---------------- HOOK ---------------- */
+
 export const useCallManager = () => {
   const { user } = useAuth();
+
   const [incomingCall, setIncomingCall] = useState<IncomingCall | null>(null);
   const [activeCall, setActiveCall] = useState<ActiveCall | null>(null);
   const [isInitiatingCall, setIsInitiatingCall] = useState(false);
 
+  /* ---------- Incoming call listener ---------- */
+
   useEffect(() => {
     if (!user) return;
 
-    // Subscribe to incoming calls
     const channel = supabase
       .channel('call-signals')
       .on(
@@ -39,14 +71,12 @@ export const useCallManager = () => {
           event: 'INSERT',
           schema: 'public',
           table: 'call_signals',
-          filter: `to_user_id=eq.${user.id}`
+          filter: `to_user_id=eq.${user.id}`,
         },
         (payload) => {
           const call = payload.new as IncomingCall;
           if (call.status === 'ringing') {
             setIncomingCall(call);
-            // Play ringtone sound here
-            playRingtone();
           }
         }
       )
@@ -57,18 +87,38 @@ export const useCallManager = () => {
     };
   }, [user]);
 
-  const playRingtone = () => {
-    // You can add actual ringtone audio here
-    // const audio = new Audio('/ringtone.mp3');
-    // audio.loop = true;
-    // audio.play();
+  /* ---------- Room listeners ---------- */
+
+  const setupRoomListeners = (room: Room) => {
+    console.log('🎧 Setting up room listeners');
+
+    // 🔥 CRITICAL FIX: attach already-published tracks
+    room.remoteParticipants.forEach((participant) => {
+      participant.audioTrackPublications.forEach((pub) => {
+        if (pub.track) {
+          attachAudioTrack(pub.track, participant.identity);
+        }
+      });
+    });
+
+    room.on(RoomEvent.TrackSubscribed, (track, _pub, participant) => {
+      if (track.kind === Track.Kind.Audio) {
+        attachAudioTrack(track, participant.identity);
+      }
+    });
+
+    room.on(RoomEvent.TrackUnsubscribed, (track) => {
+      track.detach().forEach(el => el.remove());
+    });
+
+    room.on(RoomEvent.Disconnected, () => {
+      setActiveCall(null);
+      toast('Call ended');
+    });
   };
 
-  const stopRingtone = () => {
-    // Stop ringtone audio
-  };
+  /* ---------- Initiate call ---------- */
 
-  // Initiate outgoing call
   const initiateCall = useCallback(async (buddyId: string, buddyName: string) => {
     if (activeCall || isInitiatingCall) {
       toast.error('Already in a call');
@@ -76,213 +126,87 @@ export const useCallManager = () => {
     }
 
     setIsInitiatingCall(true);
+
     try {
       toast.loading('Calling...', { id: 'calling' });
 
-      // Initiate call and get token
-      const { roomName, token, callLogId } = await livekitService.initiateCall(buddyId, buddyName);
+      const { token, callLogId } = await livekitService.initiateCall(
+        buddyId,
+        buddyName
+      );
 
-      // Join room
       const room = await livekitService.joinCall(token);
 
-      // Set up room event listeners
       setupRoomListeners(room);
 
       setActiveCall({
         room,
         buddyName,
         callLogId,
-        startTime: new Date()
+        startTime: new Date(),
       });
 
-      toast.success('Connected!', { id: 'calling' });
-    } catch (error: any) {
-      console.error('Failed to initiate call:', error);
-      toast.error(error.message || 'Failed to start call', { id: 'calling' });
+      toast.success('Connected', { id: 'calling' });
+    } catch (e: any) {
+      toast.error(e.message || 'Failed to start call', { id: 'calling' });
     } finally {
       setIsInitiatingCall(false);
     }
   }, [activeCall, isInitiatingCall]);
 
-// Answer incoming call
-const answerCall = useCallback(async () => {
-  if (!incomingCall || activeCall) return;
+  /* ---------- Answer call ---------- */
 
-  try {
-    stopRingtone();
-    toast.loading('Connecting...', { id: 'answering' });
+  const answerCall = useCallback(async () => {
+    if (!incomingCall || activeCall) return;
 
-    const { room } = await livekitService.answerCall(
-      incomingCall.id,
-      incomingCall.room_name
-    );
+    try {
+      toast.loading('Connecting...', { id: 'answering' });
 
-    setupRoomListeners(room);
+      const { room } = await livekitService.answerCall(
+        incomingCall.id,
+        incomingCall.room_name
+      );
 
-    setActiveCall({
-      room,
-      buddyName: incomingCall.from_user_name,
-      callLogId: '',
-      startTime: new Date()
-    });
+      setupRoomListeners(room);
 
-    setIncomingCall(null);
-    toast.success('Call connected!', { id: 'answering' });
-    
-    // Force play ALL audio elements after connection
-    setTimeout(() => {
-      const audioElements = document.querySelectorAll('audio');
-      console.log(`🔊 Force-playing ${audioElements.length} audio elements...`);
-      
-      audioElements.forEach(async (audio, index) => {
-        audio.muted = false;
-        audio.volume = 1.0;
-        try {
-          await audio.play();
-          console.log(`✅ Audio ${index} playing`);
-        } catch (e) {
-          console.warn(`⚠️ Audio ${index} blocked:`, e);
-        }
+      setActiveCall({
+        room,
+        buddyName: incomingCall.from_user_name,
+        callLogId: '',
+        startTime: new Date(),
       });
-    }, 1000);
-    
-  } catch (error: any) {
-    console.error('Failed to answer call:', error);
-    toast.error(error.message || 'Failed to answer call', { id: 'answering' });
-  }
-}, [incomingCall, activeCall]);
 
-  // Decline incoming call
+      setIncomingCall(null);
+      toast.success('Connected', { id: 'answering' });
+    } catch (e: any) {
+      toast.error(e.message || 'Failed to answer call', { id: 'answering' });
+    }
+  }, [incomingCall, activeCall]);
+
+  /* ---------- Decline ---------- */
+
   const declineCall = useCallback(async () => {
     if (!incomingCall) return;
 
-    try {
-      stopRingtone();
-      await livekitService.declineCall(incomingCall.id);
-      setIncomingCall(null);
-      toast('Call declined');
-    } catch (error) {
-      console.error('Failed to decline call:', error);
-    }
+    await livekitService.declineCall(incomingCall.id);
+    setIncomingCall(null);
   }, [incomingCall]);
 
-  // End active call
+  /* ---------- End call ---------- */
+
   const endCall = useCallback(async () => {
     if (!activeCall) return;
 
-    try {
-      await livekitService.endCall(
-        activeCall.room,
-        activeCall.callLogId,
-        activeCall.startTime
-      );
-      
-      setActiveCall(null);
-      toast.success('Call ended');
-    } catch (error) {
-      console.error('Failed to end call:', error);
-      toast.error('Failed to end call properly');
-      setActiveCall(null);
-    }
+    await livekitService.endCall(
+      activeCall.room,
+      activeCall.callLogId,
+      activeCall.startTime
+    );
+
+    setActiveCall(null);
   }, [activeCall]);
 
-// Setup room event listeners
-const setupRoomListeners = (room: Room) => {
-  console.log('🎧 Setting up room listeners');
-
-  room.on(RoomEvent.Disconnected, () => {
-    console.log('📴 Room disconnected');
-    setActiveCall(null);
-    toast('Call disconnected');
-  });
-
-  room.on(RoomEvent.ParticipantConnected, (participant) => {
-    console.log('✅ Participant connected:', participant.identity);
-    toast.success('Connected!');
-  });
-
-  room.on(RoomEvent.TrackSubscribed, async (track, _publication, participant) => {
-    console.log('🎵 Track subscribed:', {
-      kind: track.kind,
-      source: track.source,
-      participant: participant.identity
-    });
-    
-    if (track.kind === Track.Kind.Audio) {
-      // Detach existing elements
-      const existingElements = track.detach();
-      existingElements.forEach(el => el.remove());
-      
-      // Create fresh audio element
-      const audioElement = track.attach();
-      
-      // Set audio properties
-      audioElement.autoplay = true;
-      audioElement.volume = 1.0;
-      audioElement.muted = false;
-      audioElement.controls = false;
-      audioElement.setAttribute('playsinline', '');
-      audioElement.id = `audio-${participant.identity}`;
-      
-      // Add to DOM
-      document.body.appendChild(audioElement);
-      
-      console.log('🔊 Audio element created:', audioElement.id);
-      
-      // Force play with retry
-      let attempts = 0;
-      const tryPlay = async (): Promise<void> => {
-        attempts++;
-        try {
-          await audioElement.play();
-          console.log(`✅ Audio playing (attempt ${attempts})`);
-        } catch (err: any) {
-          console.warn(`⚠️ Attempt ${attempts} failed:`, err.message);
-          
-          if (attempts < 5) {
-            await new Promise(resolve => setTimeout(resolve, 500));
-            return tryPlay();
-          } else {
-            console.error('❌ All attempts failed - need user interaction');
-            toast('Tap screen to hear audio', { icon: '🔊', duration: 5000 });
-            
-            const playOnClick = async () => {
-              try {
-                await audioElement.play();
-                console.log('✅ Playing after user interaction');
-                document.removeEventListener('click', playOnClick);
-                document.removeEventListener('touchstart', playOnClick);
-                toast.dismiss();
-              } catch (e) {
-                console.error('Failed:', e);
-              }
-            };
-            
-            document.addEventListener('click', playOnClick, { once: true });
-            document.addEventListener('touchstart', playOnClick, { once: true });
-          }
-        }
-      };
-      
-      tryPlay();
-      
-      // Monitor audio state
-      const monitor = setInterval(() => {
-        if (audioElement.paused && !audioElement.muted) {
-          console.warn('⚠️ Audio paused, attempting resume...');
-          audioElement.play().catch(() => {});
-        }
-      }, 2000);
-      
-      setTimeout(() => clearInterval(monitor), 30000);
-    }
-  });
-
-  room.on(RoomEvent.TrackUnsubscribed, (track, _publication, participant) => {
-    console.log('🔇 Track unsubscribed from', participant.identity);
-    track.detach().forEach(el => el.remove());
-  });
-};
+  /* ---------- API ---------- */
 
   return {
     incomingCall,
@@ -291,6 +215,6 @@ const setupRoomListeners = (room: Room) => {
     initiateCall,
     answerCall,
     declineCall,
-    endCall
+    endCall,
   };
 };
