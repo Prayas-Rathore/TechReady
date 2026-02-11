@@ -183,22 +183,57 @@ const setupRoomListeners = (room: Room) => {
     toast.success('Connected!');
   });
 
-  room.on(RoomEvent.TrackSubscribed, (track, _publication, participant) => {
+  room.on(RoomEvent.TrackSubscribed, async (track, _publication, participant) => {
     console.log('🎵 Track subscribed:', track.kind, 'from', participant.identity);
     
     if (track.kind === Track.Kind.Audio) {
       const audioElement = track.attach();
+      
+      // Set audio properties
       audioElement.autoplay = true;
       audioElement.volume = 1.0;
-      audioElement.setAttribute('playsinline', 'true');
+      audioElement.muted = false;
+      audioElement.setAttribute('playsinline', '');
+      
+      // Add to DOM
       document.body.appendChild(audioElement);
       
-      console.log('🔊 Audio element attached');
+      console.log('🔊 Audio element attached, attempting to play...');
       
-      // Force play
-      audioElement.play().catch(err => {
-        console.warn('Autoplay prevented:', err);
-      });
+      // Force play with error handling
+      try {
+        await audioElement.play();
+        console.log('✅ Audio playing successfully!');
+      } catch (err: any) {
+        console.warn('⚠️ Autoplay blocked, waiting for user interaction:', err.message);
+        
+        // If blocked, play on next user interaction
+        const playOnInteraction = async () => {
+          try {
+            await audioElement.play();
+            console.log('✅ Audio started after user interaction');
+            document.removeEventListener('click', playOnInteraction);
+            document.removeEventListener('touchstart', playOnInteraction);
+          } catch (e) {
+            console.error('Failed to play audio:', e);
+          }
+        };
+        
+        document.addEventListener('click', playOnInteraction, { once: true });
+        document.addEventListener('touchstart', playOnInteraction, { once: true });
+        
+        toast('Tap screen to enable audio', { duration: 3000 });
+      }
+      
+      // Debug: Log audio element state
+      setTimeout(() => {
+        console.log('Audio element state:', {
+          paused: audioElement.paused,
+          muted: audioElement.muted,
+          volume: audioElement.volume,
+          readyState: audioElement.readyState
+        });
+      }, 1000);
     }
   });
 
