@@ -19,11 +19,32 @@ export const ActiveCallUI: React.FC<ActiveCallUIProps> = ({ buddyName, room, onE
       setIsConnected(true);
     }
 
+    // Timer starts only when call is actually connected
     const timer = setInterval(() => {
-      setCallDuration(prev => prev + 1);
+      if (isConnected) {
+        setCallDuration(prev => prev + 1);
+      }
     }, 1000);
 
     return () => clearInterval(timer);
+  }, [room, isConnected]);
+
+  useEffect(() => {
+    // Listen for participant connection
+    const onParticipantConnected = () => {
+      setIsConnected(true);
+    };
+
+    room.on('participantConnected', onParticipantConnected);
+
+    // Check if already connected
+    if (room.remoteParticipants.size > 0) {
+      setIsConnected(true);
+    }
+
+    return () => {
+      room.off('participantConnected', onParticipantConnected);
+    };
   }, [room]);
 
   const toggleMute = async () => {
@@ -50,7 +71,7 @@ export const ActiveCallUI: React.FC<ActiveCallUIProps> = ({ buddyName, room, onE
           </div>
           <h2 className="text-2xl font-bold">{buddyName}</h2>
           <p className="text-white text-opacity-80 mt-2">
-            {isConnected ? formatDuration(callDuration) : 'Connecting...'}
+            {isConnected ? formatDuration(callDuration) : 'Ringing...'}
           </p>
         </div>
 
@@ -74,7 +95,7 @@ export const ActiveCallUI: React.FC<ActiveCallUIProps> = ({ buddyName, room, onE
 
         {!isConnected && (
           <p className="mt-4 text-sm text-white text-opacity-75 animate-pulse">
-            Connecting to call...
+            Waiting for {buddyName} to answer...
           </p>
         )}
       </div>
