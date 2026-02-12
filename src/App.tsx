@@ -181,7 +181,7 @@ function App() {
               <Route 
                 path="/cv-dashboard" 
                 element={
-                  <PremiumPage allowedPlans={["basic", "starter", "pro"]}>
+                  <PremiumPage allowedPlans={["free","basic", "starter", "pro"]}>
                     <CVDashboardLayout />
                   </PremiumPage>
                 }
@@ -214,7 +214,7 @@ function App() {
               <Route 
                 path="/ai-drafter" 
                 element={
-                  <PremiumPage allowedPlans={["basic", "starter", "pro"]}>
+                  <PremiumPage allowedPlans={["free","basic", "starter", "pro"]}>
                     <AIDrafterPage />
                   </PremiumPage>
                 } 
