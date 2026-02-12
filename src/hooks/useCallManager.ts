@@ -5,8 +5,6 @@ import { livekitService } from '../services/livekit/livekitService';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 
-/* ---------------- TYPES ---------------- */
-
 interface IncomingCall {
   id: string;
   from_user_id: string;
@@ -21,9 +19,8 @@ interface ActiveCall {
   buddyName: string;
   callLogId: string;
   startTime: Date;
+  roomName: string; // ADDED: Track room name for cleanup
 }
-
-/* ---------------- AUDIO HELPER ---------------- */
 
 function attachAudioTrack(track: Track, identity: string) {
   const el = track.attach() as HTMLAudioElement;
@@ -49,8 +46,6 @@ function attachAudioTrack(track: Track, identity: string) {
   console.log('🔊 Audio attached for', identity);
 }
 
-/* ---------------- HOOK ---------------- */
-
 export const useCallManager = () => {
   const { user } = useAuth();
 
@@ -59,7 +54,6 @@ export const useCallManager = () => {
   const [isInitiatingCall, setIsInitiatingCall] = useState(false);
 
   /* ---------- Incoming call listener ---------- */
-
   useEffect(() => {
     if (!user) return;
 
@@ -87,18 +81,63 @@ export const useCallManager = () => {
     };
   }, [user]);
 
-  /* ---------- Room listeners ---------- */
+  /* ---------- Listen for call end signals ---------- */
+  useEffect(() => {
+    if (!user || !activeCall) return;
 
+    console.log('👂 Listening for call end signals for room:', activeCall.roomName);
+
+    const channel = supabase
+      .channel(`call-end-${activeCall.roomName}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'call_logs',
+          filter: `room_name=eq.${activeCall.roomName}`,
+        },
+        (payload) => {
+          console.log('📞 Call log updated:', payload.new);
+          const updated = payload.new as any;
+          
+          // If call marked as completed, end it locally
+          if (updated.status === 'completed') {
+            console.log('✅ Call ended by other party');
+            setActiveCall(null);
+            toast('Call ended');
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, activeCall?.roomName]);
+
+  /* ---------- Room listeners ---------- */
   const setupRoomListeners = (room: Room) => {
     console.log('🎧 Setting up room listeners');
 
-    // 🔥 CRITICAL FIX: attach already-published tracks
+    // Attach already-published tracks
     room.remoteParticipants.forEach((participant) => {
       participant.audioTrackPublications.forEach((pub) => {
         if (pub.track) {
           attachAudioTrack(pub.track, participant.identity);
         }
       });
+    });
+
+    // CRITICAL: Listen for participant leaving
+    room.on(RoomEvent.ParticipantDisconnected, (participant) => {
+      console.log('❌ Participant disconnected:', participant.identity);
+      toast('Other user left the call');
+      
+      // End call when other party disconnects
+      setTimeout(() => {
+        setActiveCall(null);
+      }, 500);
     });
 
     room.on(RoomEvent.TrackSubscribed, (track, _pub, participant) => {
@@ -112,13 +151,23 @@ export const useCallManager = () => {
     });
 
     room.on(RoomEvent.Disconnected, () => {
+      console.log('📴 Room disconnected');
       setActiveCall(null);
       toast('Call ended');
+    });
+
+    room.on(RoomEvent.Reconnecting, () => {
+      console.log('🔄 Reconnecting...');
+      toast.loading('Reconnecting...', { id: 'reconnect' });
+    });
+
+    room.on(RoomEvent.Reconnected, () => {
+      console.log('✅ Reconnected');
+      toast.success('Reconnected', { id: 'reconnect' });
     });
   };
 
   /* ---------- Initiate call ---------- */
-
   const initiateCall = useCallback(async (buddyId: string, buddyName: string) => {
     if (activeCall || isInitiatingCall) {
       toast.error('Already in a call');
@@ -130,7 +179,7 @@ export const useCallManager = () => {
     try {
       toast.loading('Calling...', { id: 'calling' });
 
-      const { token, callLogId } = await livekitService.initiateCall(
+      const { roomName, token, callLogId } = await livekitService.initiateCall(
         buddyId,
         buddyName
       );
@@ -144,6 +193,7 @@ export const useCallManager = () => {
         buddyName,
         callLogId,
         startTime: new Date(),
+        roomName, // ADDED
       });
 
       toast.success('Connected', { id: 'calling' });
@@ -155,7 +205,6 @@ export const useCallManager = () => {
   }, [activeCall, isInitiatingCall]);
 
   /* ---------- Answer call ---------- */
-
   const answerCall = useCallback(async () => {
     if (!incomingCall || activeCall) return;
 
@@ -174,6 +223,7 @@ export const useCallManager = () => {
         buddyName: incomingCall.from_user_name,
         callLogId: '',
         startTime: new Date(),
+        roomName: incomingCall.room_name, // ADDED
       });
 
       setIncomingCall(null);
@@ -184,30 +234,40 @@ export const useCallManager = () => {
   }, [incomingCall, activeCall]);
 
   /* ---------- Decline ---------- */
-
   const declineCall = useCallback(async () => {
     if (!incomingCall) return;
 
     await livekitService.declineCall(incomingCall.id);
     setIncomingCall(null);
+    toast('Call declined');
   }, [incomingCall]);
 
   /* ---------- End call ---------- */
-
   const endCall = useCallback(async () => {
     if (!activeCall) return;
 
-    await livekitService.endCall(
-      activeCall.room,
-      activeCall.callLogId,
-      activeCall.startTime
-    );
+    console.log('🔴 Ending call...');
 
-    setActiveCall(null);
+    try {
+      // End call (this will update DB and disconnect room)
+      await livekitService.endCall(
+        activeCall.room,
+        activeCall.callLogId,
+        activeCall.startTime
+      );
+
+      // Clear UI immediately
+      setActiveCall(null);
+      toast.success('Call ended');
+    } catch (error) {
+      console.error('Error ending call:', error);
+      // Force clear UI even if error
+      setActiveCall(null);
+      activeCall.room.disconnect();
+    }
   }, [activeCall]);
 
   /* ---------- API ---------- */
-
   return {
     incomingCall,
     activeCall,
