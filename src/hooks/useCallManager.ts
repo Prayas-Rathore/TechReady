@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Room, RoomEvent, Track } from 'livekit-client';
 import { supabase } from '../services/SupabaseClient';
 import { livekitService } from '../services/livekit/livekitService';
@@ -18,17 +18,35 @@ interface IncomingCall {
 
 interface ActiveCall {
   room: Room;
-  roomName: string;
   buddyName: string;
+  callLogId: string;
+  startTime: Date;
 }
 
-/* ---------------- AUDIO ---------------- */
+/* ---------------- AUDIO HELPER ---------------- */
 
-function attachAudio(track: Track, identity: string) {
+function attachAudioTrack(track: Track, identity: string) {
   const el = track.attach() as HTMLAudioElement;
+
   el.autoplay = true;
+  el.muted = false;
+  el.volume = 1;
+  el.setAttribute('playsinline', '');
   el.id = `audio-${identity}`;
+
   document.body.appendChild(el);
+
+  el.play().catch(() => {
+    const resume = () => {
+      el.play().catch(() => {});
+      document.removeEventListener('click', resume);
+      document.removeEventListener('touchstart', resume);
+    };
+    document.addEventListener('click', resume, { once: true });
+    document.addEventListener('touchstart', resume, { once: true });
+  });
+
+  console.log('🔊 Audio attached for', identity);
 }
 
 /* ---------------- HOOK ---------------- */
@@ -38,16 +56,10 @@ export const useCallManager = () => {
 
   const [incomingCall, setIncomingCall] = useState<IncomingCall | null>(null);
   const [activeCall, setActiveCall] = useState<ActiveCall | null>(null);
-  const [isCalling, setIsCalling] = useState(false);
+  const [isInitiatingCall, setIsInitiatingCall] = useState(false);
 
-  /* ---------- CLEANUP ---------- */
-  const cleanup = useCallback(() => {
-    activeCall?.room.disconnect();
-    setActiveCall(null);
-    setIncomingCall(null);
-  }, [activeCall]);
+  /* ---------- Incoming call listener ---------- */
 
-  /* ---------- REALTIME ---------- */
   useEffect(() => {
     if (!user) return;
 
@@ -56,21 +68,15 @@ export const useCallManager = () => {
       .on(
         'postgres_changes',
         {
-          event: '*',
+          event: 'INSERT',
           schema: 'public',
           table: 'call_signals',
           filter: `to_user_id=eq.${user.id}`,
         },
-        payload => {
+        (payload) => {
           const call = payload.new as IncomingCall;
-
           if (call.status === 'ringing') {
             setIncomingCall(call);
-          }
-
-          if (call.status === 'cancelled' || call.status === 'rejected') {
-            cleanup();
-            toast('Call ended');
           }
         }
       )
@@ -79,90 +85,133 @@ export const useCallManager = () => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [user, cleanup]);
+  }, [user]);
 
-  /* ---------- ROOM ---------- */
-  const setupRoom = (room: Room) => {
-    room.remoteParticipants.forEach(p =>
-      p.audioTrackPublications.forEach(pub => {
-        if (pub.track) attachAudio(pub.track, p.identity);
-      })
-    );
+  /* ---------- Room listeners ---------- */
 
-    room.on(RoomEvent.TrackSubscribed, (track, _, p) => {
+  const setupRoomListeners = (room: Room) => {
+    console.log('🎧 Setting up room listeners');
+
+    // 🔥 CRITICAL FIX: attach already-published tracks
+    room.remoteParticipants.forEach((participant) => {
+      participant.audioTrackPublications.forEach((pub) => {
+        if (pub.track) {
+          attachAudioTrack(pub.track, participant.identity);
+        }
+      });
+    });
+
+    room.on(RoomEvent.TrackSubscribed, (track, _pub, participant) => {
       if (track.kind === Track.Kind.Audio) {
-        attachAudio(track, p.identity);
+        attachAudioTrack(track, participant.identity);
       }
     });
 
-    room.on(RoomEvent.Disconnected, cleanup);
-  };
-
-  /* ---------- CALLER ---------- */
-  const initiateCall = async (buddyId: string, buddyName: string) => {
-    if (activeCall || isCalling) return;
-
-    setIsCalling(true);
-    toast.loading('Calling...', { id: 'call' });
-
-    try {
-      const { roomName, token } = await livekitService.initiateCall(buddyId);
-      const room = await livekitService.joinCall(token);
-
-      setupRoom(room);
-      setActiveCall({ room, roomName, buddyName });
-
-      toast.success('Connected', { id: 'call' });
-    } catch (e: any) {
-      toast.error(e.message || 'Call failed', { id: 'call' });
-    } finally {
-      setIsCalling(false);
-    }
-  };
-
-  /* ---------- ANSWER ---------- */
-  const answerCall = async () => {
-    if (!incomingCall) return;
-
-    const room = await livekitService.answerCall(
-      incomingCall.id,
-      incomingCall.room_name
-    );
-
-    setupRoom(room);
-    setActiveCall({
-      room,
-      roomName: incomingCall.room_name,
-      buddyName: incomingCall.from_user_name,
+    room.on(RoomEvent.TrackUnsubscribed, (track) => {
+      track.detach().forEach(el => el.remove());
     });
 
-    setIncomingCall(null);
+    room.on(RoomEvent.Disconnected, () => {
+      setActiveCall(null);
+      toast('Call ended');
+    });
   };
 
-  /* ---------- DECLINE ---------- */
-  const declineCall = async () => {
+  /* ---------- Initiate call ---------- */
+
+  const initiateCall = useCallback(async (buddyId: string, buddyName: string) => {
+    if (activeCall || isInitiatingCall) {
+      toast.error('Already in a call');
+      return;
+    }
+
+    setIsInitiatingCall(true);
+
+    try {
+      toast.loading('Calling...', { id: 'calling' });
+
+      const { token, callLogId } = await livekitService.initiateCall(
+        buddyId,
+        buddyName
+      );
+
+      const room = await livekitService.joinCall(token);
+
+      setupRoomListeners(room);
+
+      setActiveCall({
+        room,
+        buddyName,
+        callLogId,
+        startTime: new Date(),
+      });
+
+      toast.success('Connected', { id: 'calling' });
+    } catch (e: any) {
+      toast.error(e.message || 'Failed to start call', { id: 'calling' });
+    } finally {
+      setIsInitiatingCall(false);
+    }
+  }, [activeCall, isInitiatingCall]);
+
+  /* ---------- Answer call ---------- */
+
+  const answerCall = useCallback(async () => {
+    if (!incomingCall || activeCall) return;
+
+    try {
+      toast.loading('Connecting...', { id: 'answering' });
+
+      const { room } = await livekitService.answerCall(
+        incomingCall.id,
+        incomingCall.room_name
+      );
+
+      setupRoomListeners(room);
+
+      setActiveCall({
+        room,
+        buddyName: incomingCall.from_user_name,
+        callLogId: '',
+        startTime: new Date(),
+      });
+
+      setIncomingCall(null);
+      toast.success('Connected', { id: 'answering' });
+    } catch (e: any) {
+      toast.error(e.message || 'Failed to answer call', { id: 'answering' });
+    }
+  }, [incomingCall, activeCall]);
+
+  /* ---------- Decline ---------- */
+
+  const declineCall = useCallback(async () => {
     if (!incomingCall) return;
 
-    await supabase
-      .from('call_signals')
-      .update({ status: 'rejected' })
-      .eq('id', incomingCall.id);
-
+    await livekitService.declineCall(incomingCall.id);
     setIncomingCall(null);
-  };
+  }, [incomingCall]);
 
-  /* ---------- END ---------- */
-  const endCall = async () => {
+  /* ---------- End call ---------- */
+
+  const endCall = useCallback(async () => {
     if (!activeCall) return;
 
-    await livekitService.endCall(activeCall.roomName, activeCall.room);
-    cleanup();
-  };
+    await livekitService.endCall(
+      activeCall.room,
+      activeCall.callLogId,
+      activeCall.startTime
+    );
+
+    setActiveCall(null);
+  }, [activeCall]);
+
+  /* ---------- API ---------- */
 
   return {
     incomingCall,
     activeCall,
-    isCalling,
+    isInitiatingCall,
     initiateCall,
     answerCall,
     declineCall,
