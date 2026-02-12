@@ -1,19 +1,32 @@
-// src/services/livekit/livekitService.ts
 import { Room } from 'livekit-client';
 import { supabase } from '../SupabaseClient';
 
-const LIVEKIT_URL = import.meta.env.VITE_LIVEKIT_URL!;
+/* ---------------- SAFE ENV ---------------- */
 
-async function generateToken(roomName: string, identity: string, name: string): Promise<string> {
+const LIVEKIT_URL =
+  import.meta.env.VITE_LIVEKIT_URL || 'wss://calls.mockithub.ai';
+
+const LIVEKIT_API_KEY =
+  import.meta.env.VITE_LIVEKIT_API_KEY || 'devkey';
+
+const LIVEKIT_SECRET =
+  import.meta.env.VITE_LIVEKIT_SECRET || 'devsecret';
+
+/* ---------------- TOKEN ---------------- */
+
+async function generateToken(
+  roomName: string,
+  identity: string,
+  name: string
+): Promise<string> {
   const jsrsasign = await import('jsrsasign');
   const { KJUR } = jsrsasign;
 
   const now = Math.floor(Date.now() / 1000);
-  const exp = now + 3600;
 
   const payload = {
-    exp,
-    iss: import.meta.env.VITE_LIVEKIT_API_KEY,
+    exp: now + 3600,
+    iss: LIVEKIT_API_KEY,
     nbf: now,
     sub: identity,
     identity,
@@ -30,17 +43,46 @@ async function generateToken(roomName: string, identity: string, name: string): 
     'HS256',
     JSON.stringify({ alg: 'HS256', typ: 'JWT' }),
     JSON.stringify(payload),
-    { utf8: import.meta.env.VITE_LIVEKIT_SECRET }
+    { utf8: LIVEKIT_SECRET }
   );
 }
 
+/* ---------------- SERVICE ---------------- */
+
 export const livekitService = {
+  /* ---------- MINUTES (RESTORED) ---------- */
+  async getCallMinutesInfo(): Promise<{
+    used: number;
+    granted: number;
+    remaining: number;
+  }> {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('Not authenticated');
+
+    const { data, error } = await supabase.rpc('get_call_minutes_info', {
+      p_user_id: user.id,
+    });
+
+    if (error) throw error;
+
+    if (data && data.length > 0) {
+      return {
+        used: data[0].minutes_used,
+        granted: data[0].minutes_granted,
+        remaining: data[0].minutes_remaining,
+      };
+    }
+
+    return { used: 0, granted: 0, remaining: 0 };
+  },
+
   /* ---------- CALLER ---------- */
   async initiateCall(buddyId: string) {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('Not authenticated');
 
     const roomName = `call-${Date.now()}`;
+
     const token = await generateToken(
       roomName,
       user.id,
@@ -98,7 +140,6 @@ export const livekitService = {
 
   /* ---------- END / CANCEL ---------- */
   async endCall(roomName: string, room?: Room) {
-    // 🔥 THIS IS THE KEY FIX
     await supabase
       .from('call_signals')
       .update({ status: 'cancelled' })

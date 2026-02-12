@@ -5,7 +5,7 @@ import { livekitService } from '../services/livekit/livekitService';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 
-/* ---------- TYPES ---------- */
+/* ---------------- TYPES ---------------- */
 
 interface IncomingCall {
   id: string;
@@ -22,7 +22,7 @@ interface ActiveCall {
   buddyName: string;
 }
 
-/* ---------- AUDIO ---------- */
+/* ---------------- AUDIO ---------------- */
 
 function attachAudio(track: Track, identity: string) {
   const el = track.attach() as HTMLAudioElement;
@@ -31,7 +31,7 @@ function attachAudio(track: Track, identity: string) {
   document.body.appendChild(el);
 }
 
-/* ---------- HOOK ---------- */
+/* ---------------- HOOK ---------------- */
 
 export const useCallManager = () => {
   const { user } = useAuth();
@@ -47,7 +47,7 @@ export const useCallManager = () => {
     setIncomingCall(null);
   }, [activeCall]);
 
-  /* ---------- REALTIME LISTENER ---------- */
+  /* ---------- REALTIME ---------- */
   useEffect(() => {
     if (!user) return;
 
@@ -56,7 +56,7 @@ export const useCallManager = () => {
       .on(
         'postgres_changes',
         {
-          event: '*', // INSERT + UPDATE
+          event: '*',
           schema: 'public',
           table: 'call_signals',
           filter: `to_user_id=eq.${user.id}`,
@@ -81,7 +81,7 @@ export const useCallManager = () => {
     };
   }, [user, cleanup]);
 
-  /* ---------- ROOM LISTENERS ---------- */
+  /* ---------- ROOM ---------- */
   const setupRoom = (room: Room) => {
     room.remoteParticipants.forEach(p =>
       p.audioTrackPublications.forEach(pub => {
@@ -90,7 +90,9 @@ export const useCallManager = () => {
     );
 
     room.on(RoomEvent.TrackSubscribed, (track, _, p) => {
-      if (track.kind === Track.Kind.Audio) attachAudio(track, p.identity);
+      if (track.kind === Track.Kind.Audio) {
+        attachAudio(track, p.identity);
+      }
     });
 
     room.on(RoomEvent.Disconnected, cleanup);
@@ -108,11 +110,11 @@ export const useCallManager = () => {
       const room = await livekitService.joinCall(token);
 
       setupRoom(room);
-
       setActiveCall({ room, roomName, buddyName });
+
       toast.success('Connected', { id: 'call' });
     } catch (e: any) {
-      toast.error(e.message, { id: 'call' });
+      toast.error(e.message || 'Call failed', { id: 'call' });
     } finally {
       setIsCalling(false);
     }
@@ -152,6 +154,7 @@ export const useCallManager = () => {
   /* ---------- END ---------- */
   const endCall = async () => {
     if (!activeCall) return;
+
     await livekitService.endCall(activeCall.roomName, activeCall.room);
     cleanup();
   };
