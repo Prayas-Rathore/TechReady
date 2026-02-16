@@ -1,296 +1,296 @@
+import { memo } from 'react';
 import PolicyLayout from '../components/PolicyLayout';
 
-export default function ConsentPolicyPage() {
+const ConsentPolicyPage = memo(() => {
   return (
     <PolicyLayout title="Consent Policy" lastUpdated="December 3, 2025">
       <div className="space-y-8">
+        {/* Company Information */}
+        <section className="bg-slate-50 border border-slate-200 rounded-lg p-6">
+          <p className="text-slate-700"><strong>Company:</strong> MockITHub Ltd</p>
+          <p className="text-slate-700"><strong>Company Number:</strong> 16823684</p>
+          <p className="text-slate-700"><strong>Registered Office:</strong> 165–169 Great Portland Street, 5th Floor, W1W 5PF, London, United Kingdom</p>
+          <p className="text-slate-700"><strong>Email:</strong> support@mockithub.ai</p>
+        </section>
+
         <section>
           <h2 className="text-2xl font-bold text-slate-900 mb-4">1. Introduction</h2>
           <p className="text-slate-700 leading-relaxed mb-4">
-            At MockITHub Ltd ("MockITHub," "we," "us," or "our"), we respect your privacy and are committed
-            to providing you with clear choices about how we collect, use, and share your personal information.
-            This Consent Policy explains how we obtain and manage your consent for data processing activities.</p>
-           <p className="text-slate-700 leading-relaxed mb-4">
-            This policy follows UK GDPR, the Data Protection Act 2018, and PECR, and explains how we obtain, record, manage, and withdraw consent.
+            MockITHub Ltd is committed to processing personal data lawfully, fairly, and transparently in accordance with:
           </p>
+          <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4 mb-4">
+            <li>UK General Data Protection Regulation (UK GDPR)</li>
+            <li>Data Protection Act 2018</li>
+            <li>Privacy and Electronic Communications Regulations (PECR)</li>
+            <li>ICO guidance on consent</li>
+          </ul>
+          <p className="text-slate-700 leading-relaxed mb-3">
+            This Consent Policy explains:
+          </p>
+          <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4 mb-4">
+            <li>When we rely on consent</li>
+            <li>How consent is obtained</li>
+            <li>How consent is recorded</li>
+            <li>How consent may be withdrawn</li>
+          </ul>
           <p className="text-slate-700 leading-relaxed">
-            This policy should be read in conjunction with our Privacy Policy and Cookies Policy, which provide
-            detailed information about our data practices.
+            This Policy should be read alongside our Privacy Policy and Cookie Policy.
           </p>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">2. Types of Consent</h2>
-
-          <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">2.1 Explicit Consent</h3>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">2. Lawful Basis for Processing</h2>
           <p className="text-slate-700 leading-relaxed mb-3">
-            For certain sensitive processing activities, we require your explicit consent. This includes:
+            Under UK GDPR, personal data may be processed on several lawful bases. MockITHub relies on:
           </p>
-          <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4">
-            <li>Video and audio recording during mock interviews</li>
-            <li>Analysis of your interview performance using AI technology</li>
-            <li>Sharing your anonymized data for research purposes</li>
-            <li>Marketing communications and promotional offers</li>
-            <li>Using your testimonials and feedback publicly</li>
-            <li>Consent for AI-based profiling and behavioural/career assessments</li>
-            <li>Consent for processing any sensitive data voluntarily provided</li>
+          <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4 mb-4">
+            <li>Contractual necessity</li>
+            <li>Legitimate interests</li>
+            <li>Legal obligation</li>
+            <li>Consent (where required)</li>
           </ul>
-          <p className="text-slate-700 leading-relaxed mt-3">
-            Explicit consent is obtained through clear affirmative action, such as checking a box or clicking
-            an "I agree" button.
-          </p>
-
-          <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">2.2 Implied Consent</h3>
-          <p className="text-slate-700 leading-relaxed mb-3">
-            By using MockITHub services, you provide implied consent for:
-          </p>
-          <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4">
-            <li>Essential cookies necessary for platform functionality</li>
-            
-            <li>Processing information necessary to fulfill our contract with you</li>
-            <li>Communication about your account and services</li>
-          </ul>
-
-          <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">2.3 Opt-In vs. Opt-Out</h3>
-          <p className="text-slate-700 leading-relaxed">
-            We use an opt-in approach for non-essential data processing, meaning we will ask for your permission
-            before processing your data. For certain activities, you can opt-out at any time through your account
-            settings.
+          <p className="text-slate-700 leading-relaxed font-semibold">
+            Not all processing requires consent.
           </p>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">3. When We Request Consent</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">3. Account Registration & Service Delivery</h2>
+          
+          <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6">
+            <h3 className="text-lg font-semibold text-blue-900 mb-2">3.1 Account Registration (Not Consent-Based)</h3>
+            <p className="text-blue-800 text-sm mb-3">
+              By completing account registration, you agree to the processing of your personal data necessary to provide the MockITHub services.
+            </p>
+            <p className="text-blue-800 text-sm mb-3">
+              The processing required to:
+            </p>
+            <ul className="list-disc list-inside space-y-1 text-blue-800 text-sm ml-4 mb-3">
+              <li>Create your account</li>
+              <li>Provide subscription services</li>
+              <li>Process CV uploads</li>
+              <li>Deliver AI-powered interview simulations</li>
+              <li>Provide roadmap features</li>
+              <li>Manage billing and account administration</li>
+            </ul>
+            <p className="text-blue-800 text-sm mb-3">
+              is carried out under <strong>contractual necessity</strong>, not consent.
+            </p>
+            <p className="text-blue-800 text-sm">
+              This processing is required to deliver the services you request and cannot be withdrawn unless you close your account. If you do not agree to this processing, account registration cannot be completed.
+            </p>
+          </div>
+
+          <h3 className="text-xl font-semibold text-slate-800 mb-3">3.2 Contract-Based Processing (Not Consent)</h3>
+          <p className="text-slate-700 leading-relaxed mb-3">
+            The following processing activities are based on contractual necessity and do not rely on consent:
+          </p>
+          <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4">
+            <li>CV uploads and analysis</li>
+            <li>AI interview simulations</li>
+            <li>Roadmap generation</li>
+            <li>Job filtering features</li>
+            <li>Subscription management</li>
+            <li>Account communications</li>
+          </ul>
+          <p className="text-slate-700 leading-relaxed mt-4">
+            You may stop this processing only by closing your account.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">4. When We Require Consent</h2>
+          <p className="text-slate-700 leading-relaxed mb-4">
+            We rely on consent only where legally required. Consent is:
+          </p>
+          <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4 mb-4">
+            <li>Freely given</li>
+            <li>Specific</li>
+            <li>Informed</li>
+            <li>Unambiguous</li>
+            <li>Recorded</li>
+          </ul>
+          <p className="text-slate-700 leading-relaxed mb-6">
+            We do not use pre-ticked boxes or bundled consent.
+          </p>
 
           <div className="space-y-6">
-            <div className="bg-slate-50 border border-slate-200 rounded-lg p-6">
-              <h4 className="font-semibold text-slate-900 mb-3">Account Creation</h4>
-              <p className="text-slate-700 text-sm mb-3">
-                When you create an account, we ask for consent to:
+            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <h3 className="text-lg font-semibold text-slate-900 mb-2">4.1 Marketing Communications</h3>
+              <p className="text-slate-700 text-sm mb-2">
+                We request separate opt-in consent for:
               </p>
               <ul className="list-disc list-inside space-y-1 text-slate-700 text-sm ml-4">
-                <li>Process your personal information</li>
-                <li>Store your data securely</li>
-                <li>Send account-related notifications</li>
-              </ul>
-            </div>
-
-            <div className="bg-slate-50 border border-slate-200 rounded-lg p-6">
-              <h4 className="font-semibold text-slate-900 mb-3">Interview Sessions</h4>
-              <p className="text-slate-700 text-sm mb-3">
-                Before starting a recorded interview, we request consent for:
-              </p>
-              <ul className="list-disc list-inside space-y-1 text-slate-700 text-sm ml-4">
-                <li>Recording audio and video</li>
-                <li>Analyzing your responses using AI</li>
-                <li>Storing session data for your review</li>
-              </ul>
-            </div>
-
-            <div className="bg-slate-50 border border-slate-200 rounded-lg p-6">
-              <h4 className="font-semibold text-slate-900 mb-3">CV Upload</h4>
-              <p className="text-slate-700 text-sm mb-3">
-                When uploading your CV or resume, we ask for consent to:
-              </p>
-              <ul className="list-disc list-inside space-y-1 text-slate-700 text-sm ml-4">
-                <li>Parse and analyze your document</li>
-                <li>Extract relevant information</li>
-                <li>Provide optimization recommendations</li>
-              </ul>
-            </div>
-
-            <div className="bg-slate-50 border border-slate-200 rounded-lg p-6">
-              <h4 className="font-semibold text-slate-900 mb-3">Marketing Communications</h4>
-              <p className="text-slate-700 text-sm mb-3">
-                We request separate consent for:
-              </p>
-              <ul className="list-disc list-inside space-y-1 text-slate-700 text-sm ml-4">
-                <li>Email newsletters and updates</li>
-                <li>Promotional offers and discounts</li>
+                <li>Email newsletters</li>
+                <li>Promotional campaigns</li>
                 <li>Product announcements</li>
+                <li>Discounts and offers</li>
               </ul>
+              <p className="text-slate-700 text-sm mt-2">
+                You may withdraw consent at any time without affecting your account.
+              </p>
             </div>
 
-            <div className="bg-slate-50 border border-slate-200 rounded-lg p-6">
-              <h4 className="font-semibold text-slate-900 mb-3">Cookie Consent</h4>
-              <p className="text-slate-700 text-sm mb-3">
-                On your first visit, we display a cookie banner requesting consent for:
+            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <h3 className="text-lg font-semibold text-slate-900 mb-2">4.2 Non-Essential Cookies</h3>
+              <p className="text-slate-700 text-sm mb-2">
+                We request consent before placing:
               </p>
               <ul className="list-disc list-inside space-y-1 text-slate-700 text-sm ml-4">
-                <li>Analytics and performance cookies</li>
-                <li>Functional cookies for enhanced features</li>
-                <li>Advertising and targeting cookies</li>
+                <li>Analytics cookies</li>
+                <li>Performance cookies</li>
+                <li>Advertising or targeting cookies</li>
+              </ul>
+              <p className="text-slate-700 text-sm mt-2">
+                Essential cookies do not require consent.
+              </p>
+            </div>
+
+            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <h3 className="text-lg font-semibold text-slate-900 mb-2">4.3 Testimonials & Public Use of Content</h3>
+              <p className="text-slate-700 text-sm mb-2">
+                We request explicit consent before:
+              </p>
+              <ul className="list-disc list-inside space-y-1 text-slate-700 text-sm ml-4">
+                <li>Publishing testimonials</li>
+                <li>Displaying success stories</li>
+                <li>Using feedback for promotional purposes</li>
               </ul>
             </div>
-          </div>
-        </section>
 
-        <section>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">4. How to Provide Consent</h2>
-          <p className="text-slate-700 leading-relaxed mb-4">
-            We make it easy for you to understand what you're consenting to and provide clear mechanisms to
-            give consent:
-          </p>
-
-          <div className="space-y-4">
-            <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 w-8 h-8 bg-sky-100 rounded-full flex items-center justify-center text-sky-600 font-semibold">
-                1
-              </div>
-              <div>
-                <h4 className="font-semibold text-slate-900 mb-1">Clear Information</h4>
-                <p className="text-slate-700 text-sm">
-                  We provide clear, concise explanations of what data we collect and how we use it
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 w-8 h-8 bg-sky-100 rounded-full flex items-center justify-center text-sky-600 font-semibold">
-                2
-              </div>
-              <div>
-                <h4 className="font-semibold text-slate-900 mb-1">Specific Requests</h4>
-                <p className="text-slate-700 text-sm">
-                  We ask for consent separately for different purposes, not in bulk
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 w-8 h-8 bg-sky-100 rounded-full flex items-center justify-center text-sky-600 font-semibold">
-                3
-              </div>
-              <div>
-                <h4 className="font-semibold text-slate-900 mb-1">Voluntary Choice</h4>
-                <p className="text-slate-700 text-sm">
-                  Your consent must be freely given; you can refuse without negative consequences
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 w-8 h-8 bg-sky-100 rounded-full flex items-center justify-center text-sky-600 font-semibold">
-                4
-              </div>
-              <div>
-                <h4 className="font-semibold text-slate-900 mb-1">Affirmative Action</h4>
-                <p className="text-slate-700 text-sm">
-                  We require active consent through checkboxes, buttons, or explicit statements
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">5. Withdrawing Consent</h2>
-          <p className="text-slate-700 leading-relaxed mb-4">
-            You have the right to withdraw your consent at any time. Withdrawing consent does not affect the
-            lawfulness of processing based on consent before its withdrawal.
-          </p>
-
-          <h3 className="text-xl font-semibold text-slate-800 mb-3">How to Withdraw Consent</h3>
-          <div className="space-y-3">
-            <div className="bg-sky-50 border border-sky-200 rounded-lg p-4">
-              <h4 className="font-semibold text-sky-900 mb-2">Account Settings</h4>
-              <p className="text-sky-800 text-sm">
-                Log in to your account and navigate to Privacy Settings to manage your consent preferences
+            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <h3 className="text-lg font-semibold text-slate-900 mb-2">4.4 Optional AI Research or Model Improvement</h3>
+              <p className="text-slate-700 text-sm mb-2">
+                If we wish to use identifiable data for research, AI model improvement, or development beyond core service delivery, we will request separate explicit consent.
               </p>
-            </div>
-
-            <div className="bg-sky-50 border border-sky-200 rounded-lg p-4">
-              <h4 className="font-semibold text-sky-900 mb-2">Unsubscribe Links</h4>
-              <p className="text-sky-800 text-sm">
-                Click the "Unsubscribe" link at the bottom of our marketing emails
-              </p>
-            </div>
-
-            <div className="bg-sky-50 border border-sky-200 rounded-lg p-4">
-              <h4 className="font-semibold text-sky-900 mb-2">Cookie Settings</h4>
-              <p className="text-sky-800 text-sm">
-                Use the cookie consent tool to adjust your cookie preferences at any time
-              </p>
-            </div>
-
-            <div className="bg-sky-50 border border-sky-200 rounded-lg p-4">
-              <h4 className="font-semibold text-sky-900 mb-2">Contact Us</h4>
-              <p className="text-sky-800 text-sm">
-                Email privacy@mockithub.com to withdraw consent for specific processing activities
+              <p className="text-slate-700 text-sm">
+                We do not use identifiable data for such purposes without lawful basis.
               </p>
             </div>
           </div>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">6. Consequences of Withdrawing Consent</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">5. How Consent Is Obtained</h2>
           <p className="text-slate-700 leading-relaxed mb-3">
-            Depending on what consent you withdraw, this may affect your ability to use certain features:
+            Where consent is required, it is obtained through:
+          </p>
+          <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4 mb-4">
+            <li>Unticked checkboxes</li>
+            <li>Clear "I Agree" buttons</li>
+            <li>Separate opt-in fields</li>
+            <li>Granular selection options</li>
+          </ul>
+          <p className="text-slate-700 leading-relaxed">
+            We provide clear explanations before consent is requested.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">6. Withdrawing Consent</h2>
+          <p className="text-slate-700 leading-relaxed mb-4">
+            You may withdraw consent at any time. Withdrawal does not affect processing carried out before withdrawal.
+          </p>
+          <p className="text-slate-700 leading-relaxed mb-3">
+            You may withdraw consent by:
           </p>
           <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4">
-            <li>Withdrawing consent for interview recording will prevent you from using recorded interview features</li>
-            <li>Refusing analytics cookies may limit our ability to improve your experience</li>
-            <li>Unsubscribing from marketing emails means you'll miss promotional offers</li>
-            <li>Some essential services require certain data processing to function</li>
+            <li>Updating privacy settings in your account</li>
+            <li>Clicking "Unsubscribe" in marketing emails</li>
+            <li>Adjusting cookie preferences</li>
+            <li>Contacting privacy@mockithub.com</li>
           </ul>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">7. Children and Consent</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">7. Consequences of Withdrawing Consent</h2>
+          <p className="text-slate-700 leading-relaxed mb-3">
+            Depending on the consent withdrawn:
+          </p>
+          <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4 mb-4">
+            <li>Marketing emails will stop</li>
+            <li>Interview recording features may be disabled</li>
+            <li>Optional AI features may be restricted</li>
+          </ul>
           <p className="text-slate-700 leading-relaxed">
-            MockITHub is not intended for users under 18 years of age. If we discover that we have collected
-            personal information from a child under 18 without parental consent, we will delete that information
-            immediately. If you believe we have inadvertently collected such information, please contact us.
+            Core services based on contract will continue unless you close your account.
           </p>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">8. Record of Consent</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">8. Automated Processing & Profiling</h2>
           <p className="text-slate-700 leading-relaxed mb-3">
-            We maintain records of the consents you provide, including:
+            MockITHub uses AI to generate:
+          </p>
+          <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4 mb-4">
+            <li>Interview feedback</li>
+            <li>CV recommendations</li>
+            <li>Behavioural insights</li>
+            <li>Readiness indicators</li>
+          </ul>
+          <p className="text-slate-700 leading-relaxed mb-4">
+            AI outputs are advisory and not legally binding.
+          </p>
+          <p className="text-slate-700 leading-relaxed mb-3">
+            Where profiling is used:
           </p>
           <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4">
-            <li>What you consented to</li>
-            <li>When you provided consent</li>
-            <li>How consent was obtained</li>
-            <li>Any changes or withdrawals of consent</li>
+            <li>You are informed before processing</li>
+            <li>You may request human review (where available)</li>
+            <li>We do not make solely automated decisions with legal or similarly significant effects without safeguards</li>
           </ul>
-          <p className="text-slate-700 leading-relaxed mt-3">
-            You can request a copy of your consent records by contacting privacy@mockithub.com
-          </p>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">9. Updates to This Policy</h2>
-          <p className="text-slate-700 leading-relaxed">
-            This policy is reviewed every 12 months or after significant regulatory or platform changes. Material
-            changes will be communicated to you, and we may request renewed consent where necessary. The "Last
-            Updated" date indicates when the policy was last revised.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">10. Contact Us</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">9. Record of Consent</h2>
           <p className="text-slate-700 leading-relaxed mb-3">
-            If you have questions about consent or wish to exercise your rights, please contact us:
+            MockITHub securely maintains records of:
+          </p>
+          <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4 mb-4">
+            <li>What consent was provided</li>
+            <li>Date and time of consent</li>
+            <li>Method of consent</li>
+            <li>Any withdrawal or modification</li>
+          </ul>
+          <p className="text-slate-700 leading-relaxed">
+            You may request your consent record by contacting privacy@mockithub.com.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">10. Children</h2>
+          <p className="text-slate-700 leading-relaxed mb-4">
+            MockITHub is not intended for individuals under 18 years of age.
+          </p>
+          <p className="text-slate-700 leading-relaxed">
+            If we become aware that we have collected personal data from a minor, we will delete it promptly.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">11. Updates to This Policy</h2>
+          <p className="text-slate-700 leading-relaxed">
+            This Consent Policy is reviewed annually or following significant legal or platform changes. We will notify you of material changes via email or platform notification.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">12. Contact Us</h2>
+          <p className="text-slate-700 leading-relaxed mb-3">
+            For questions about consent or data processing:
           </p>
           <div className="bg-slate-50 border border-slate-200 rounded-lg p-6 space-y-2">
             <p className="text-slate-700"><strong>Email:</strong> privacy@mockithub.com</p>
-            <p className="text-slate-700"><strong>Data Protection Officer:</strong> dpo@mockithub.com</p>
-            <p className="text-slate-700"><strong>Address:</strong> MockITHub Ltd, United Kingdom</p>
-            <p className="text-slate-700"><strong>Website:</strong> www.mockithub.com</p>
+            <p className="text-slate-700"><strong>Support:</strong> support@mockithub.ai</p>
+            <p className="text-slate-700"><strong>Address:</strong> MockITHub Ltd, 165–169 Great Portland Street, 5th Floor, W1W 5PF, London, United Kingdom</p>
+            <p className="text-slate-700"><strong>Website:</strong> www.mockithub.ai</p>
           </div>
         </section>
-
-        <div className="bg-sky-50 border border-sky-200 rounded-lg p-6 mt-8">
-          <p className="text-sky-900 font-semibold mb-2">Your Rights</p>
-          <p className="text-sky-800 text-sm">
-            You have control over your personal data. You can manage your consent preferences at any time
-            through your account settings or by contacting us directly. We're here to help you understand
-            and exercise your privacy rights.
-          </p>
-        </div>
       </div>
     </PolicyLayout>
   );
-}
+});
+
+ConsentPolicyPage.displayName = 'ConsentPolicyPage';
+
+export default ConsentPolicyPage;

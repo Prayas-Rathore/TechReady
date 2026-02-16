@@ -1,207 +1,262 @@
+import { memo } from 'react';
 import PolicyLayout from '../components/PolicyLayout';
 
-export default function CookiesPolicyPage() {
+const CookiesPolicyPage = memo(() => {
   return (
-    <PolicyLayout title="Cookies Policy" lastUpdated="December 3, 2025">
+    <PolicyLayout title="Cookie Policy" lastUpdated="November 24, 2025">
       <div className="space-y-8">
+        {/* Company Information */}
+        <section className="bg-slate-50 border border-slate-200 rounded-lg p-6">
+          <p className="text-slate-700"><strong>Company:</strong> MockITHub Ltd</p>
+          <p className="text-slate-700"><strong>Company Number:</strong> 16823684</p>
+          <p className="text-slate-700"><strong>Registered Office:</strong> 165–169 Great Portland Street, 5th Floor, W1W 5PF, London, United Kingdom</p>
+          <p className="text-slate-700"><strong>Email:</strong> support@mockithub.ai</p>
+        </section>
+
         <section>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">1. What Are Cookies?</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">1. Introduction</h2>
           <p className="text-slate-700 leading-relaxed mb-4">
-            Cookies are small text files that are placed on your computer or mobile device when you visit a website.
-            They are widely used to make websites work more efficiently and provide information to website owners.
+            This Cookie Policy explains how MockITHub Ltd uses cookies and similar technologies when you visit our website or use our platform.
           </p>
-          <p className="text-slate-700 leading-relaxed">
-            MockITHub uses cookies and similar tracking technologies to enhance your experience, analyze usage
-            patterns, and improve our services.
+          <p className="text-slate-700 leading-relaxed mb-4">
+            This Policy should be read alongside our Privacy Policy.
           </p>
+          <p className="text-slate-700 leading-relaxed mb-3">
+            We comply with:
+          </p>
+          <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4">
+            <li>UK General Data Protection Regulation (UK GDPR)</li>
+            <li>Data Protection Act 2018</li>
+            <li>Privacy and Electronic Communications Regulations (PECR)</li>
+            <li>ICO cookie guidance</li>
+          </ul>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">2. Types of Cookies We Use</h2>
-
-          <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">2.1 Essential Cookies</h3>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">2. What Are Cookies?</h2>
+          <p className="text-slate-700 leading-relaxed mb-4">
+            Cookies are small text files placed on your device (computer, tablet, or mobile) when you visit a website.
+          </p>
           <p className="text-slate-700 leading-relaxed mb-3">
-            These cookies are necessary for the website to function properly. They enable core functionality such as:
+            They help websites:
+          </p>
+          <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4 mb-4">
+            <li>Remember your preferences</li>
+            <li>Keep you logged in</li>
+            <li>Improve performance</li>
+            <li>Understand how users interact with the platform</li>
+            <li>Deliver relevant content or advertisements</li>
+          </ul>
+          <p className="text-slate-700 leading-relaxed mb-3">
+            Cookies may be:
           </p>
           <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4">
-            <li>User authentication and account access</li>
-            <li>Security and fraud prevention</li>
-            <li>Remembering your privacy settings</li>
-            <li>Load balancing and performance optimization</li>
+            <li><strong>Session cookies</strong> – deleted when you close your browser</li>
+            <li><strong>Persistent cookies</strong> – remain for a set period or until manually deleted</li>
           </ul>
-          <p className="text-slate-700 leading-relaxed mt-3">
-            <strong>Duration:</strong> Session cookies (deleted when you close your browser) or persistent cookies
-            (remain for a set period)
-          </p>
-
-          <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">2.2 Performance and Analytics Cookies</h3>
-          <p className="text-slate-700 leading-relaxed mb-3">
-            These cookies help us understand how visitors interact with our platform by collecting anonymous information:
-          </p>
-          <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4">
-            <li>Number of visitors and pages viewed</li>
-            <li>Time spent on pages</li>
-            <li>Navigation patterns and user flow</li>
-            <li>Error messages and technical issues</li>
-          </ul>
-          <p className="text-slate-700 leading-relaxed mt-3">
-            <strong>Duration:</strong> Up to 2 years
-          </p>
-
-          <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">2.3 Functional Cookies</h3>
-          <p className="text-slate-700 leading-relaxed mb-3">
-            These cookies enable enhanced functionality and personalization:
-          </p>
-          <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4">
-            <li>Remembering your preferences and settings</li>
-            <li>Personalizing content and recommendations</li>
-            <li>Language and region preferences</li>
-            <li>Chat and support features</li>
-          </ul>
-          <p className="text-slate-700 leading-relaxed mt-3">
-            <strong>Duration:</strong> Up to 1 year
-          </p>
-
-          <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">2.4 Targeting and Advertising Cookies</h3>
-          <p className="text-slate-700 leading-relaxed mb-3">
-            These cookies are used to deliver relevant advertisements and track campaign effectiveness:
-          </p>
-          <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4">
-            <li>Displaying personalized ads based on your interests</li>
-            <li>Limiting the number of times you see an ad</li>
-            <li>Measuring advertising campaign effectiveness</li>
-            <li>Understanding user behavior across websites</li>
-          </ul>
-          <p className="text-slate-700 leading-relaxed mt-3">
-            <strong>Duration:</strong> Up to 2 years
-          </p>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">3. Third-Party Cookies</h2>
-          <p className="text-slate-700 leading-relaxed mb-3">
-            We work with third-party service providers who may set cookies on your device. These include:
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">3. Types of Cookies We Use</h2>
+          <p className="text-slate-700 leading-relaxed mb-6">
+            We use four categories of cookies:
           </p>
 
-          <div className="space-y-4 mt-4">
-            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
-              <h4 className="font-semibold text-slate-900 mb-2">Google Analytics</h4>
-              <p className="text-slate-700 text-sm">
-                Used to analyze website traffic and user behavior. Learn more at{' '}
-                <a href="https://policies.google.com/privacy" className="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
-                  Google Privacy Policy
-                </a>
+          <div className="space-y-6">
+            <div className="bg-green-50 border-l-4 border-green-500 p-4">
+              <h3 className="text-xl font-semibold text-slate-800 mb-3">A. Strictly Necessary Cookies (Always Active)</h3>
+              <p className="text-slate-700 leading-relaxed mb-3">
+                These cookies are essential for the platform to function properly. They allow you to:
               </p>
+              <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4 mb-3">
+                <li>Log in securely</li>
+                <li>Maintain session authentication</li>
+                <li>Navigate between pages</li>
+                <li>Process payments securely</li>
+                <li>Use AI tools and account features</li>
+              </ul>
+              <div className="bg-green-100 rounded p-3 mt-3">
+                <p className="text-green-900 text-sm"><strong>Legal basis:</strong> Legitimate interest / Contractual necessity</p>
+                <p className="text-green-900 text-sm"><strong>Consent:</strong> Not required under PECR</p>
+                <p className="text-green-900 text-sm mt-2">Without these cookies, the platform cannot operate.</p>
+              </div>
             </div>
 
             <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
-              <h4 className="font-semibold text-slate-900 mb-2">Payment Processors</h4>
-              <p className="text-slate-700 text-sm">
-                Secure payment processing cookies from our payment partners (e.g., Stripe)
+              <h3 className="text-xl font-semibold text-slate-800 mb-3">B. Functional Cookies</h3>
+              <p className="text-slate-700 leading-relaxed mb-3">
+                These cookies allow us to:
+              </p>
+              <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4">
+                <li>Remember your preferences</li>
+                <li>Save language or region settings</li>
+                <li>Store roadmap progress</li>
+                <li>Maintain feature customisation</li>
+              </ul>
+              <p className="text-slate-700 text-sm mt-3">
+                <strong>Legal basis:</strong> Legitimate interest or consent (where required)
               </p>
             </div>
 
-            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
-              <h4 className="font-semibold text-slate-900 mb-2">Social Media Platforms</h4>
-              <p className="text-slate-700 text-sm">
-                Cookies from social media platforms for sharing and engagement features
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <h3 className="text-xl font-semibold text-slate-800 mb-3">C. Analytics & Performance Cookies</h3>
+              <p className="text-slate-700 leading-relaxed mb-3">
+                These cookies help us understand how users interact with MockITHub, including:
+              </p>
+              <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4 mb-3">
+                <li>Page views</li>
+                <li>Session duration</li>
+                <li>Feature usage (e.g., Interview Toolkit, CV Optimizer)</li>
+                <li>Error tracking</li>
+                <li>Performance monitoring</li>
+              </ul>
+              <p className="text-slate-700 leading-relaxed mb-3">
+                This may include tools such as:
+              </p>
+              <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4">
+                <li>Google Analytics (if implemented)</li>
+                <li>Platform analytics tools</li>
+              </ul>
+              <div className="bg-blue-100 rounded p-3 mt-3">
+                <p className="text-blue-900 text-sm"><strong>Legal basis:</strong> Consent</p>
+                <p className="text-blue-900 text-sm mt-1">Analytics cookies are only activated after you accept them in our cookie banner.</p>
+              </div>
+            </div>
+
+            <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+              <h3 className="text-xl font-semibold text-slate-800 mb-3">D. Marketing & Advertising Cookies (Optional)</h3>
+              <p className="text-slate-700 leading-relaxed mb-3">
+                If enabled, these cookies may:
+              </p>
+              <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4">
+                <li>Measure advertising effectiveness</li>
+                <li>Show relevant content</li>
+                <li>Track campaign performance</li>
+              </ul>
+              <p className="text-slate-700 leading-relaxed mt-3">
+                These are only used if you provide explicit consent.
+              </p>
+              <p className="text-slate-700 leading-relaxed mt-3 font-semibold">
+                We do not sell personal data.
               </p>
             </div>
           </div>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">4. How to Manage Cookies</h2>
-          <p className="text-slate-700 leading-relaxed mb-4">
-            You have several options to manage or disable cookies:
-          </p>
-
-          <h3 className="text-xl font-semibold text-slate-800 mb-3">4.1 Browser Settings</h3>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">4. Third-Party Cookies</h2>
           <p className="text-slate-700 leading-relaxed mb-3">
-            Most browsers allow you to control cookies through their settings. You can:
+            Some cookies may be placed by third-party providers such as:
           </p>
-          <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4">
-            <li>Block all cookies</li>
-            <li>Block third-party cookies only</li>
-            <li>Delete cookies after each browsing session</li>
-            <li>View and delete individual cookies</li>
-          </ul>
-
-          <div className="mt-4 space-y-2 text-sm text-slate-700">
-            <p><strong>Chrome:</strong> Settings → Privacy and Security → Cookies</p>
-            <p><strong>Firefox:</strong> Options → Privacy & Security → Cookies</p>
-            <p><strong>Safari:</strong> Preferences → Privacy → Cookies</p>
-            <p><strong>Edge:</strong> Settings → Privacy → Cookies</p>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <h4 className="font-semibold text-slate-900 mb-2">Stripe</h4>
+              <p className="text-slate-700 text-sm">Secure payment processing</p>
+            </div>
+            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <h4 className="font-semibold text-slate-900 mb-2">Analytics Providers</h4>
+              <p className="text-slate-700 text-sm">Usage analytics and insights</p>
+            </div>
+            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <h4 className="font-semibold text-slate-900 mb-2">Cloud Hosting</h4>
+              <p className="text-slate-700 text-sm">Infrastructure and data storage</p>
+            </div>
+            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+              <h4 className="font-semibold text-slate-900 mb-2">Security Services</h4>
+              <p className="text-slate-700 text-sm">Platform security and fraud prevention</p>
+            </div>
           </div>
-
-          <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">4.2 Cookie Consent Tool</h3>
-          <p className="text-slate-700 leading-relaxed">
-            When you first visit MockITHub, you'll see a cookie consent banner. You can customize your cookie
-            preferences by clicking "Cookie Settings" at any time.
+          <p className="text-slate-700 leading-relaxed mt-4">
+            These third parties may process limited technical data according to their own privacy policies. We ensure contractual safeguards are in place where required.
           </p>
+        </section>
 
-          <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">4.3 Opt-Out Links</h3>
+        <section>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">5. How We Obtain Consent</h2>
           <p className="text-slate-700 leading-relaxed mb-3">
-            You can opt out of certain third-party cookies:
+            When you first visit MockITHub:
+          </p>
+          <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4 mb-4">
+            <li>You will see a cookie banner</li>
+            <li>You can accept, reject, or customise your preferences</li>
+            <li>Non-essential cookies are disabled until consent is given</li>
+          </ul>
+          <p className="text-slate-700 leading-relaxed mb-3">
+            You can change your preferences at any time via:
           </p>
           <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4">
-            <li>
-              <a href="https://tools.google.com/dlpage/gaoptout" className="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
-                Google Analytics Opt-out
-              </a>
-            </li>
-            <li>
-              <a href="https://www.youronlinechoices.com/" className="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
-                Your Online Choices (EU)
-              </a>
-            </li>
-            <li>
-              <a href="https://optout.networkadvertising.org/" className="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
-                Network Advertising Initiative Opt-out
-              </a>
-            </li>
+            <li>The "Cookie Settings" link on our website</li>
+            <li>Your browser settings</li>
           </ul>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">5. Impact of Disabling Cookies</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">6. Managing or Deleting Cookies</h2>
           <p className="text-slate-700 leading-relaxed mb-3">
-            Please note that disabling cookies may affect your experience on MockITHub:
+            You can manage cookies by:
           </p>
-          <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4">
-            <li>You may need to log in repeatedly</li>
-            <li>Personalized features may not work properly</li>
-            <li>Some pages may load more slowly</li>
-            <li>Certain features may become unavailable</li>
+          <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4 mb-4">
+            <li>Adjusting browser settings</li>
+            <li>Clearing cookies manually</li>
+            <li>Blocking certain categories</li>
           </ul>
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-4">
-            <p className="text-amber-800 text-sm">
-              <strong>Note:</strong> Essential cookies cannot be disabled as they are necessary for the website to function.
+
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
+            <p className="text-amber-900 text-sm">
+              <strong>Please note:</strong> Blocking essential cookies may affect platform functionality.
             </p>
           </div>
+
+          <div className="space-y-2 text-sm text-slate-700">
+            <p><strong>Chrome:</strong> <a href="https://support.google.com" className="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">support.google.com</a></p>
+            <p><strong>Firefox:</strong> <a href="https://support.mozilla.org" className="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">support.mozilla.org</a></p>
+            <p><strong>Safari:</strong> <a href="https://support.apple.com" className="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">support.apple.com</a></p>
+          </div>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">6. Updates to This Policy</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">7. Cookie Retention Periods</h2>
           <p className="text-slate-700 leading-relaxed">
-            We may update this Cookies Policy from time to time to reflect changes in technology, legislation,
-            or our practices. We encourage you to review this page periodically. The "Last Updated" date at
-            the top indicates when the policy was last revised.
+            Retention periods may vary depending on the cookie type and third-party providers. Session cookies are deleted when you close your browser, while persistent cookies may remain for periods ranging from days to years based on their purpose.
           </p>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">7. Contact Us</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">8. Data Protection & Security</h2>
           <p className="text-slate-700 leading-relaxed mb-3">
-            If you have questions about our use of cookies, please contact us:
+            Cookies may collect limited personal data such as IP address or device identifiers. We:
+          </p>
+          <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4">
+            <li>Encrypt data in transit</li>
+            <li>Limit access to authorised personnel</li>
+            <li>Use secure hosting infrastructure</li>
+            <li>Monitor for misuse or abuse</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">9. Updates to This Policy</h2>
+          <p className="text-slate-700 leading-relaxed">
+            We may update this Cookie Policy from time to time. Changes will be reflected by updating the "Last Updated" date at the top. We encourage you to review this policy periodically.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">10. Contact Us</h2>
+          <p className="text-slate-700 leading-relaxed mb-3">
+            For questions about cookies or this policy:
           </p>
           <div className="bg-slate-50 border border-slate-200 rounded-lg p-6 space-y-2">
-            <p className="text-slate-700"><strong>Email:</strong> privacy@mockithub.com</p>
-            <p className="text-slate-700"><strong>Address:</strong> MockITHub Ltd, United Kingdom</p>
-            <p className="text-slate-700"><strong>Website:</strong> www.mockithub.com</p>
+            <p className="text-slate-700"><strong>Email:</strong> support@mockithub.ai</p>
+            <p className="text-slate-700"><strong>Address:</strong> MockITHub Ltd, 165–169 Great Portland Street, 5th Floor, W1W 5PF, London, United Kingdom</p>
+            <p className="text-slate-700"><strong>Website:</strong> www.mockithub.ai</p>
           </div>
         </section>
       </div>
     </PolicyLayout>
   );
-}
+});
+
+CookiesPolicyPage.displayName = 'CookiesPolicyPage';
+
+export default CookiesPolicyPage;
