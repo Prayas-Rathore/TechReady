@@ -25,7 +25,7 @@ export default function HeroSection() {
 
             <p className="text-xl text-slate-300 leading-relaxed animate-fadeIn" style={{ animationDelay: '0.2s' }}>
 
-              Whether you're just starting out or levelling up, MockITHub equips you with everything you need to stand out and succeed in tech. From CV optimisation and AI-powered interview prep to portfolio branding, confidence training, Buddy blogs, and a personalised growth roadmap — it’s your all-in-one career accelerator. 
+             Whether you're starting out or stepping up, MockITHub helps you stand out in tech. Search smarter, optimise your CV with AI, generate tailored applications, practise mock interviews, and follow personalised roadmaps. It’s not just a tool — it’s your complete tech career preparation platform, from job search to long-term growth. 
 
             </p>
 

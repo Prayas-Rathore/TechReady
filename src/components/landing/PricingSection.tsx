@@ -8,9 +8,12 @@ const plans = [
     period: '',
     description: 'Perfect for getting started',
     features: [
-      'JD Scanner & CV Optimiser',
+      'Interview Mindset Roadmap',
+      'Job Search',
+      'CV Optimiser',
+      'AI Drafter',
       'Interview ToolKit',
-      'Portfolio Branding & Identity',
+      'Buddy Connector',
     ],
     popular: false
   },
@@ -20,10 +23,12 @@ const plans = [
     period: '/month',
     description: 'Most popular choice',
     features: [
-       'JD Scanner & CV Optimiser',
+      'Interview Mindset Roadmap',
+      'Job Search',
+      'CV Optimiser',
+      'AI Drafter',
       'Interview ToolKit',
-      'Portfolio Branding & Identity',
-      'Buddy Model',
+      'Buddy Connector',
     ],
     popular: true
   },
@@ -34,10 +39,11 @@ const plans = [
     description: 'For serious candidates',
     features: [
      'Interview Mindset Roadmap',
-       'JD Scanner & CV Optimiser',
+      'Job Search',
+      'CV Optimiser',
+      'AI Drafter',
       'Interview ToolKit',
-      'Portfolio Branding & Identity',
-      'Buddy Model',
+      'Buddy Connector and Voice calls',
       'Post-Job Growth Roadmap'
     ],
     popular: false
