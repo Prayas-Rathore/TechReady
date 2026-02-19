@@ -34,7 +34,7 @@ const plans = [
   },
   {
     name: 'Pro Pack',
-    price: '£29.99',
+    price: '£24.99',
     period: '/month',
     description: 'For serious candidates',
     features: [

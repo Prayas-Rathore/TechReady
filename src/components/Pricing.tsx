@@ -8,10 +8,12 @@ const plans = [
     price: '14.99',
     description: 'Perfect for getting started with mock interviews',
     features: [
-      '	JD Scanner & CV Optimiser',	
-      ' AI Interview Prep ',
-      'Portfolio Branding & Identity',
-      'Buddy Model'
+      'Interview Mindset Roadmap',
+      'Job Search',
+      'CV Optimiser',
+      'AI Drafter',
+      'Interview ToolKit',
+      'Buddy Connector'
       
     ],
     cta: 'Get Basic',
@@ -22,26 +24,28 @@ const plans = [
     price: '19.99',
     description: 'Most popular choice for serious job seekers ',
     features: [
-      'Mindset & Confidence Training',
-       'JD Scanner & CV Optimiser',	
-      'AI Interview Prep ',
-      'Portfolio Branding & Identity',
-      'Buddy Model'
+      'Interview Mindset Roadmap',
+      'Job Search',
+      'CV Optimiser',
+      'AI Drafter',
+      'Interview ToolKit',
+      'Buddy Connector'
     ],
     cta: 'Start Starter',
     highlighted: true,
   },
   {
     name: 'Guaranteed Success',
-    price: '29.99',
+    price: '24.99',
     description: ' Built for candidates who refuse average and aim for offers.',
     features: [
-      'Mindset & Confidence Training',
-      'JD Scanner & CV Optimiser',	
-      ' AI Interview Prep ',
-      'Portfolio Branding & Identity',
-      'Buddy Model',
-      'Post-Job Growth Roadmap',
+      'Interview Mindset Roadmap',
+      'Job Search',
+      'CV Optimiser',
+      'AI Drafter',
+      'Interview ToolKit',
+      'Buddy Connector and Voice calls',
+      'Post-Job Growth Roadmap'
       
     ],
     cta: 'Go Pro',

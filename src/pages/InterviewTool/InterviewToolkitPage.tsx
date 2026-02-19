@@ -4,7 +4,7 @@ import { ChevronDown, ChevronRight, BookOpen, Sparkles, Target, MessageSquare, U
 
 const MOCKITHUB_OPTIONS = [
   { path: '/interview-toolkit/home', label: 'Home', icon: BookOpen },
-  { path: '/interview-toolkit/tips', label: 'Tips', icon: Target },
+  { path: '/interview-toolkit/tips', label: 'Interview Tips', icon: Target },
   { path: '/interview-toolkit/star-framework', label: 'STAR Framework', icon: Award },
   { path: '/interview-toolkit/scenarios', label: 'Scenarios', icon: MessageSquare },
   { path: '/interview-toolkit/entry-level', label: 'Entry Level Interview Prep', icon: Users },
