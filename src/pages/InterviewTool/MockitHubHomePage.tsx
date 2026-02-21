@@ -1,5 +1,6 @@
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, BookOpen, Target, Award } from 'lucide-react';
+import { ArrowLeft, BookOpen } from 'lucide-react';
 
 export default function MockitHubHomePage() {
   const navigate = useNavigate();
@@ -20,37 +21,43 @@ export default function MockitHubHomePage() {
             <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-sky-500 to-blue-600 rounded-2xl mb-4">
               <BookOpen className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-4xl font-bold text-slate-900 mb-3">MockitHub Home</h1>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-              Welcome to your interview preparation hub
-            </p>
+            <h1 className="text-4xl font-bold text-slate-900 mb-3">Welcome to MockITHub</h1>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">Getting Started</h2>
-            <p className="text-slate-700 mb-6 leading-relaxed">
-              MockitHub provides comprehensive interview preparation resources to help you succeed in your job search.
-              Navigate through the different sections to access tips, frameworks, scenarios, and level-specific preparation materials.
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 md:p-12">
+            <p className="text-xl text-slate-700 mb-8 leading-relaxed">
+              If you're reading this, you're already doing something most candidates don't: <strong>preparing properly.</strong>
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="p-4 bg-sky-50 rounded-xl border border-sky-200">
-                <Target className="w-8 h-8 text-sky-600 mb-2" />
-                <h3 className="font-semibold text-slate-900 mb-1">Tips & Tricks</h3>
-                <p className="text-sm text-slate-600">Expert advice for interview success</p>
-              </div>
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold text-slate-900 mb-4">This guide exists to help you:</h2>
+              <ul className="space-y-3">
+                <li className="flex items-start gap-3">
+                  <span className="text-sky-600 font-bold text-xl mt-1">•</span>
+                  <span className="text-lg text-slate-700">understand how interviews really work</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-sky-600 font-bold text-xl mt-1">•</span>
+                  <span className="text-lg text-slate-700">remove fear and confusion</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-sky-600 font-bold text-xl mt-1">•</span>
+                  <span className="text-lg text-slate-700">build confidence step by step</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-sky-600 font-bold text-xl mt-1">•</span>
+                  <span className="text-lg text-slate-700">walk into interviews feeling calm and ready</span>
+                </li>
+              </ul>
+            </div>
 
-              <div className="p-4 bg-sky-50 rounded-xl border border-sky-200">
-                <Award className="w-8 h-8 text-sky-600 mb-2" />
-                <h3 className="font-semibold text-slate-900 mb-1">STAR Framework</h3>
-                <p className="text-sm text-slate-600">Master behavioral interviews</p>
-              </div>
-
-              <div className="p-4 bg-sky-50 rounded-xl border border-sky-200">
-                <BookOpen className="w-8 h-8 text-sky-600 mb-2" />
-                <h3 className="font-semibold text-slate-900 mb-1">Practice Scenarios</h3>
-                <p className="text-sm text-slate-600">Real-world interview situations</p>
-              </div>
+            <div className="bg-gradient-to-br from-sky-50 to-blue-50 border border-sky-200 rounded-xl p-8 text-center">
+              <p className="text-2xl font-bold text-slate-900 mb-2">
+                You don't need to be perfect.
+              </p>
+              <p className="text-2xl font-bold text-sky-600">
+                You need to be prepared.
+              </p>
             </div>
           </div>
         </div>

@@ -47,7 +47,7 @@ export default function InterviewSuggestionsPage() {
       if (sessionError) throw sessionError;
 
       if (!sessionData) {
-        navigate('/interview-prep');
+        navigate('/user-dashboard');
         return;
       }
 
@@ -64,7 +64,7 @@ export default function InterviewSuggestionsPage() {
       calculateOverallScore(responsesData || []);
     } catch (err) {
       console.error('Error loading session data:', err);
-      navigate('/interview-prep');
+      navigate('/user-dashboard');
     } finally {
       setLoading(false);
     }
@@ -437,7 +437,7 @@ export default function InterviewSuggestionsPage() {
                 Continue practicing to improve your interview skills and boost your confidence.
               </p>
               <button
-                onClick={() => navigate('/interview-prep')}
+                onClick={() => navigate('/jobdescription')}
                 className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-white text-sky-600 rounded-lg font-semibold hover:bg-sky-50 transition-colors"
               >
                 <ArrowRight className="w-4 h-4" />
