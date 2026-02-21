@@ -28,9 +28,9 @@ export default function Sidebar({ isMobileOpen, onClose }: SidebarProps) {
     { icon: StickyNote, label: 'Cv Optimizer', path: '/cv-dashboard' },
     { icon: MailMinus, label: 'AI Drafter', path: '/ai-drafter' },
     { icon: Video, label: 'Interview Toolkit', path: '/interview-toolkit', paidOnly: true }, // ✅ Only paid users
+    { icon: Trophy, label: 'Interview Toolkit', path: '/ai_jobdescription', freeOnly: true }, // ✅ Only free users
     { icon: Users, label: 'Buddy Connector', path: '/buddy-connector'},
     { icon: MapPin, label: 'Post Job RoadMap', path: '/postroadmap', requiresPro: true },
-    { icon: Trophy, label: 'Interview Practice', path: '/ai_jobdescription', freeOnly: true }, // ✅ Only free users
   ];
 
   const isActive = (path: string) => {

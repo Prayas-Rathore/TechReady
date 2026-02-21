@@ -113,7 +113,7 @@ function App() {
               <Route 
                 path="/assessment" 
                 element={
-                  <PremiumPage allowedPlans={["basic", "starter", "pro"]}>
+                  <PremiumPage allowedPlans={["basic", "free", "pro"]}>
                     <AssessmentPage />
                   </PremiumPage>
                 } 
@@ -122,7 +122,7 @@ function App() {
               <Route 
                 path="/mindset-roadmap" 
                 element={
-                  <PremiumPage allowedPlans={["basic", "starter", "pro"]}>
+                  <PremiumPage allowedPlans={["basic", "free", "pro"]}>
                     <InterviewMindsetRoadmapPage />
                   </PremiumPage>
                 } 
@@ -223,7 +223,7 @@ function App() {
               <Route 
                 path="/buddy-connector" 
                 element={
-                  <PremiumPage allowedPlans={["basic", "starter", "pro"]}>
+                  <PremiumPage allowedPlans={["basic", "free", "pro"]}>
                     <BuddyConnectorPage />
                   </PremiumPage>
                 } 
@@ -231,7 +231,7 @@ function App() {
               <Route 
                 path="/jobs" 
                 element={
-                  <PremiumPage allowedPlans={["basic", "starter", "pro"]}>
+                  <PremiumPage allowedPlans={["basic", "free", "pro"]}>
                     <JobSearchPage />
                   </PremiumPage>
                 } 
