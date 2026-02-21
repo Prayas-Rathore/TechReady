@@ -322,7 +322,7 @@ const TermsOfServicePage = memo(() => {
           <h2 className="text-2xl font-bold text-slate-900 mb-4">17. Contact Us</h2>
           <div className="bg-slate-50 border border-slate-200 rounded-lg p-6 space-y-2">
             <p className="text-slate-700"><strong>Support:</strong> support@mockithub.ai</p>
-            <p className="text-slate-700"><strong>Privacy:</strong> privacy@mockithub.com</p>
+            <p className="text-slate-700"><strong>Privacy:</strong> support@mockithub.ai</p>
             <p className="text-slate-700"><strong>Address:</strong> MockITHub Ltd, 165–169 Great Portland Street, 5th Floor, W1W 5PF, London, United Kingdom</p>
           </div>
         </section>

@@ -198,7 +198,7 @@ const ConsentPolicyPage = memo(() => {
             <li>Updating privacy settings in your account</li>
             <li>Clicking "Unsubscribe" in marketing emails</li>
             <li>Adjusting cookie preferences</li>
-            <li>Contacting privacy@mockithub.com</li>
+            <li>Contacting support@mockithub.ai</li>
           </ul>
         </section>
 
@@ -253,7 +253,7 @@ const ConsentPolicyPage = memo(() => {
             <li>Any withdrawal or modification</li>
           </ul>
           <p className="text-slate-700 leading-relaxed">
-            You may request your consent record by contacting privacy@mockithub.com.
+            You may request your consent record by contacting support@mockithub.ai .
           </p>
         </section>
 
@@ -280,7 +280,6 @@ const ConsentPolicyPage = memo(() => {
             For questions about consent or data processing:
           </p>
           <div className="bg-slate-50 border border-slate-200 rounded-lg p-6 space-y-2">
-            {/* <p className="text-slate-700"><strong>Email:</strong> privacy@mockithub.com</p> */}
             <p className="text-slate-700"><strong>Support:</strong> support@mockithub.ai</p>
             <p className="text-slate-700"><strong>Address:</strong> MockITHub Ltd, 165–169 Great Portland Street, 5th Floor, W1W 5PF, London, United Kingdom</p>
             <p className="text-slate-700"><strong>Website:</strong> www.mockithub.ai</p>
