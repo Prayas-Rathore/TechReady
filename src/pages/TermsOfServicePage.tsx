@@ -3,7 +3,7 @@ import PolicyLayout from '../components/PolicyLayout';
 
 const TermsOfServicePage = memo(() => {
   return (
-    <PolicyLayout title="Terms of Service" lastUpdated="November 24, 2025">
+    <PolicyLayout title="Terms of Service" lastUpdated="24 November 2025">
       <div className="space-y-8">
         <section>
           <h2 className="text-2xl font-bold text-slate-900 mb-4">1. Welcome to MockITHub</h2>

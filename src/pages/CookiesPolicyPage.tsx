@@ -3,7 +3,7 @@ import PolicyLayout from '../components/PolicyLayout';
 
 const CookiesPolicyPage = memo(() => {
   return (
-    <PolicyLayout title="Cookie Policy" lastUpdated="November 24, 2025">
+    <PolicyLayout title="Cookie Policy" lastUpdated="24 November 2025">
       <div className="space-y-8">
         {/* Company Information */}
         <section className="bg-slate-50 border border-slate-200 rounded-lg p-6">

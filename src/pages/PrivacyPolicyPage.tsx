@@ -27,7 +27,7 @@ export default function PrivacyPolicyPage() {
             <li>CV Optimizer (AI-powered CV alignment)</li>
             <li>AI Drafter (cover letters, emails, LinkedIn messages)</li>
             <li>Interview Toolkit (AI mock interviews, STAR practice)</li>
-            <li>Buddy Connector (community feeds & live voice practice)</li>
+            <li>Buddy Connector (community feeds &amp; live voice practice)</li>
             <li>Post-Job Roadmap</li>
             <li>Website and subscription services</li>
           </ul>
@@ -68,7 +68,7 @@ export default function PrivacyPolicyPage() {
             <li>Feedback submissions</li>
           </ul>
 
-          <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">B. AI-Generated & Derived Data</h3>
+          <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">B. AI-Generated &amp; Derived Data</h3>
           <p className="text-slate-700 leading-relaxed mb-3">
             When you use our AI features, we may generate:
           </p>
@@ -86,12 +86,12 @@ export default function PrivacyPolicyPage() {
 
           <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">C. Payment Information</h3>
           <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4">
-            <li>Payments are processed by third-party providers (e.g., Stripe)</li>
-            <li>We do not store full card numbers</li>
-            <li>We may receive limited billing metadata (e.g., subscription status, last 4 digits of card, transaction ID)</li>
+            <li>Payments are processed by third-party providers (e.g., Stripe).</li>
+            <li>We do not store full card numbers.</li>
+            <li>We may receive limited billing metadata (e.g., subscription status, last 4 digits of card, transaction ID).</li>
           </ul>
 
-          <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">D. Technical & Usage Data</h3>
+          <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">D. Technical &amp; Usage Data</h3>
           <p className="text-slate-700 leading-relaxed mb-3">
             Automatically collected data may include:
           </p>
@@ -106,7 +106,7 @@ export default function PrivacyPolicyPage() {
             <li>Crash logs and error diagnostics</li>
           </ul>
 
-          <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">E. Cookies & Tracking Technologies</h3>
+          <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">E. Cookies &amp; Tracking Technologies</h3>
           <p className="text-slate-700 leading-relaxed mb-3">
             We use cookies for:
           </p>
@@ -132,7 +132,7 @@ export default function PrivacyPolicyPage() {
           <p className="text-slate-700 leading-relaxed mb-3">To provide:</p>
           <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4">
             <li>Interview Mindset Roadmaps</li>
-            <li>CV Optimisation & ATS analysis</li>
+            <li>CV Optimisation &amp; ATS analysis</li>
             <li>AI-generated interview simulations</li>
             <li>AI cover letter and message drafting</li>
             <li>Job filtering functionality</li>
@@ -173,269 +173,277 @@ export default function PrivacyPolicyPage() {
             <li>Renewal reminders</li>
             <li>Service updates</li>
             <li>Security alerts</li>
-            <li>Optional marketing emails (requires opt-in consent)</li>
+            <li>Support responses</li>
           </ul>
+          <p className="text-slate-700 leading-relaxed mt-3">
+            Marketing emails are sent only if you opt in.
+          </p>
 
-          <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">E. Legal Compliance</h3>
+          <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">E. Compliance &amp; Legal Obligations</h3>
+          <p className="text-slate-700 leading-relaxed mb-3">We process data to:</p>
           <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4">
-            <li>Fraud detection and prevention</li>
-            <li>Responding to legal requests</li>
-            <li>Enforcing our Terms of Service</li>
+            <li>Prevent fraud</li>
+            <li>Maintain accounting records</li>
+            <li>Comply with tax law</li>
+            <li>Meet regulatory requirements</li>
+            <li>Respond to lawful requests</li>
           </ul>
         </section>
 
         <section>
           <h2 className="text-2xl font-bold text-slate-900 mb-4">4. Legal Basis for Processing (UK GDPR)</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse border border-slate-200 rounded-lg">
+              <thead>
+                <tr className="bg-slate-100">
+                  <th className="border border-slate-200 px-4 py-3 text-left text-slate-800 font-semibold">Purpose</th>
+                  <th className="border border-slate-200 px-4 py-3 text-left text-slate-800 font-semibold">Legal Basis</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="border border-slate-200 px-4 py-3 text-slate-700">Account &amp; subscription services</td>
+                  <td className="border border-slate-200 px-4 py-3 text-slate-700">Contract</td>
+                </tr>
+                <tr className="bg-slate-50">
+                  <td className="border border-slate-200 px-4 py-3 text-slate-700">AI CV/interview processing</td>
+                  <td className="border border-slate-200 px-4 py-3 text-slate-700">Contract</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-200 px-4 py-3 text-slate-700">AI model improvement (if identifiable)</td>
+                  <td className="border border-slate-200 px-4 py-3 text-slate-700">Explicit Consent</td>
+                </tr>
+                <tr className="bg-slate-50">
+                  <td className="border border-slate-200 px-4 py-3 text-slate-700">Marketing emails</td>
+                  <td className="border border-slate-200 px-4 py-3 text-slate-700">Consent</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-200 px-4 py-3 text-slate-700">Platform analytics</td>
+                  <td className="border border-slate-200 px-4 py-3 text-slate-700">Legitimate Interest or Consent</td>
+                </tr>
+                <tr className="bg-slate-50">
+                  <td className="border border-slate-200 px-4 py-3 text-slate-700">Fraud prevention</td>
+                  <td className="border border-slate-200 px-4 py-3 text-slate-700">Legitimate Interest</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-200 px-4 py-3 text-slate-700">Accounting &amp; compliance</td>
+                  <td className="border border-slate-200 px-4 py-3 text-slate-700">Legal Obligation</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">5. Automated Decision-Making &amp; AI Transparency</h2>
           <p className="text-slate-700 leading-relaxed mb-4">
-            We process your personal data under the following legal bases:
+            MockITHub uses AI systems to generate:
           </p>
-
-          <h3 className="text-xl font-semibold text-slate-800 mb-3">A. Contractual Necessity</h3>
-          <p className="text-slate-700 leading-relaxed">
-            Processing is required to deliver services you subscribed to (e.g., CV analysis, interview preparation).
-          </p>
-
-          <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">B. Consent</h3>
-          <p className="text-slate-700 leading-relaxed">
-            We rely on your explicit consent for:
-          </p>
-          <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4">
-            <li>Marketing emails</li>
-            <li>Non-essential cookies (analytics, advertising)</li>
-            <li>Voice recordings in Buddy Connector</li>
+          <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4 mb-4">
+            <li>Interview questions</li>
+            <li>Performance scoring</li>
+            <li>CV recommendations</li>
+            <li>Behavioural insights</li>
           </ul>
+          <p className="text-slate-700 leading-relaxed mb-4">
+            These are automated processes.
+          </p>
+          <p className="text-slate-700 leading-relaxed mb-3 font-semibold">Important:</p>
+          <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4 mb-4">
+            <li>AI outputs are advisory only</li>
+            <li>They do not replace human judgement</li>
+            <li>They do not produce legally binding decisions</li>
+            <li>Users may request human review where available</li>
+          </ul>
+          <p className="text-slate-700 leading-relaxed">
+            You have the right not to be subject solely to automated decision-making with significant legal effects.
+          </p>
+        </section>
 
-          <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">C. Legitimate Interests</h3>
+        <section>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">6. Data Sharing</h2>
+          <p className="text-slate-700 leading-relaxed mb-4 font-semibold">
+            We do not sell personal data.
+          </p>
           <p className="text-slate-700 leading-relaxed mb-3">
-            For:
+            We may share data with:
           </p>
-          <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4">
-            <li>Platform improvement</li>
-            <li>Security and fraud prevention</li>
-            <li>Internal analytics (using aggregated/anonymised data)</li>
+          <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4 mb-4">
+            <li>Payment processors (e.g., Stripe)</li>
+            <li>Cloud hosting providers</li>
+            <li>AI processing infrastructure providers</li>
+            <li>Analytics providers</li>
+            <li>Email communication services</li>
+            <li>Security monitoring providers</li>
           </ul>
-
-          <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">D. Legal Obligations</h3>
           <p className="text-slate-700 leading-relaxed">
-            To comply with UK law (e.g., data retention for accounting purposes, responding to lawful requests).
+            All third parties are bound by contractual data protection obligations.
           </p>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">5. Data Sharing & Third-Party Processors</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">7. International Transfers</h2>
           <p className="text-slate-700 leading-relaxed mb-4">
-            We may share data with trusted third parties under strict contractual terms.
+            Due to global infrastructure, data may be processed outside the UK.
           </p>
-
-          <h3 className="text-xl font-semibold text-slate-800 mb-3">A. Service Providers</h3>
-          <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4">
-            <li><strong>OpenAI:</strong> For AI-powered features (CV analysis, interview simulation, drafting)</li>
-            <li><strong>Supabase:</strong> Database hosting and authentication</li>
-            <li><strong>Stripe:</strong> Payment processing</li>
-            <li><strong>LiveKit:</strong> Voice call infrastructure (Buddy Connector)</li>
-            <li><strong>Email Service Providers:</strong> Transactional and marketing emails</li>
-            <li><strong>Cloud Hosting Providers:</strong> Data storage and infrastructure</li>
-          </ul>
-
-          <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">B. Analytics Providers</h3>
-          <p className="text-slate-700 leading-relaxed">
-            We use Google Analytics and similar tools (only with consent) to understand user behaviour.
-          </p>
-
-          <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">C. Legal Disclosure</h3>
-          <p className="text-slate-700 leading-relaxed">
-            We may disclose data if required by law, court order, or regulatory authority.
-          </p>
-
-          <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">D. Business Transfers</h3>
-          <p className="text-slate-700 leading-relaxed">
-            If MockITHub is acquired or merged, your data may be transferred to the new entity under equivalent privacy protections.
-          </p>
-
-          <p className="text-slate-700 leading-relaxed mt-4 font-semibold">
-            We do not sell personal data to third parties.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">6. International Data Transfers</h2>
-          <p className="text-slate-700 leading-relaxed mb-4">
-            Some third-party processors are located outside the UK/EEA (e.g., OpenAI in the USA).
-          </p>
-          <p className="text-slate-700 leading-relaxed mb-4">
-            We ensure appropriate safeguards are in place:
+          <p className="text-slate-700 leading-relaxed mb-3">
+            We safeguard transfers through:
           </p>
           <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4">
-            <li>EU/UK Standard Contractual Clauses (SCCs)</li>
-            <li>Adequacy decisions (where applicable)</li>
-            <li>Additional security measures compliant with UK GDPR</li>
+            <li>UK-approved Standard Contractual Clauses (SCCs)</li>
+            <li>Adequacy decisions</li>
+            <li>Data processing agreements</li>
+            <li>Encrypted infrastructure</li>
           </ul>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">7. Data Retention</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">8. Data Retention</h2>
           <p className="text-slate-700 leading-relaxed mb-4">
-            We retain personal data only as long as necessary.
+            We retain data only as long as necessary.
           </p>
-
-          <div className="bg-slate-50 border border-slate-200 rounded-lg p-6 space-y-3">
-            <div>
-              <p className="text-slate-700"><strong>CVs and Career Data:</strong> 12–24 months after account closure</p>
-            </div>
-            <div>
-              <p className="text-slate-700"><strong>Interview Recordings:</strong> 12 months (or user-requested deletion)</p>
-            </div>
-            <div>
-              <p className="text-slate-700"><strong>Account Data:</strong> Until account deletion, then 30 days</p>
-            </div>
-            <div>
-              <p className="text-slate-700"><strong>Payment Records:</strong> 7 years (UK tax/accounting requirements)</p>
-            </div>
-            <div>
-              <p className="text-slate-700"><strong>Analytics Data:</strong> Up to 26 months (aggregated/anonymised)</p>
-            </div>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse border border-slate-200 rounded-lg">
+              <thead>
+                <tr className="bg-slate-100">
+                  <th className="border border-slate-200 px-4 py-3 text-left text-slate-800 font-semibold">Data Type</th>
+                  <th className="border border-slate-200 px-4 py-3 text-left text-slate-800 font-semibold">Retention</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="border border-slate-200 px-4 py-3 text-slate-700">CV uploads</td>
+                  <td className="border border-slate-200 px-4 py-3 text-slate-700">12–24 months</td>
+                </tr>
+                <tr className="bg-slate-50">
+                  <td className="border border-slate-200 px-4 py-3 text-slate-700">Interview recordings</td>
+                  <td className="border border-slate-200 px-4 py-3 text-slate-700">12 months</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-200 px-4 py-3 text-slate-700">Account data</td>
+                  <td className="border border-slate-200 px-4 py-3 text-slate-700">While account is active</td>
+                </tr>
+                <tr className="bg-slate-50">
+                  <td className="border border-slate-200 px-4 py-3 text-slate-700">Payment records</td>
+                  <td className="border border-slate-200 px-4 py-3 text-slate-700">7 years (legal requirement)</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-200 px-4 py-3 text-slate-700">Analytics data</td>
+                  <td className="border border-slate-200 px-4 py-3 text-slate-700">Up to 26 months</td>
+                </tr>
+                <tr className="bg-slate-50">
+                  <td className="border border-slate-200 px-4 py-3 text-slate-700">Community content</td>
+                  <td className="border border-slate-200 px-4 py-3 text-slate-700">Until deleted by user or account closure</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-
           <p className="text-slate-700 leading-relaxed mt-4">
-            You may request earlier deletion by contacting us at support@mockithub.ai
+            Users may request earlier deletion where legally permitted.
           </p>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">8. Your Rights Under UK GDPR</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">9. Your Rights</h2>
           <p className="text-slate-700 leading-relaxed mb-4">
-            You have the following rights:
+            Under UK GDPR, you have the right to:
           </p>
-
-          <div className="space-y-4">
-            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
-              <h4 className="font-semibold text-slate-900 mb-2">Right of Access (Subject Access Request)</h4>
-              <p className="text-slate-700 text-sm">Request a copy of all personal data we hold about you.</p>
-            </div>
-
-            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
-              <h4 className="font-semibold text-slate-900 mb-2">Right to Rectification</h4>
-              <p className="text-slate-700 text-sm">Correct inaccurate or incomplete data.</p>
-            </div>
-
-            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
-              <h4 className="font-semibold text-slate-900 mb-2">Right to Erasure ("Right to be Forgotten")</h4>
-              <p className="text-slate-700 text-sm">Request deletion of your data (subject to legal obligations).</p>
-            </div>
-
-            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
-              <h4 className="font-semibold text-slate-900 mb-2">Right to Restriction</h4>
-              <p className="text-slate-700 text-sm">Limit how we process your data in certain circumstances.</p>
-            </div>
-
-            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
-              <h4 className="font-semibold text-slate-900 mb-2">Right to Data Portability</h4>
-              <p className="text-slate-700 text-sm">Receive your data in a machine-readable format (e.g., JSON, CSV).</p>
-            </div>
-
-            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
-              <h4 className="font-semibold text-slate-900 mb-2">Right to Object</h4>
-              <p className="text-slate-700 text-sm">Object to processing based on legitimate interests or direct marketing.</p>
-            </div>
-
-            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
-              <h4 className="font-semibold text-slate-900 mb-2">Right to Withdraw Consent</h4>
-              <p className="text-slate-700 text-sm">Withdraw consent at any time (e.g., marketing emails, analytics cookies).</p>
-            </div>
-
-            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
-              <h4 className="font-semibold text-slate-900 mb-2">Right to Lodge a Complaint</h4>
-              <p className="text-slate-700 text-sm">
-                File a complaint with the UK Information Commissioner's Office (ICO) at <a href="https://ico.org.uk" className="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">ico.org.uk</a>
-              </p>
-            </div>
+          <div className="space-y-3">
+            {[
+              'Access your data',
+              'Correct inaccurate data',
+              'Request deletion',
+              'Restrict processing',
+              'Object to processing',
+              'Withdraw consent',
+              'Data portability',
+              'Request human review of automated outputs',
+            ].map((right) => (
+              <div key={right} className="bg-slate-50 border border-slate-200 rounded-lg px-4 py-3">
+                <p className="text-slate-700 text-sm">{right}</p>
+              </div>
+            ))}
           </div>
-
           <p className="text-slate-700 leading-relaxed mt-6">
-            To exercise any of these rights, contact us at <strong>support@mockithub.ai</strong>. We will respond within 30 days.
+            To exercise your rights: <strong>support@mockithub.ai</strong>
+          </p>
+          <p className="text-slate-700 leading-relaxed mt-2">
+            We respond within one month unless extended under lawful circumstances.
           </p>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">9. Security Measures</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">10. Security Measures</h2>
           <p className="text-slate-700 leading-relaxed mb-4">
             We implement industry-standard security measures:
           </p>
           <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4">
-            <li>Encryption in transit (TLS/SSL)</li>
-            <li>Encryption at rest for sensitive data</li>
-            <li>Regular security audits and monitoring</li>
-            <li>Access controls and role-based permissions</li>
-            <li>Secure authentication mechanisms</li>
-            <li>Data backup and disaster recovery plans</li>
+            <li>Encryption in transit (TLS)</li>
+            <li>Encryption at rest</li>
+            <li>Role-based access control</li>
+            <li>Multi-factor authentication for staff</li>
+            <li>Regular vulnerability assessments</li>
+            <li>Access logging &amp; monitoring</li>
+            <li>Incident response procedures</li>
           </ul>
           <p className="text-slate-700 leading-relaxed mt-4">
-            However, no method is 100% secure. We encourage users to use strong, unique passwords and enable two-factor authentication where available.
+            In case of a data breach, we will notify affected users and regulators where legally required.
           </p>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">10. Children's Privacy</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">11. Children's Privacy</h2>
           <p className="text-slate-700 leading-relaxed">
-            MockITHub is not intended for users under 18. We do not knowingly collect data from children. If you believe we have inadvertently collected data from a minor, contact us immediately at support@mockithub.ai
+            MockITHub is not intended for individuals under 18. If we discover data from a minor, it will be deleted promptly.
           </p>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">11. AI-Specific Privacy Considerations</h2>
-          
-          <h3 className="text-xl font-semibold text-slate-800 mb-3">A. AI Model Training</h3>
-          <p className="text-slate-700 leading-relaxed">
-            We do not use your identifiable personal data (CVs, interview recordings, or uploads) to train our AI models without explicit, separate consent.
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">12. Complaints</h2>
+          <p className="text-slate-700 leading-relaxed mb-4">
+            You may lodge a complaint with:
           </p>
-
-          <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">B. Third-Party AI Providers</h3>
-          <p className="text-slate-700 leading-relaxed">
-            OpenAI processes data to generate outputs but does not use customer data for model training (per OpenAI's API terms).
-          </p>
-
-          <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">C. AI-Generated Outputs</h3>
-          <p className="text-slate-700 leading-relaxed">
-            AI-generated feedback, CV scores, and interview simulations are derived from your inputs but do not expose your data to other users.
-          </p>
-
-          <h3 className="text-xl font-semibold text-slate-800 mb-3 mt-6">D. Accuracy Disclaimer</h3>
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-            <p className="text-amber-900 text-sm">
-              AI outputs are probabilistic and may contain inaccuracies. Users should verify AI-generated content before use in real-world scenarios.
+          <div className="bg-slate-50 border border-slate-200 rounded-lg p-6 mb-4">
+            <p className="text-slate-700 font-semibold">Information Commissioner's Office (ICO)</p>
+            <p className="text-slate-700">
+              Website:{' '}
+              <a href="https://ico.org.uk" className="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">
+                ico.org.uk
+              </a>
             </p>
           </div>
+          <p className="text-slate-700 leading-relaxed">
+            We encourage contacting us first at <strong>support@mockithub.ai</strong>
+          </p>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">12. Updates to This Privacy Policy</h2>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">13. Changes to This Policy</h2>
           <p className="text-slate-700 leading-relaxed mb-4">
-            We may update this Privacy Policy from time to time to reflect:
+            We may update this Privacy Policy periodically. Significant changes will be communicated via email or platform notification.
           </p>
-          <ul className="list-disc list-inside space-y-2 text-slate-700 ml-4">
-            <li>Changes in our services</li>
-            <li>Legal or regulatory requirements</li>
-            <li>Improvements to our data practices</li>
-          </ul>
-          <p className="text-slate-700 leading-relaxed mt-4">
-            We will notify you of material changes via email or a prominent notice on our website. Continued use after notification constitutes acceptance.
+          <p className="text-slate-700 leading-relaxed">
+            Continued use of the platform indicates acceptance of updates.
           </p>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">13. Contact Us</h2>
-          <p className="text-slate-700 leading-relaxed mb-3">
-            For privacy-related questions, data requests, or complaints:
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">14. Third-Party Links</h2>
+          <p className="text-slate-700 leading-relaxed">
+            Our platform may contain links to third-party websites. We are not responsible for their privacy practices.
           </p>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">15. Contact Information</h2>
           <div className="bg-slate-50 border border-slate-200 rounded-lg p-6 space-y-2">
-            <p className="text-slate-700"><strong>Email:</strong> support@mockithub.ai</p>
-            <p className="text-slate-700"><strong>Data Protection Officer:</strong> support@mockithub.ai</p>
-            <p className="text-slate-700"><strong>Address:</strong> MockITHub Ltd, 165–169 Great Portland Street, 5th Floor, W1W 5PF, London, United Kingdom</p>
-            <p className="text-slate-700"><strong>Website:</strong> www.mockithub.ai</p>
+            <p className="text-slate-700 font-semibold">MockITHub Ltd</p>
+            <p className="text-slate-700">165–169 Great Portland Street</p>
+            <p className="text-slate-700">5th Floor, W1W 5PF</p>
+            <p className="text-slate-700">London, United Kingdom</p>
+            <p className="text-slate-700 mt-3"><strong>Support:</strong> support@mockithub.ai</p>
+            <p className="text-slate-700"><strong>Company Number:</strong> 16823684</p>
           </div>
-          <p className="text-slate-700 leading-relaxed mt-4">
-            <strong>UK Supervisory Authority:</strong> Information Commissioner's Office (ICO) - <a href="https://ico.org.uk" className="text-sky-600 hover:underline" target="_blank" rel="noopener noreferrer">ico.org.uk</a>
-          </p>
         </section>
       </div>
     </PolicyLayout>
