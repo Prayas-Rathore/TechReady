@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ChevronDown, ChevronRight, BookOpen, Sparkles, Target, MessageSquare, Users, Briefcase, Award } from 'lucide-react';
+import { useSubscription } from "../../context/SubscriptionContext";
+
 
 const MOCKITHUB_OPTIONS = [
   { path: '/interview-toolkit/home', label: 'Home', icon: BookOpen },
@@ -15,6 +17,7 @@ const MOCKITHUB_OPTIONS = [
 export default function InterviewToolkitPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { tier } = useSubscription();
   const [isMockitHubOpen, setIsMockitHubOpen] = useState(false);
 
   const isActivePath = (path: string) => location.pathname === path;
@@ -138,25 +141,25 @@ export default function InterviewToolkitPage() {
             </div>
 
             <button
-              onClick={() => navigate('/jobdescription')}
-              className="w-full bg-white rounded-2xl shadow-sm border border-slate-200 px-6 py-5 hover:shadow-md hover:border-sky-300 transition-all group"
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-sky-500 to-blue-600 rounded-xl flex items-center justify-center">
-                    <Sparkles className="w-5 h-5 text-white" />
-                  </div>
-                  <div className="text-left">
-                    <h2 className="text-xl font-bold text-slate-900 group-hover:text-sky-600 transition-colors">
-                      AI Preparation
-                    </h2>
-                    <p className="text-sm text-slate-600">
-                      Get personalized AI-powered interview coaching
-                    </p>
-                  </div>
-                </div>
-                <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-sky-600 transition-colors" />
-              </div>
+  onClick={() => navigate(tier === 'free' ? '/ai_jobdescription' : '/jobdescription')}
+  className="w-full bg-white rounded-2xl shadow-sm border border-slate-200 px-6 py-5 hover:shadow-md hover:border-sky-300 transition-all group"
+>
+  <div className="flex items-center justify-between">
+    <div className="flex items-center gap-3">
+      <div className="w-10 h-10 bg-gradient-to-br from-sky-500 to-blue-600 rounded-xl flex items-center justify-center">
+        <Sparkles className="w-5 h-5 text-white" />
+      </div>
+      <div className="text-left">
+        <h2 className="text-xl font-bold text-slate-900 group-hover:text-sky-600 transition-colors">
+          AI Preparation
+        </h2>
+        <p className="text-sm text-slate-600">
+          Get personalized AI-powered interview coaching
+        </p>
+      </div>
+    </div>
+    <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-sky-600 transition-colors" />
+  </div>
             </button>
           </div>
         </div>
