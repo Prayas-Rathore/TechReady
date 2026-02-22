@@ -16,17 +16,16 @@ export default function HeroSection() {
             </div>
 
             <h1 className="text-5xl sm:text-6xl lg:text-6xl font-bold leading-tight animate-fadeIn" style={{ animationDelay: '0.1s' }}>
-              Crack the Code: Land Your Dream Tech Role - With &nbsp;
+              Don't Just Apply.&nbsp;
               
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 animate-gradient">
-                Confidence
+                 Actually Prepare
               </span>
             </h1>
 
             <p className="text-xl text-slate-300 leading-relaxed animate-fadeIn" style={{ animationDelay: '0.2s' }}>
 
-             Whether you're starting out or stepping up, MockITHub helps you stand out in tech. Search smarter, optimise your CV with AI, generate tailored applications, practise mock interviews, and follow personalised roadmaps. It’s not just a tool — it’s your complete tech career preparation platform, from job search to long-term growth. 
-
+MockITHub gives you structure, AI mock interviews, real feedback, and a clear roadmap - so you show up confident and ready.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 animate-fadeIn" style={{ animationDelay: '0.3s' }}>
